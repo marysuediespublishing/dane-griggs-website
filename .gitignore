@@ -45,3 +45,6 @@ Thumbs.db
 
 # CMS admin build
 public/admin/dist/
+
+# Playwright
+playwright-report/
