@@ -1,6 +1,6 @@
 # Author Dane Griggs Website - Development Specifications
 
-## [ ] Spec 001: Astro Blog Platform Foundation
+## [x] Spec 001: Astro Blog Platform Foundation
 
 ```json
 {
@@ -8,10 +8,11 @@
   "title": "Astro Blog Platform Foundation",
   "why": "Author needs modern blog platform with CMS for content management",
   "system": {
-    "complete": false,
+    "complete": true,
     "commands": [
       "npm init -y",
-      "npm create astro@latest -- --template blog --typescript --yes --skip-houston",
+      "npm create astro@latest ./temp --template blog --typescript --yes --skip-houston",
+      "mv ./temp/* ./ && rmdir ./temp",
       "npm install @astrojs/tailwind decap-cms-app"
     ],
     "files": {
