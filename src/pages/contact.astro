@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Contact - Dane Griggs">
+	<Header />
+	<main class="container mx-auto px-4 py-8">
+		<h1 class="text-4xl font-bold text-dark-text mb-6">Contact Dane Griggs</h1>
+		<div class="prose prose-invert max-w-none">
+			<p class="text-dark-text-muted text-lg mb-8">
+				I'd love to hear from you. Whether you have a project in mind, want to collaborate, or just want to say hello, feel free to reach out.
+			</p>
+			
+			<div class="grid md:grid-cols-2 gap-8">
+				<div>
+					<h2 class="text-2xl font-semibold text-dark-text mb-4">Get in Touch</h2>
+					<div class="space-y-4">
+						<div>
+							<h3 class="text-lg font-medium text-dark-text mb-2">Email</h3>
+							<p class="text-dark-text-muted">
+								<a href="mailto:hello@danegriggs.com" class="text-blue-400 hover:text-blue-300">
+									hello@danegriggs.com
+								</a>
+							</p>
+						</div>
+						
+						<div>
+							<h3 class="text-lg font-medium text-dark-text mb-2">Social Media</h3>
+							<p class="text-dark-text-muted">
+								Follow me on social media for updates and insights.
+							</p>
+						</div>
+					</div>
+				</div>
+				
+				<div>
+					<h2 class="text-2xl font-semibold text-dark-text mb-4">What I Do</h2>
+					<ul class="space-y-2 text-dark-text-muted">
+						<li>• Writing and content creation</li>
+						<li>• Creative consulting</li>
+						<li>• Speaking engagements</li>
+						<li>• Collaborative projects</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="mt-8 p-6 bg-dark-surface rounded-lg border border-dark-border">
+				<p class="text-dark-text-muted">
+					<strong class="text-dark-text">Note:</strong> I try to respond to all inquiries within 48 hours. For urgent matters, please mention "urgent" in your subject line.
+				</p>
+			</div>
+		</div>
+	</main>
+	<Footer />
+</Layout>

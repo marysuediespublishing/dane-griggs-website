@@ -33,7 +33,7 @@
 
 ---
 
-## [ ] Spec 002: Dark Theme Site Header
+## [x] Spec 002: Dark Theme Site Header
 
 ```json
 {
@@ -42,7 +42,7 @@
   "why": "Visitors need professional navigation and author branding with consistent dark theme",
   "depends": [1],
   "ui": {
-    "complete": false,
+    "complete": true,
     "url": "/",
     "scenarios": [
       {

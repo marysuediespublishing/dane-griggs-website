@@ -1,0 +1,27 @@
+---
+import HeaderLink from './HeaderLink.astro';
+---
+
+<div data-testid="desktop-navigation" class="hidden md:flex items-center space-x-8">
+	<HeaderLink 
+		href="/blog" 
+		class="text-dark-text hover:text-white transition-colors py-2 px-3 rounded-md hover:bg-dark-bg"
+		data-testid="blog-link"
+	>
+		Blog
+	</HeaderLink>
+	<HeaderLink 
+		href="/about" 
+		class="text-dark-text hover:text-white transition-colors py-2 px-3 rounded-md hover:bg-dark-bg"
+		data-testid="about-link"
+	>
+		About
+	</HeaderLink>
+	<HeaderLink 
+		href="/contact" 
+		class="text-dark-text hover:text-white transition-colors py-2 px-3 rounded-md hover:bg-dark-bg"
+		data-testid="contact-link"
+	>
+		Contact
+	</HeaderLink>
+</div>
