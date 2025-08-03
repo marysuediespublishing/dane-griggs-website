@@ -27,8 +27,8 @@ I'm using a streamlined spec-driven development system where:
     "complete": false,
     "packages": ["package-name"],
     "commands": ["npm install package-name"],
-    "files": {"config.js": "content"},
-    "env_vars": {"NODE_ENV": "development"}
+    "env_vars": {"NODE_ENV": "development"},
+    "notes": "Special setup instructions"
   },
   "mocks": {
     "[feature]": {
@@ -54,6 +54,78 @@ I'm using a streamlined spec-driven development system where:
 ```
 ```
 
+## Section Rules
+
+**Must have at least one of:**
+- `system` - Package installation, app setup, environment configuration
+- `mocks` - Shared data contracts for APIs and testing
+- `apis` - Backend endpoints and unit tests
+- `ui` - Frontend components and E2E tests
+
+**Common Patterns:**
+- **System-only**: Project setup, package installation, configuration
+- **UI-only**: Static components, layouts, styling
+- **API-only**: Backend services, data processing  
+- **Full-stack**: Complete features with frontend + backend
+
+## System Section Guidelines
+
+### Purpose: App Foundation, Not Implementation
+
+**Rules**
+Specs define **WHAT** to set up, not **HOW** to implement.
+System gets the tools working, UI makes them look good.
+
+**✅ Use System Section For:**
+- Package installation and dependency management
+- Build tool integration (Tailwind + PostCSS setup, Vite config)
+- Base configuration files (tailwind.config.js with content paths)
+- Environment variable configuration
+- Database setup and connection strings
+- External service configuration (Firebase, Stripe, etc.)
+- Development tool setup (ESLint, Prettier configs)
+- Zod schemas, type inference and related helper functions
+
+**❌ Don't Use System Section For:**
+- React components, routes, hooks, theme customization and styling/CSS (let frontend agent create these)
+- API route implementations (let backend agent handle these)
+- Utility functions or business logic
+- Detailed file structures or boilerplate code
+- CSS files or styling implementations
+
+### System Section Format
+
+```json
+"system": {
+  "complete": false,
+  "packages": ["react-hook-form", "zod", "@types/node"],
+  "commands": [
+    "npm install react-hook-form zod",
+    "npm install -D @types/node"
+  ],
+  "env_vars": {
+    "DATABASE_URL": "postgresql://localhost:5432/myapp",
+    "NEXT_PUBLIC_API_URL": "http://localhost:3000/api"
+  },
+  "notes": "Requires PostgreSQL running locally on port 5432"
+}
+```
+
+### The Contract Principle
+
+**Specs define contracts (WHAT), agents implement solutions (HOW)**
+
+- **Mocks** = Data contracts between frontend and backend
+- **APIs** = Service contracts and expected behavior  
+- **UI** = User interaction contracts and expected outcomes
+- **System** = Infrastructure contracts and dependencies
+
+This separation allows agents to:
+- Use latest best practices and patterns
+- Adapt to framework updates and new features
+- Create optimal file structures for the specific implementation
+- Apply modern tooling and conventions
+
 ## Spec Size Guidelines
 
 **Target: 1-10 minutes implementation time**
@@ -69,7 +141,7 @@ I'm using a streamlined spec-driven development system where:
   "system": {
     "complete": false,
     "commands": ["npm create astro@latest .", "npm install @astrojs/tailwind"],
-    "files": {"astro.config.mjs": "import tailwind from '@astrojs/tailwind'; export default { integrations: [tailwind()] };"}
+    "notes": "Includes Tailwind integration and basic config"
   }
 }
 ```
@@ -129,20 +201,6 @@ I'm using a streamlined spec-driven development system where:
 - Complex multi-step workflows  
 - Multiple unrelated features
 - Anything taking 15+ minutes to implement
-
-## Section Rules
-
-**Must have at least one of:**
-- `system` - Package installation, file creation, environment setup
-- `mocks` - Shared data contracts for APIs and testing
-- `apis` - Backend endpoints and unit tests
-- `ui` - Frontend components and E2E tests
-
-**Common Patterns:**
-- **System-only**: Project setup, package installation, configuration
-- **UI-only**: Static components, layouts, styling
-- **API-only**: Backend services, data processing  
-- **Full-stack**: Complete features with frontend + backend
 
 ## Mock Data Best Practices
 
@@ -262,5 +320,6 @@ I'm using a streamlined spec-driven development system where:
 - **Clear dependencies** enable parallel development
 - **Specific scenarios** reduce implementation ambiguity
 - **System sections** handle environment setup automatically
+- **Contracts over implementation** - define WHAT, let agents determine HOW
 
 Ready to create some specs! What feature should we design?

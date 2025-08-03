@@ -5,7 +5,7 @@
 ```json
 {
   "id": 1,
-  "title": "Astro Blog Platform Foundation",
+  "title": "Astro Website Platform Foundation",
   "why": "Author needs modern blog platform with CMS for content management",
   "system": {
     "complete": true,

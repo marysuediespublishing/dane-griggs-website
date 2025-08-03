@@ -58,15 +58,34 @@ Use @frontend-agent when spec has `ui` section with `complete: false`:
 
 #### Phase 4: Quality Verification & Commit
 
-After all implementation phases complete:
+### Enhanced Phase 4: Quality Verification & Commit
 
-1. **Run comprehensive checks**
+## After all implementation phases complete:
+
+1. **Capture initial test baseline**
+   ```bash
+   # Capture starting test state before any agent work
+   echo "📊 Capturing initial test baseline..."
+   
+   # Run tests and capture counts
+   INITIAL_UNIT_TESTS=$(npm run test -- --passWithNoTests --json 2>/dev/null | jq '.numTotalTests // 0')
+   INITIAL_UNIT_PASSING=$(npm run test -- --passWithNoTests --json 2>/dev/null | jq '.numPassedTests // 0')
+   
+   INITIAL_E2E_TESTS=$(npm run test:e2e -- --reporter=json 2>/dev/null | jq '.suites[].tests | length' | awk '{sum += $1} END {print sum || 0}')
+   INITIAL_E2E_PASSING=$(npm run test:e2e -- --reporter=json 2>/dev/null | jq '[.suites[].tests[] | select(.status == "passed")] | length')
+   
+   echo "🏁 Starting State:"
+   echo "   Unit Tests: $INITIAL_UNIT_PASSING/$INITIAL_UNIT_TESTS passing"
+   echo "   E2E Tests: $INITIAL_E2E_PASSING/$INITIAL_E2E_TESTS passing"
+   ```
+
+2. **Run comprehensive checks**
    ```bash
    # Execute all quality verification
    /run-all-checks
    ```
 
-2. **Auto-fix any issues found**
+3. **Auto-fix any issues found**
    ```bash
    # If any checks fail, attempt automatic fixes
    /auto-fix-issues
@@ -75,8 +94,63 @@ After all implementation phases complete:
    /run-all-checks
    ```
 
-3. **Final steps**
-   - **Commit changes** with descriptive message including spec ID and title
+4. **Capture final test results and report**
+   ```bash
+   echo "📊 Capturing final test results..."
+   
+   # Capture final test counts
+   FINAL_UNIT_TESTS=$(npm run test -- --passWithNoTests --json 2>/dev/null | jq '.numTotalTests // 0')
+   FINAL_UNIT_PASSING=$(npm run test -- --passWithNoTests --json 2>/dev/null | jq '.numPassedTests // 0')
+   
+   FINAL_E2E_TESTS=$(npm run test:e2e -- --reporter=json 2>/dev/null | jq '.suites[].tests | length' | awk '{sum += $1} END {print sum || 0}')
+   FINAL_E2E_PASSING=$(npm run test:e2e -- --reporter=json 2>/dev/null | jq '[.suites[].tests[] | select(.status == "passed")] | length')
+   
+   # Calculate changes
+   UNIT_TESTS_ADDED=$((FINAL_UNIT_TESTS - INITIAL_UNIT_TESTS))
+   UNIT_PASSING_ADDED=$((FINAL_UNIT_PASSING - INITIAL_UNIT_PASSING))
+   E2E_TESTS_ADDED=$((FINAL_E2E_TESTS - INITIAL_E2E_TESTS))
+   E2E_PASSING_ADDED=$((FINAL_E2E_PASSING - INITIAL_E2E_PASSING))
+   
+   echo ""
+   echo "📈 TEST IMPACT REPORT"
+   echo "===================="
+   echo ""
+   echo "🧪 Unit Tests:"
+   echo "   Before: $INITIAL_UNIT_PASSING/$INITIAL_UNIT_TESTS passing"
+   echo "   After:  $FINAL_UNIT_PASSING/$FINAL_UNIT_TESTS passing"
+   echo "   Added:  +$UNIT_TESTS_ADDED tests (+$UNIT_PASSING_ADDED passing)"
+   echo ""
+   echo "🎭 E2E Tests:"
+   echo "   Before: $INITIAL_E2E_PASSING/$INITIAL_E2E_TESTS passing"
+   echo "   After:  $FINAL_E2E_PASSING/$FINAL_E2E_TESTS passing"
+   echo "   Added:  +$E2E_TESTS_ADDED tests (+$E2E_PASSING_ADDED passing)"
+   echo ""
+   
+   # Analyze failures
+   if [ $FINAL_UNIT_PASSING -lt $FINAL_UNIT_TESTS ]; then
+     UNIT_FAILING=$((FINAL_UNIT_TESTS - FINAL_UNIT_PASSING))
+     echo "⚠️  $UNIT_FAILING unit tests failing:"
+     npm run test -- --verbose 2>&1 | grep -A 5 "FAIL\|✕"
+     echo ""
+   fi
+   
+   if [ $FINAL_E2E_PASSING -lt $FINAL_E2E_TESTS ]; then
+     E2E_FAILING=$((FINAL_E2E_TESTS - FINAL_E2E_PASSING))
+     echo "⚠️  $E2E_FAILING E2E tests failing:"
+     npm run test:e2e -- --reporter=line 2>&1 | grep -A 3 "failing\|✗"
+     echo ""
+   fi
+   
+   # Success summary
+   if [ $FINAL_UNIT_PASSING -eq $FINAL_UNIT_TESTS ] && [ $FINAL_E2E_PASSING -eq $FINAL_E2E_TESTS ]; then
+     echo "✅ All tests passing! Ready to commit."
+   else
+     echo "❌ Some tests failing. Review failures above."
+   fi
+   ```
+
+5. **Final steps**
+   - **Commit changes** with descriptive message including spec ID, title, and test impact
    - **Report completion** with summary of implemented sections and quality status
 
 ## Smart Workflow Logic
