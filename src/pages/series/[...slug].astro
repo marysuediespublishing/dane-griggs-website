@@ -1,0 +1,310 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BookCard from '../../components/ui/BookCard.tsx';
+import { SITE_TITLE } from '../../consts';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const series = await getCollection('series');
+  return series.map((seriesItem) => ({
+    params: { slug: seriesItem.slug },
+    props: { seriesItem },
+  }));
+}
+
+interface Props {
+  seriesItem: CollectionEntry<'series'>;
+}
+
+const { seriesItem } = Astro.props;
+// const { Content } = await seriesItem.render();
+
+// Get all books for this series
+const books = await getCollection('books');
+const seriesBooks = books.filter(book => book.data.series === seriesItem.data.title);
+
+// Sort books by series order
+const sortedSeriesBooks = seriesBooks.sort((a, b) => {
+  const orderA = a.data.seriesOrder || 999;
+  const orderB = b.data.seriesOrder || 999;
+  return orderA - orderB;
+});
+
+// Get related series (same alien species)
+const allSeries = await getCollection('series');
+const relatedSeries = allSeries.filter(s => 
+  s.id !== seriesItem.id && 
+  s.data.alienSpecies.some(species => 
+    seriesItem.data.alienSpecies.includes(species)
+  )
+).slice(0, 3);
+
+// Calculate series statistics
+const totalRatings = seriesBooks.reduce((sum, book) => sum + (book.data.ratingCount || 0), 0);
+const averageRating = seriesBooks.length > 0 
+  ? seriesBooks.reduce((sum, book) => sum + (book.data.rating || 0), 0) / seriesBooks.length
+  : 0;
+const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCount || 0), 0);
+---
+
+<Layout title={`${seriesItem.data.title} - ${SITE_TITLE}`}>
+  <Header />
+  
+  <main class="min-h-screen bg-bg-primary">
+    <!-- Hero Section -->
+    <section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <!-- Cosmic Background Elements -->
+      <div class="absolute inset-0 bg-starfield opacity-20 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-6xl mx-auto">
+          <!-- Breadcrumb -->
+          <nav class="mb-8" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2 text-sm text-solar-white/60">
+              <li><a href="/" class="hover:text-solar-white transition-colors">Home</a></li>
+              <li class="text-solar-white/40">›</li>
+              <li><a href="/books" class="hover:text-solar-white transition-colors">Books</a></li>
+              <li class="text-solar-white/40">›</li>
+              <li class="text-solar-white">{seriesItem.data.title}</li>
+            </ol>
+          </nav>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+            <!-- Series Cover & Quick Info -->
+            <div class="lg:col-span-1">
+              {seriesItem.data.cover && (
+                <div class="mb-6">
+                  <img 
+                    src={seriesItem.data.cover} 
+                    alt={`${seriesItem.data.title} series cover`}
+                    class="w-full max-w-sm mx-auto rounded-xl shadow-2xl"
+                  />
+                </div>
+              )}
+              
+              <!-- Series Stats -->
+              <div class="bg-solar-white/10 backdrop-blur-sm rounded-xl p-6 border border-cosmic-rose/30">
+                <h3 class="text-lg font-bold text-solar-white mb-4">Series Info</h3>
+                <div class="space-y-3 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-solar-white/70">Books:</span>
+                    <span class="text-solar-white font-medium">{seriesItem.data.bookCount}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-solar-white/70">Status:</span>
+                    <span class="text-stellar-gold font-medium capitalize">{seriesItem.data.completionStatus}</span>
+                  </div>
+                  {averageRating > 0 && (
+                    <div class="flex justify-between">
+                      <span class="text-solar-white/70">Rating:</span>
+                      <span class="text-solar-white font-medium">{averageRating.toFixed(1)} ⭐</span>
+                    </div>
+                  )}
+                  {totalRatings > 0 && (
+                    <div class="flex justify-between">
+                      <span class="text-solar-white/70">Total Ratings:</span>
+                      <span class="text-solar-white font-medium">{totalRatings.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {totalWordCount > 0 && (
+                    <div class="flex justify-between">
+                      <span class="text-solar-white/70">Total Words:</span>
+                      <span class="text-solar-white font-medium">{Math.round(totalWordCount / 1000)}k</span>
+                    </div>
+                  )}
+                  {seriesItem.data.startDate && (
+                    <div class="flex justify-between">
+                      <span class="text-solar-white/70">Started:</span>
+                      <span class="text-solar-white font-medium">
+                        {new Date(seriesItem.data.startDate).getFullYear()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                
+                {seriesItem.data.alienSpecies && seriesItem.data.alienSpecies.length > 0 && (
+                  <div class="mt-4 pt-4 border-t border-solar-white/20">
+                    <h4 class="text-sm font-medium text-solar-white mb-2">Featured Species:</h4>
+                    <div class="flex flex-wrap gap-2">
+                      {seriesItem.data.alienSpecies.map((species) => (
+                        <span class="badge badge-primary text-xs">
+                          {species}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <!-- Series Description -->
+            <div class="lg:col-span-2">
+              <div class="space-y-6">
+                <div>
+                  <h1 class="text-4xl md:text-5xl font-primary font-bold text-solar-white mb-4">
+                    <span class="bg-gradient-aurora bg-clip-text text-transparent">
+                      {seriesItem.data.title}
+                    </span>
+                  </h1>
+                  <p class="text-xl text-stellar-gold font-medium mb-6">
+                    {seriesItem.data.description}
+                  </p>
+                </div>
+
+                <!-- World Building Info -->
+                {seriesItem.data.worldBuilding && (
+                  <div class="bg-solar-white/5 backdrop-blur-sm rounded-lg p-6 border border-cosmic-rose/20">
+                    <h3 class="text-lg font-bold text-solar-white mb-3">World Building</h3>
+                    <p class="text-solar-white/80">{seriesItem.data.worldBuilding}</p>
+                  </div>
+                )}
+
+                <!-- Reading Order -->
+                {seriesItem.data.readingOrder && seriesItem.data.readingOrder.length > 0 && (
+                  <div class="bg-solar-white/5 backdrop-blur-sm rounded-lg p-6 border border-cosmic-rose/20">
+                    <h3 class="text-lg font-bold text-solar-white mb-3">Reading Order</h3>
+                    <ol class="space-y-2">
+                      {seriesItem.data.readingOrder.map((bookSlug, index) => {
+                        const book = seriesBooks.find(b => b.slug === bookSlug);
+                        return (
+                          <li class="flex items-center space-x-3 text-solar-white/80">
+                            <span class="w-6 h-6 bg-stellar-gold text-deep-space-navy rounded-full flex items-center justify-center text-sm font-bold">
+                              {index + 1}
+                            </span>
+                            <span>{book?.data.title || bookSlug}</span>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Series Content -->
+    <!-- <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto prose prose-lg">
+          <Content />
+        </div>
+      </div>
+    </section> -->
+
+    <!-- Books in Series -->
+    <section class="py-16 bg-bg-secondary">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+            Books in This Series
+          </h2>
+          <p class="text-lg text-gray-600">
+            {seriesItem.data.completionStatus === 'complete' 
+              ? 'The complete collection' 
+              : `${sortedSeriesBooks.length} of ${seriesItem.data.bookCount} books published`}
+          </p>
+        </div>
+        
+        {sortedSeriesBooks.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {sortedSeriesBooks.map((book) => (
+              <BookCard 
+                book={book}
+                variant="standard"
+                showSeriesOrder={true}
+                client:load
+              />
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-12">
+            <div class="text-4xl mb-4">📚</div>
+            <p class="text-gray-600">Books in this series are coming soon!</p>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Related Series -->
+    {relatedSeries.length > 0 && (
+      <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+              Related Series
+            </h2>
+            <p class="text-lg text-gray-600">
+              Other series featuring similar alien species and themes
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {relatedSeries.map((related) => (
+              <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                <div class="text-center">
+                  <h3 class="text-xl font-bold text-deep-space-navy mb-2">
+                    <a href={`/series/${related.slug}`} class="hover:text-cosmic-rose transition-colors">
+                      {related.data.title}
+                    </a>
+                  </h3>
+                  <p class="text-gray-600 mb-4 text-sm">
+                    {related.data.description}
+                  </p>
+                  
+                  <div class="flex justify-center items-center space-x-4 text-sm text-gray-500 mb-4">
+                    <span>{related.data.bookCount} Books</span>
+                    <span>•</span>
+                    <span class="capitalize">{related.data.completionStatus}</span>
+                  </div>
+                  
+                  {related.data.alienSpecies && related.data.alienSpecies.length > 0 && (
+                    <div class="flex flex-wrap justify-center gap-2 mb-4">
+                      {related.data.alienSpecies.slice(0, 3).map((species) => (
+                        <span class="badge badge-outline text-xs">
+                          {species}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <a 
+                    href={`/series/${related.slug}`}
+                    class="btn btn-secondary btn-sm w-full"
+                  >
+                    Explore Series
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Newsletter CTA -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold mb-4">
+            Love This Series?
+          </h2>
+          <p class="text-xl mb-8 text-solar-white/90">
+            Join my newsletter to get notified when new books in this series are released, plus exclusive bonus content and behind-the-scenes insights.
+          </p>
+          
+          <button class="btn btn-secondary btn-lg px-8 py-4 text-lg">
+            Get Series Updates
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

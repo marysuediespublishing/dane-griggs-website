@@ -1,12 +1,84 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Manager</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-</head>
-<body>
-  <script src="https://unpkg.com/decap-cms-app@^3.0.0/dist/decap-cms-app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Content Manager - Dane Griggs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <!-- Include the script that builds the page and powers Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.8.2/dist/decap-cms.js"></script>
+    <script>
+      // Custom preview templates for better content editing experience
+      CMS.registerPreviewTemplate('blog', createPreviewTemplate('blog'));
+      CMS.registerPreviewTemplate('books', createPreviewTemplate('books'));
+      CMS.registerPreviewTemplate('series', createPreviewTemplate('series'));
+      
+      function createPreviewTemplate(collection) {
+        return ({ entry, widgetFor, widgetsFor }) => {
+          const data = entry.get('data').toJS();
+          
+          if (collection === 'books') {
+            return `
+              <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: system-ui, sans-serif;">
+                <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin-bottom: 20px;">
+                  <div>
+                    <img src="${data.cover}" alt="${data.title}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+                  </div>
+                  <div>
+                    <h1 style="margin: 0 0 8px 0; color: #1a1a2e; font-size: 24px;">${data.title}</h1>
+                    <p style="margin: 0 0 12px 0; color: #666; font-size: 16px;">by ${data.author}</p>
+                    ${data.series ? `<p style="margin: 0 0 12px 0; color: #d4336a; font-weight: 600;">${data.series} ${data.seriesOrder ? `#${data.seriesOrder}` : ''}</p>` : ''}
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                      ${data.alienSpecies ? data.alienSpecies.map(species => `<span style="background: rgba(212, 51, 106, 0.1); color: #d4336a; padding: 4px 8px; border-radius: 16px; font-size: 12px; text-transform: capitalize;">${species}</span>`).join('') : ''}
+                    </div>
+                    <p style="margin: 0; color: #333; line-height: 1.6;">${data.description}</p>
+                  </div>
+                </div>
+                <div style="prose; color: #333;">
+                  ${widgetFor('body')}
+                </div>
+              </div>
+            `;
+          }
+          
+          if (collection === 'series') {
+            return `
+              <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: system-ui, sans-serif;">
+                <h1 style="margin: 0 0 12px 0; color: #1a1a2e; font-size: 32px;">${data.title}</h1>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 18px;">${data.description}</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                    <strong>Status:</strong> ${data.completionStatus}
+                  </div>
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                    <strong>Books:</strong> ${data.bookCount}
+                  </div>
+                  <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                    <strong>Rating:</strong> ${data.overallRating}/5
+                  </div>
+                </div>
+                <div style="prose; color: #333;">
+                  ${widgetFor('body')}
+                </div>
+              </div>
+            `;
+          }
+          
+          // Default blog template
+          return `
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: system-ui, sans-serif;">
+              <h1 style="margin: 0 0 12px 0; color: #1a1a2e; font-size: 32px;">${data.title}</h1>
+              <p style="margin: 0 0 20px 0; color: #666; font-size: 18px;">${data.description}</p>
+              <div style="prose; color: #333; line-height: 1.6;">
+                ${widgetFor('body')}
+              </div>
+            </div>
+          `;
+        };
+      }
+    </script>
+  </body>
 </html>

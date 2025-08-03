@@ -1,0 +1,321 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BookCard from '../components/ui/BookCard.tsx';
+import { SITE_TITLE } from '../consts';
+import { getCollection } from 'astro:content';
+
+// Get all books and series for display
+const books = await getCollection('books');
+const series = await getCollection('series');
+
+// Sort books by publication date (newest first)
+const sortedBooks = books.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+// Group books by series
+const booksBySeries = books.reduce((acc, book) => {
+  const seriesName = book.data.series || 'Standalone';
+  if (!acc[seriesName]) {
+    acc[seriesName] = [];
+  }
+  acc[seriesName].push(book);
+  return acc;
+}, {} as Record<string, typeof books>);
+
+// Get featured books
+const featuredBooks = books.filter(book => book.data.featured);
+
+// Get latest releases (last 6 months)
+const sixMonthsAgo = new Date();
+sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMonthsAgo);
+---
+
+<Layout title={`Books - ${SITE_TITLE}`}>
+  <Header />
+  
+  <main class="min-h-screen bg-bg-primary">
+    <!-- Hero Section -->
+    <section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <!-- Cosmic Background Elements -->
+      <div class="absolute inset-0 bg-starfield opacity-20 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      
+      <div class="container mx-auto px-4 text-center relative z-10">
+        <div class="max-w-4xl mx-auto space-y-6">
+          <h1 class="text-4xl md:text-6xl font-primary font-bold text-solar-white mb-4">
+            <span class="bg-gradient-aurora bg-clip-text text-transparent">
+              My Books
+            </span>
+          </h1>
+          <p class="text-xl md:text-2xl text-stellar-gold font-medium">
+            Sexy sci-fi romance with competent heroines and swoon-worthy aliens
+          </p>
+          <p class="text-lg text-solar-white/90 max-w-2xl mx-auto leading-relaxed">
+            Explore my collection of alien romance novels featuring strong heroines, detailed world-building, and steamy relationships that go beyond the surface.
+          </p>
+          
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+            <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+              <div class="text-2xl font-bold text-stellar-gold">{books.length}</div>
+              <div class="text-sm text-solar-white/80">Books Published</div>
+            </div>
+            <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+              <div class="text-2xl font-bold text-stellar-gold">{series.length}</div>
+              <div class="text-sm text-solar-white/80">Series</div>
+            </div>
+            <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+              <div class="text-2xl font-bold text-stellar-gold">{featuredBooks.length}</div>
+              <div class="text-sm text-solar-white/80">Bestsellers</div>
+            </div>
+            <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+              <div class="text-2xl font-bold text-stellar-gold">4.6</div>
+              <div class="text-sm text-solar-white/80">Avg Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Books Section -->
+    {featuredBooks.length > 0 && (
+      <section class="py-16 bg-bg-secondary">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+              Bestsellers & Fan Favorites
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+              The books readers can't stop talking about
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredBooks.slice(0, 6).map((book) => (
+              <BookCard 
+                book={book}
+                variant="featured"
+                client:load
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Latest Releases Section -->
+    {latestReleases.length > 0 && (
+      <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+              Latest Releases
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+              Hot off the press - the newest adventures in alien romance
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {latestReleases.slice(0, 8).map((book) => (
+              <BookCard 
+                book={book}
+                variant="compact"
+                client:load
+              />
+            ))}
+          </div>
+          
+          {latestReleases.length > 8 && (
+            <div class="text-center mt-8">
+              <a href="#all-books" class="btn btn-primary btn-lg">
+                View All Latest Releases
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- Series Section -->
+    <section class="py-16 bg-bg-secondary">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+            Explore My Series
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Dive deep into interconnected worlds and follow character arcs across multiple books
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {series.map((seriesItem) => (
+            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div class="mb-4">
+                {seriesItem.data.cover && (
+                  <img 
+                    src={seriesItem.data.cover} 
+                    alt={`${seriesItem.data.title} series cover`}
+                    class="w-20 h-28 object-cover rounded-lg mx-auto mb-4"
+                  />
+                )}
+              </div>
+              
+              <div class="text-center">
+                <h3 class="text-xl font-bold text-deep-space-navy mb-2">
+                  {seriesItem.data.title}
+                </h3>
+                <p class="text-gray-600 mb-4 text-sm">
+                  {seriesItem.data.description}
+                </p>
+                
+                <div class="flex justify-center items-center space-x-4 text-sm text-gray-500 mb-4">
+                  <span>{seriesItem.data.bookCount} Books</span>
+                  <span>•</span>
+                  <span class="capitalize">{seriesItem.data.completionStatus}</span>
+                </div>
+                
+                {seriesItem.data.alienSpecies && seriesItem.data.alienSpecies.length > 0 && (
+                  <div class="flex flex-wrap justify-center gap-2 mb-4">
+                    {seriesItem.data.alienSpecies.map((species) => (
+                      <span class="badge badge-primary text-xs">
+                        {species}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
+                <a 
+                  href={`/series/${seriesItem.slug}`}
+                  class="btn btn-secondary btn-sm w-full"
+                >
+                  Explore Series
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- All Books Section -->
+    <section id="all-books" class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+            Complete Book Collection
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Every alien romance adventure, from standalone novels to epic series
+          </p>
+        </div>
+
+        <!-- Filter Options -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <button class="btn btn-outline active" data-filter="all">All Books</button>
+          <button class="btn btn-outline" data-filter="series">Series Books</button>
+          <button class="btn btn-outline" data-filter="standalone">Standalone</button>
+          <button class="btn btn-outline" data-filter="cerastean">Cerastean</button>
+          <button class="btn btn-outline" data-filter="featured">Bestsellers</button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {sortedBooks.map((book) => (
+            <BookCard 
+              book={book}
+              variant="standard"
+              client:load
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter CTA Section -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold mb-4">
+            Never Miss a New Release
+          </h2>
+          <p class="text-xl mb-8 text-solar-white/90">
+            Join 10,000+ sci-fi romance fans and be the first to know about new books, exclusive content, and special offers.
+          </p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left max-w-2xl mx-auto">
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-stellar-gold rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-3 h-3 text-deep-space-navy" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <span class="text-solar-white">Free starter pack with bonus content</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-stellar-gold rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-3 h-3 text-deep-space-navy" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <span class="text-solar-white">Early access to new releases</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-stellar-gold rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-3 h-3 text-deep-space-navy" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <span class="text-solar-white">Exclusive alien species guides</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-stellar-gold rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-3 h-3 text-deep-space-navy" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <span class="text-solar-white">Behind-the-scenes writing insights</span>
+            </div>
+          </div>
+          
+          <button class="btn btn-secondary btn-lg px-8 py-4 text-lg">
+            Get Your Free Books Now
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+// Simple filtering functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const filterButtons = document.querySelectorAll('[data-filter]');
+  const bookCards = document.querySelectorAll('[data-book]');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Update active button
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      const filter = button.getAttribute('data-filter');
+      
+      // Show/hide books based on filter
+      bookCards.forEach(card => {
+        if (filter === 'all') {
+          card.style.display = 'block';
+        } else {
+          // This would need to be implemented based on the BookCard component structure
+          const shouldShow = card.getAttribute('data-categories')?.includes(filter);
+          card.style.display = shouldShow ? 'block' : 'none';
+        }
+      });
+    });
+  });
+});
+</script>

@@ -2,19 +2,199 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: public/images
-public_folder: /images
+# Enable local development mode
+local_backend: true
 
+# Media storage configuration
+media_folder: "public/images"
+public_folder: "/images"
+
+# Collections configuration
 collections:
-  - name: 'blog'
-    label: 'Blog Posts'
-    folder: 'src/content/blog'
+  # Books collection
+  - name: "books"
+    label: "Books"
+    folder: "src/content/books"
     create: true
-    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
     fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Description', name: 'description', widget: 'string' }
-      - { label: 'Author', name: 'author', widget: 'string', default: 'Dane Griggs' }
-      - { label: 'Publish Date', name: 'pubDate', widget: 'datetime' }
-      - { label: 'Hero Image', name: 'heroImage', widget: 'image', required: false }
-      - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Author", name: "author", widget: "string", default: "Dane Griggs" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Cover Image", name: "cover", widget: "image" }
+      - { label: "Series", name: "series", widget: "string", required: false }
+      - { label: "Series Order", name: "seriesOrder", widget: "number", required: false }
+      - { label: "Publication Date", name: "pubDate", widget: "datetime" }
+      - { label: "Rating", name: "rating", widget: "number", min: 0, max: 5, step: 0.1, default: 0 }
+      - { label: "Rating Count", name: "ratingCount", widget: "number", default: 0 }
+      - label: "Alien Species"
+        name: "alienSpecies"
+        widget: "select"
+        multiple: true
+        options: ["cerastean", "kraken", "dulci", "human"]
+        default: []
+      - label: "Heat Level"
+        name: "heatLevel"
+        widget: "select"
+        options: ["mild", "medium", "spicy"]
+        default: "medium"
+      - label: "Setting"
+        name: "setting"
+        widget: "select"
+        multiple: true
+        options: ["space-station", "alien-planet", "earth", "spaceship"]
+        default: []
+      - { label: "Genres", name: "genres", widget: "list", default: [] }
+      - { label: "Available on Kindle Unlimited", name: "isKU", widget: "boolean", default: true }
+      - { label: "Amazon URL", name: "amazonUrl", widget: "string", required: false }
+      - { label: "Goodreads URL", name: "goodreadsUrl", widget: "string", required: false }
+      - { label: "Price", name: "price", widget: "string", required: false }
+      - { label: "Word Count", name: "wordCount", widget: "number", required: false }
+      - { label: "Page Count", name: "pageCount", widget: "number", required: false }
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        options: ["published", "pre-order", "upcoming", "draft"]
+        default: "published"
+      - { label: "Featured Book", name: "featured", widget: "boolean", default: false }
+      - { label: "Content", name: "body", widget: "markdown" }
+
+  # Series collection
+  - name: "series"
+    label: "Series"
+    folder: "src/content/series"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - { label: "Book Count", name: "bookCount", widget: "number" }
+      - label: "Completion Status"
+        name: "completionStatus"
+        widget: "select"
+        options: ["ongoing", "complete"]
+        default: "ongoing"
+      - { label: "Start Date", name: "startDate", widget: "datetime" }
+      - { label: "Completion Date", name: "completionDate", widget: "datetime", required: false }
+      - label: "Alien Species"
+        name: "alienSpecies"
+        widget: "select"
+        multiple: true
+        options: ["cerastean", "kraken", "dulci", "human"]
+        default: []
+      - { label: "Overall Rating", name: "overallRating", widget: "number", min: 0, max: 5, step: 0.1, default: 0 }
+      - { label: "Total Ratings", name: "totalRatings", widget: "number", default: 0 }
+      - { label: "World Building Notes", name: "worldBuilding", widget: "text", required: false }
+      - { label: "Reading Order", name: "readingOrder", widget: "list", default: [] }
+      - { label: "Featured Series", name: "featured", widget: "boolean", default: false }
+      - { label: "Content", name: "body", widget: "markdown" }
+
+  # Blog collection
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Publication Date", name: "pubDate", widget: "datetime" }
+      - { label: "Updated Date", name: "updatedDate", widget: "datetime", required: false }
+      - { label: "Hero Image", name: "heroImage", widget: "image", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options: ["alien-cultures", "world-building", "writing-process", "behind-scenes"]
+        default: "writing-process"
+      - { label: "Content", name: "body", widget: "markdown" }
+
+  # Testimonials collection
+  - name: "testimonials"
+    label: "Testimonials"
+    folder: "src/content/testimonials"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Reviewer Name", name: "reviewerName", widget: "string" }
+      - label: "Platform"
+        name: "reviewerPlatform"
+        widget: "select"
+        options: ["amazon", "goodreads", "bookbub", "facebook", "email"]
+        default: "amazon"
+      - { label: "Rating", name: "rating", widget: "number", min: 1, max: 5 }
+      - { label: "Quote", name: "quote", widget: "text" }
+      - { label: "Book Title", name: "bookTitle", widget: "string", required: false }
+      - { label: "Verified Purchase", name: "verified", widget: "boolean", default: false }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Featured Testimonial", name: "featured", widget: "boolean", default: false }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options: ["character-development", "world-building", "romance", "humor", "overall"]
+        default: "overall"
+      - { label: "Content", name: "body", widget: "markdown", required: false }
+
+  # Site settings
+  - name: "settings"
+    label: "Site Settings"
+    folder: "src/content/settings"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Site Title", name: "siteTitle", widget: "string", required: false }
+      - { label: "Site Description", name: "siteDescription", widget: "text", required: false }
+      - { label: "Author Name", name: "authorName", widget: "string", required: false }
+      - { label: "Author Bio", name: "authorBio", widget: "text", required: false }
+      - { label: "Tagline", name: "tagline", widget: "string", required: false }
+      - label: "Social Links"
+        name: "socialLinks"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Facebook", name: "facebook", widget: "string", required: false }
+          - { label: "Goodreads", name: "goodreads", widget: "string", required: false }
+          - { label: "Twitter", name: "twitter", widget: "string", required: false }
+          - { label: "Instagram", name: "instagram", widget: "string", required: false }
+          - { label: "Email", name: "email", widget: "string", required: false }
+      - label: "Statistics"
+        name: "stats"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Books Published", name: "booksPublished", widget: "number", required: false }
+          - { label: "Pages Read", name: "pagesRead", widget: "string", required: false }
+          - { label: "Reader Ratings", name: "readerRatings", widget: "string", required: false }
+          - { label: "Series Complete", name: "seriesComplete", widget: "number", required: false }
+      - label: "Newsletter"
+        name: "newsletter"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Lead Magnet Title", name: "leadMagnetTitle", widget: "string", required: false }
+          - { label: "Lead Magnet Description", name: "leadMagnetDescription", widget: "text", required: false }
+          - { label: "Benefits", name: "benefits", widget: "list", required: false }
+      - { label: "Content", name: "body", widget: "markdown", required: false }
+
+# Site configuration
+site_url: https://danegriggs.com
+display_url: https://danegriggs.com
+logo_url: https://danegriggs.com/images/logo.png
+
+# Editor configuration
+editor:
+  preview: true
+
+# Publishing configuration
+publish_mode: editorial_workflow

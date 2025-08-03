@@ -2,26 +2,69 @@
 import HeaderLink from './HeaderLink.astro';
 ---
 
-<div data-testid="desktop-navigation" class="hidden md:flex items-center space-x-8">
+<nav data-testid="desktop-navigation" class="hidden md:flex items-center space-x-1">
+	<HeaderLink 
+		href="/" 
+		class="nav-link"
+		data-testid="home-link"
+	>
+		Home
+	</HeaderLink>
+	<HeaderLink 
+		href="/books" 
+		class="nav-link"
+		data-testid="books-link"
+	>
+		Books
+	</HeaderLink>
+	<HeaderLink 
+		href="/series" 
+		class="nav-link"
+		data-testid="series-link"
+	>
+		Series
+	</HeaderLink>
 	<HeaderLink 
 		href="/blog" 
-		class="text-dark-text hover:text-white transition-colors py-2 px-3 rounded-md hover:bg-dark-bg"
+		class="nav-link"
 		data-testid="blog-link"
 	>
 		Blog
 	</HeaderLink>
 	<HeaderLink 
 		href="/about" 
-		class="text-dark-text hover:text-white transition-colors py-2 px-3 rounded-md hover:bg-dark-bg"
+		class="nav-link"
 		data-testid="about-link"
 	>
 		About
 	</HeaderLink>
 	<HeaderLink 
 		href="/contact" 
-		class="text-dark-text hover:text-white transition-colors py-2 px-3 rounded-md hover:bg-dark-bg"
+		class="nav-link"
 		data-testid="contact-link"
 	>
 		Contact
 	</HeaderLink>
-</div>
+</nav>
+
+<style>
+	.nav-link {
+		@apply text-solar-white/90 hover:text-stellar-gold transition-all duration-200 py-2 px-4 rounded-lg hover:bg-solar-white/10 font-medium relative;
+	}
+	
+	.nav-link:hover::after {
+		content: '';
+		@apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-stellar-gold transition-all duration-200;
+		width: calc(100% - 2rem);
+	}
+	
+	/* Active state styling */
+	.nav-link.active {
+		@apply text-stellar-gold;
+	}
+	
+	.nav-link.active::after {
+		content: '';
+		@apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-stellar-gold;
+	}
+</style>

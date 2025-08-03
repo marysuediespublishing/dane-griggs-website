@@ -1,0 +1,425 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BookCard from '../../components/ui/BookCard.tsx';
+import { SITE_TITLE } from '../../consts';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map((book) => ({
+    params: { slug: book.slug },
+    props: { book },
+  }));
+}
+
+interface Props {
+  book: CollectionEntry<'books'>;
+}
+
+const { book } = Astro.props;
+// const { Content } = await book.render();
+
+// Get all books for related recommendations
+const allBooks = await getCollection('books');
+
+// Get books from the same series
+const seriesBooks = book.data.series 
+  ? allBooks.filter(b => b.data.series === book.data.series && b.id !== book.id)
+  : [];
+
+// Get books with similar alien species
+const similarBooks = allBooks.filter(b => 
+  b.id !== book.id &&
+  b.data.alienSpecies.some(species => book.data.alienSpecies.includes(species))
+).slice(0, 4);
+
+// Get other books by same author (if different than current book)
+const otherBooks = allBooks.filter(b => 
+  b.id !== book.id && 
+  b.data.author === book.data.author
+).slice(0, 6);
+
+// Get testimonials if available
+const testimonials = await getCollection('testimonials');
+const bookTestimonials = testimonials.filter(t => 
+  t.data.bookTitle === book.data.title
+);
+
+// Calculate reading time (rough estimate: 250 words per minute)
+const estimatedReadingTime = book.data.wordCount 
+  ? Math.round((book.data.wordCount / 250) / 60) // Convert to hours
+  : null;
+---
+
+<Layout title={`${book.data.title} - ${SITE_TITLE}`}>
+  <Header />
+  
+  <main class="min-h-screen bg-bg-primary">
+    <!-- Book Hero Section -->
+    <section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <!-- Cosmic Background Elements -->
+      <div class="absolute inset-0 bg-starfield opacity-20 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-6xl mx-auto">
+          <!-- Breadcrumb -->
+          <nav class="mb-8" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2 text-sm text-solar-white/60">
+              <li><a href="/" class="hover:text-solar-white transition-colors">Home</a></li>
+              <li class="text-solar-white/40">›</li>
+              <li><a href="/books" class="hover:text-solar-white transition-colors">Books</a></li>
+              {book.data.series && (
+                <>
+                  <li class="text-solar-white/40">›</li>
+                  <li><a href={`/series/${book.data.series.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-solar-white transition-colors">{book.data.series}</a></li>
+                </>
+              )}
+              <li class="text-solar-white/40">›</li>
+              <li class="text-solar-white">{book.data.title}</li>
+            </ol>
+          </nav>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+            <!-- Book Cover & Purchase Options -->
+            <div class="lg:col-span-1">
+              <div class="sticky top-8">
+                {book.data.cover && (
+                  <div class="mb-6">
+                    <img 
+                      src={book.data.cover} 
+                      alt={`${book.data.title} book cover`}
+                      class="w-full max-w-sm mx-auto rounded-xl shadow-2xl hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+                
+                <!-- Purchase Options -->
+                <div class="space-y-4 mb-6">
+                  {book.data.isKU && (
+                    <a 
+                      href={book.data.amazonUrl || '#'}
+                      class="btn btn-primary btn-lg w-full"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      📖 Read FREE on Kindle Unlimited
+                    </a>
+                  )}
+                  
+                  {book.data.amazonUrl && (
+                    <a 
+                      href={book.data.amazonUrl}
+                      class="btn btn-secondary btn-lg w-full"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      🛒 Buy on Amazon {book.data.price && `(${book.data.price})`}
+                    </a>
+                  )}
+                  
+                  {book.data.goodreadsUrl && (
+                    <a 
+                      href={book.data.goodreadsUrl}
+                      class="btn btn-outline btn-lg w-full"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      📚 Add to Goodreads
+                    </a>
+                  )}
+                </div>
+
+                <!-- Book Details -->
+                <div class="bg-solar-white/10 backdrop-blur-sm rounded-xl p-6 border border-cosmic-rose/30">
+                  <h3 class="text-lg font-bold text-solar-white mb-4">Book Details</h3>
+                  <div class="space-y-3 text-sm">
+                    {book.data.series && (
+                      <div class="flex justify-between">
+                        <span class="text-solar-white/70">Series:</span>
+                        <span class="text-stellar-gold font-medium">
+                          <a href={`/series/${book.data.series.toLowerCase().replace(/\s+/g, '-')}`} class="hover:underline">
+                            {book.data.series}
+                          </a>
+                        </span>
+                      </div>
+                    )}
+                    {book.data.seriesOrder && (
+                      <div class="flex justify-between">
+                        <span class="text-solar-white/70">Book #:</span>
+                        <span class="text-solar-white font-medium">{book.data.seriesOrder}</span>
+                      </div>
+                    )}
+                    <div class="flex justify-between">
+                      <span class="text-solar-white/70">Published:</span>
+                      <span class="text-solar-white font-medium">
+                        {new Date(book.data.pubDate).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    {book.data.pageCount && (
+                      <div class="flex justify-between">
+                        <span class="text-solar-white/70">Pages:</span>
+                        <span class="text-solar-white font-medium">{book.data.pageCount}</span>
+                      </div>
+                    )}
+                    {book.data.wordCount && (
+                      <div class="flex justify-between">
+                        <span class="text-solar-white/70">Word Count:</span>
+                        <span class="text-solar-white font-medium">{book.data.wordCount.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {estimatedReadingTime && (
+                      <div class="flex justify-between">
+                        <span class="text-solar-white/70">Reading Time:</span>
+                        <span class="text-solar-white font-medium">~{estimatedReadingTime}h</span>
+                      </div>
+                    )}
+                    <div class="flex justify-between">
+                      <span class="text-solar-white/70">Heat Level:</span>
+                      <span class="text-stellar-gold font-medium capitalize">{book.data.heatLevel}</span>
+                    </div>
+                    {book.data.rating > 0 && (
+                      <div class="flex justify-between">
+                        <span class="text-solar-white/70">Rating:</span>
+                        <span class="text-solar-white font-medium">
+                          {book.data.rating.toFixed(1)} ⭐ ({book.data.ratingCount?.toLocaleString() || 0})
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Tags/Categories */}
+                  <div class="mt-6 pt-4 border-t border-solar-white/20">
+                    {book.data.alienSpecies && book.data.alienSpecies.length > 0 && (
+                      <div class="mb-3">
+                        <h4 class="text-sm font-medium text-solar-white mb-2">Species:</h4>
+                        <div class="flex flex-wrap gap-2">
+                          {book.data.alienSpecies.map((species) => (
+                            <span class="badge badge-primary text-xs">
+                              {species}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {book.data.setting && book.data.setting.length > 0 && (
+                      <div class="mb-3">
+                        <h4 class="text-sm font-medium text-solar-white mb-2">Setting:</h4>
+                        <div class="flex flex-wrap gap-2">
+                          {book.data.setting.map((setting) => (
+                            <span class="badge badge-secondary text-xs">
+                              {setting.replace('-', ' ')}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {book.data.genres && book.data.genres.length > 0 && (
+                      <div>
+                        <h4 class="text-sm font-medium text-solar-white mb-2">Genres:</h4>
+                        <div class="flex flex-wrap gap-2">
+                          {book.data.genres.map((genre) => (
+                            <span class="badge badge-outline text-xs">
+                              {genre}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book Information -->
+            <div class="lg:col-span-2">
+              <div class="space-y-8">
+                <div>
+                  <h1 class="text-4xl md:text-5xl font-primary font-bold text-solar-white mb-4">
+                    <span class="bg-gradient-aurora bg-clip-text text-transparent">
+                      {book.data.title}
+                    </span>
+                  </h1>
+                  
+                  <div class="text-lg text-stellar-gold font-medium mb-6">
+                    by {book.data.author}
+                    {book.data.series && book.data.seriesOrder && (
+                      <span class="text-solar-white/60"> • Book {book.data.seriesOrder} of {book.data.series}</span>
+                    )}
+                  </div>
+                  
+                  <p class="text-xl text-solar-white/90 leading-relaxed">
+                    {book.data.description}
+                  </p>
+                </div>
+
+                <!-- Social Sharing -->
+                <div class="flex items-center space-x-4 py-4 border-y border-solar-white/20">
+                  <span class="text-solar-white/70 text-sm">Share:</span>
+                  <div class="flex space-x-3">
+                    <button class="text-solar-white/60 hover:text-solar-white transition-colors">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                      </svg>
+                    </button>
+                    <button class="text-solar-white/60 hover:text-solar-white transition-colors">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                    </button>
+                    <button class="text-solar-white/60 hover:text-solar-white transition-colors">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Book Content/Description -->
+    <!-- <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto prose prose-lg">
+          <Content />
+        </div>
+      </div>
+    </section> -->
+
+    <!-- Reader Reviews -->
+    {bookTestimonials.length > 0 && (
+      <section class="py-16 bg-bg-secondary">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+              What Readers Are Saying
+            </h2>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {bookTestimonials.slice(0, 6).map((testimonial) => (
+              <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="flex items-center mb-4">
+                  <div class="flex text-stellar-gold">
+                    {Array.from({ length: testimonial.data.rating }, (_, i) => (
+                      <svg key={i} class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  {testimonial.data.verified && (
+                    <span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      Verified Purchase
+                    </span>
+                  )}
+                </div>
+                <blockquote class="text-gray-700 mb-4">
+                  "{testimonial.data.quote}"
+                </blockquote>
+                <div class="text-sm text-gray-600">
+                  — {testimonial.data.reviewerName}
+                  <span class="capitalize ml-1">({testimonial.data.reviewerPlatform})</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- More from This Series -->
+    {seriesBooks.length > 0 && (
+      <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+              More from {book.data.series}
+            </h2>
+            <p class="text-lg text-gray-600">
+              Continue the adventure in this interconnected series
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {seriesBooks.slice(0, 4).map((seriesBook) => (
+              <BookCard 
+                book={seriesBook}
+                variant="standard"
+                client:load
+              />
+            ))}
+          </div>
+          
+          {seriesBooks.length > 4 && (
+            <div class="text-center mt-8">
+              <a 
+                href={`/series/${book.data.series?.toLowerCase().replace(/\s+/g, '-')}`}
+                class="btn btn-primary btn-lg"
+              >
+                View Complete Series
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- Similar Books -->
+    {similarBooks.length > 0 && (
+      <section class="py-16 bg-bg-secondary">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+              Readers Also Enjoyed
+            </h2>
+            <p class="text-lg text-gray-600">
+              Books featuring similar alien species and themes
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {similarBooks.map((similarBook) => (
+              <BookCard 
+                book={similarBook}
+                variant="standard"
+                client:load
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Newsletter CTA -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold mb-4">
+            Loved This Book?
+          </h2>
+          <p class="text-xl mb-8 text-solar-white/90">
+            Join my newsletter for exclusive content, early access to new releases, and behind-the-scenes insights into alien world-building.
+          </p>
+          
+          <button class="btn btn-secondary btn-lg px-8 py-4 text-lg">
+            Get More Cosmic Romance
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

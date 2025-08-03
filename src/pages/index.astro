@@ -3,29 +3,191 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE } from '../consts';
+import NewsletterCTA from '../components/ui/NewsletterCTA.tsx';
+import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
+
+// Mock data for initial build - will be replaced with real content
+const siteConfig = {
+	tagline: "Sexy escapes with heart, humor, and no Mary Sues",
+	stats: {
+		booksPublished: 47,
+		pagesRead: "200M+",
+		readerRatings: "50K+",
+		seriesComplete: 3
+	},
+	authorBio: "Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building.",
+	newsletter: {
+		leadMagnetTitle: "Get Your FREE Alien Romance Pack",
+		leadMagnetDescription: "Join 10,000+ sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights.",
+		benefits: [
+			"Free starter pack with bonus content",
+			"Early access to new releases",
+			"Exclusive alien species guides",
+			"Behind-the-scenes writing insights"
+		]
+	}
+};
 ---
 
 <Layout title={SITE_TITLE}>
 	<Header />
-	<main class="container mx-auto px-4 py-8">
-		<h1 class="text-4xl font-bold text-dark-text mb-6">Welcome to Dane Griggs</h1>
-		<div class="prose prose-invert max-w-none">
-			<p class="text-dark-text-muted text-lg mb-4">
-				Author, writer, and creative professional sharing insights and stories.
-			</p>
-			<p class="text-dark-text-muted mb-4">
-				This is a modern, dark-themed website built with <a href="https://astro.build/" class="text-blue-400 hover:text-blue-300">Astro</a> 
-				and styled with Tailwind CSS. Explore the blog for the latest writings and insights.
-			</p>
-			<div class="mt-8">
-				<h2 class="text-2xl font-semibold text-dark-text mb-4">Get Started</h2>
-				<ul class="space-y-2 text-dark-text-muted">
-					<li><a href="/blog" class="text-blue-400 hover:text-blue-300">Read the latest blog posts</a></li>
-					<li><a href="/about" class="text-blue-400 hover:text-blue-300">Learn more about Dane</a></li>
-					<li><a href="/contact" class="text-blue-400 hover:text-blue-300">Get in touch</a></li>
-				</ul>
+	
+	<!-- Starfield Background -->
+	<StarfieldBackground client:load />
+	
+	<main class="relative z-10">
+		<!-- Hero Section -->
+		<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+			<!-- Cosmic Background Elements -->
+			<div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+			<div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+			
+			<div class="container mx-auto px-4 text-center relative z-10">
+				<div class="max-w-4xl mx-auto space-y-8">
+					<!-- Author Name & Tagline -->
+					<div class="space-y-4">
+						<h1 class="text-5xl md:text-7xl font-primary font-bold text-solar-white mb-4 animate-fade-in">
+							<span class="bg-gradient-aurora bg-clip-text text-transparent">
+								Dane Griggs
+							</span>
+						</h1>
+						<p class="text-xl md:text-2xl text-stellar-gold font-medium animate-fade-in [animation-delay:0.2s]">
+							{siteConfig.tagline || "Sexy escapes with heart, humor, and no Mary Sues"}
+						</p>
+					</div>
+					
+					<!-- Stats -->
+					<div class="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in [animation-delay:0.4s]">
+						<div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+							<div class="text-2xl md:text-3xl font-bold text-stellar-gold">{siteConfig.stats?.booksPublished || 47}</div>
+							<div class="text-sm text-solar-white/80">Books Published</div>
+						</div>
+						<div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+							<div class="text-2xl md:text-3xl font-bold text-stellar-gold">{siteConfig.stats?.pagesRead || "200M+"}</div>
+							<div class="text-sm text-solar-white/80">Pages Read</div>
+						</div>
+						<div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+							<div class="text-2xl md:text-3xl font-bold text-stellar-gold">{siteConfig.stats?.readerRatings || "50K+"}</div>
+							<div class="text-sm text-solar-white/80">Reader Ratings</div>
+						</div>
+						<div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+							<div class="text-2xl md:text-3xl font-bold text-stellar-gold">{siteConfig.stats?.seriesComplete || 3}</div>
+							<div class="text-sm text-solar-white/80">Series Complete</div>
+						</div>
+					</div>
+					
+					<!-- CTA Buttons -->
+					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in [animation-delay:0.6s]">
+						<a href="/books" class="btn btn-primary btn-lg px-8 py-4 text-lg">
+							Explore My Books
+						</a>
+						<NewsletterCTA 
+							variant="hero" 
+							class="btn btn-secondary btn-lg px-8 py-4 text-lg"
+							client:load 
+						/>
+					</div>
+					
+					<!-- Author Bio Snippet -->
+					<div class="max-w-2xl mx-auto animate-fade-in [animation-delay:0.8s]">
+						<p class="text-lg text-solar-white/90 leading-relaxed">
+							{siteConfig.authorBio?.split('.').slice(0, 2).join('.') + '.' || 
+							"Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building."}
+						</p>
+					</div>
+				</div>
 			</div>
-		</div>
+			
+			<!-- Scroll Indicator -->
+			<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+				<svg class="w-6 h-6 text-stellar-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+				</svg>
+			</div>
+		</section>
+		
+		<!-- About Section -->
+		<section class="py-16 bg-bg-secondary">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+						Why Readers Love My Books
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						Discover what makes my cosmic romances different
+					</p>
+				</div>
+				
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+					<div class="bg-white rounded-xl p-8 shadow-lg text-center">
+						<div class="text-4xl mb-4">🧠</div>
+						<h3 class="text-xl font-bold text-deep-space-navy mb-4">Competent Heroines</h3>
+						<p class="text-gray-600">
+							No Mary Sues here! My heroines are skilled professionals who solve problems with their brains, not just their beauty.
+						</p>
+					</div>
+					
+					<div class="bg-white rounded-xl p-8 shadow-lg text-center">
+						<div class="text-4xl mb-4">🌌</div>
+						<h3 class="text-xl font-bold text-deep-space-navy mb-4">Rich World-Building</h3>
+						<p class="text-gray-600">
+							Meticulously crafted alien cultures with their own societies, customs, and believable biology.
+						</p>
+					</div>
+					
+					<div class="bg-white rounded-xl p-8 shadow-lg text-center">
+						<div class="text-4xl mb-4">💝</div>
+						<h3 class="text-xl font-bold text-deep-space-navy mb-4">Heart & Humor</h3>
+						<p class="text-gray-600">
+							Steamy romance with emotional depth, laugh-out-loud moments, and happily ever afters.
+						</p>
+					</div>
+				</div>
+				
+				<div class="text-center mt-12">
+					<a href="/books" class="btn btn-primary btn-lg px-8 py-4">
+						Explore My Books
+					</a>
+				</div>
+			</div>
+		</section>
+		
+		<!-- Newsletter Section -->
+		<section class="py-16 bg-gradient-cosmic text-solar-white">
+			<div class="container mx-auto px-4 text-center">
+				<div class="max-w-3xl mx-auto">
+					<h2 class="text-3xl md:text-4xl font-primary font-bold mb-4">
+						{siteConfig.newsletter?.leadMagnetTitle || "Get Your FREE Alien Romance Pack"}
+					</h2>
+					<p class="text-xl mb-8 text-solar-white/90">
+						{siteConfig.newsletter?.leadMagnetDescription || "Join 10,000+ sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights."}
+					</p>
+					
+					{siteConfig.newsletter?.benefits && (
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left max-w-2xl mx-auto">
+							{siteConfig.newsletter.benefits.slice(0, 4).map((benefit: string) => (
+								<div class="flex items-center space-x-3">
+									<div class="w-5 h-5 bg-stellar-gold rounded-full flex items-center justify-center flex-shrink-0">
+										<svg class="w-3 h-3 text-deep-space-navy" fill="currentColor" viewBox="0 0 20 20">
+											<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+										</svg>
+									</div>
+									<span class="text-solar-white">{benefit}</span>
+								</div>
+							))}
+						</div>
+					)}
+					
+					<NewsletterCTA 
+						variant="hero" 
+						class="btn btn-secondary btn-lg px-8 py-4 text-lg"
+						client:load 
+					/>
+				</div>
+			</div>
+		</section>
+		
 	</main>
+	
 	<Footer />
 </Layout>
