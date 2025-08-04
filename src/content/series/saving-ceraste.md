@@ -4,22 +4,22 @@ description: "A groundbreaking bride exchange program brings together humans and
 cover: "/favicon.svg"
 bookCount: 9
 completionStatus: "complete"
-startDate: 2022-03-15T00:00:00.000Z
-completionDate: 2024-08-15T00:00:00.000Z
+startDate: 2019-01-01T00:00:00.000Z
+completionDate: 2021-01-01T00:00:00.000Z
 alienSpecies: ["cerastean", "human"]
-overallRating: 4.7
-totalRatings: 18742
+overallRating: 4.32
+totalRatings: 3879
 worldBuilding: "Advanced medical space station, complex alien culture, interspecies cooperation"
 readingOrder: [
-  "the-bride-program",
-  "the-healing-protocol", 
-  "the-recovery-project",
-  "the-wellness-initiative",
-  "the-treatment-plan",
-  "the-care-directive",
-  "the-health-accord",
-  "the-medical-alliance",
-  "the-final-protocol"
+  "The Bride Program",
+  "Bedside Manners For Aliens", 
+  "Threesome's Guide to the Galaxy",
+  "The Bride Program Honeymoon",
+  "Insatiable Curiosity",
+  "The Alien's Gossip Queen",
+  "Marshmallow",
+  "War Brides",
+  "The Chancellor's Pilot"
 ]
 featured: true
 ---

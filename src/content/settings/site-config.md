@@ -9,10 +9,12 @@ socialLinks:
   goodreads: "https://goodreads.com/author/show/danegriggs"
   email: "hello@danegriggs.com"
 stats:
-  booksPublished: 47
+  booksPublished: 13
   pagesRead: "200M+"
-  readerRatings: "50K+"
-  seriesComplete: 3
+  readerRatings: "9.3K+"
+  seriesComplete: 2
+  averageRating: "4.3"
+  totalReviews: "3,879"
 newsletter:
   leadMagnetTitle: "Get Your FREE Alien Romance Pack"
   leadMagnetDescription: "Join 10,000+ sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights into alien world-building."

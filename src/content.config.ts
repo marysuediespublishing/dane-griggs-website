@@ -104,6 +104,8 @@ const settings = defineCollection({
 			pagesRead: z.string().optional(),
 			readerRatings: z.string().optional(),
 			seriesComplete: z.number().optional(),
+			averageRating: z.string().optional(),
+			totalReviews: z.string().optional(),
 		}).optional(),
 		newsletter: z.object({
 			leadMagnetTitle: z.string().optional(),

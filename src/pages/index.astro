@@ -5,15 +5,17 @@ import Footer from '../components/Footer.astro';
 import { SITE_TITLE } from '../consts';
 import NewsletterCTA from '../components/ui/NewsletterCTA.tsx';
 import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
+import { getCollection } from 'astro:content';
 
-// Mock data for initial build - will be replaced with real content
-const siteConfig = {
+// Get site configuration from CMS
+const settingsCollection = await getCollection('settings');
+const siteConfig = settingsCollection[0]?.data || {
 	tagline: "Sexy escapes with heart, humor, and no Mary Sues",
 	stats: {
-		booksPublished: 47,
+		booksPublished: 13,
 		pagesRead: "200M+",
-		readerRatings: "50K+",
-		seriesComplete: 3
+		readerRatings: "9.3K+",
+		seriesComplete: 2
 	},
 	authorBio: "Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building.",
 	newsletter: {

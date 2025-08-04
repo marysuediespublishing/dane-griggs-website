@@ -2,37 +2,215 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
+
+// Get site configuration from CMS
+const settingsCollection = await getCollection('settings');
+const siteConfig = settingsCollection[0]?.data || {};
 ---
 
 <Layout title="About - Dane Griggs">
 	<Header />
-	<main class="container mx-auto px-4 py-8">
-		<h1 class="text-4xl font-bold text-dark-text mb-6">About Dane Griggs</h1>
-		<div class="prose prose-invert max-w-none">
-			<p class="text-dark-text-muted text-lg mb-4">
-				Author, writer, and creative professional passionate about storytelling and sharing insights.
-			</p>
-			
-			<p class="text-dark-text-muted mb-4">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-				labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-				viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-				adipiscing.
-			</p>
-
-			<p class="text-dark-text-muted mb-4">
-				Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-				tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-				blandit massa. Cursus vitae congue mauris rhoncus.
-			</p>
-
-			<div class="mt-8">
-				<h2 class="text-2xl font-semibold text-dark-text mb-4">Get in Touch</h2>
-				<p class="text-dark-text-muted">
-					Interested in collaborating or have questions? <a href="/contact" class="text-blue-400 hover:text-blue-300">Contact me</a> to start a conversation.
-				</p>
+	
+	<!-- Starfield Background -->
+	<StarfieldBackground client:load />
+	
+	<main class="relative z-10">
+		<!-- Hero Section -->
+		<section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy">
+			<div class="absolute inset-0 bg-starfield opacity-30"></div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<h1 class="text-4xl md:text-6xl font-primary font-bold text-solar-white mb-6">
+						<span class="bg-gradient-aurora bg-clip-text text-transparent">
+							About Dane Griggs
+						</span>
+					</h1>
+					<p class="text-xl text-stellar-gold font-medium mb-8">
+						{siteConfig.tagline || "Sexy escapes with heart, humor, and no Mary Sues"}
+					</p>
+				</div>
 			</div>
-		</div>
+		</section>
+
+		<!-- Author Bio Section -->
+		<section class="py-16 bg-bg-secondary">
+			<div class="container mx-auto px-4">
+				<div class="max-w-4xl mx-auto">
+					<div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+						<!-- Author Photo Placeholder -->
+						<div class="lg:col-span-1">
+							<div class="bg-gradient-cosmic rounded-xl p-8 text-center">
+								<div class="w-32 h-32 mx-auto bg-stellar-gold/20 rounded-full flex items-center justify-center mb-6">
+									<span class="text-6xl text-stellar-gold">✨</span>
+								</div>
+								<h3 class="text-xl font-bold text-solar-white mb-2">Dane Griggs</h3>
+								<p class="text-solar-white/80">Sci-Fi Romance Author</p>
+							</div>
+						</div>
+						
+						<!-- Author Bio -->
+						<div class="lg:col-span-2">
+							<div class="prose prose-lg max-w-none">
+								<p class="text-gray-700 text-lg leading-relaxed mb-6">
+									{siteConfig.authorBio || "Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building and characters who solve problems with their brains, not just their beauty."}
+								</p>
+								
+								<p class="text-gray-700 leading-relaxed mb-6">
+									Dane enjoys writing about relationships that evolve and grow over time, with lots of super-hot romance. She strives to put her characters in interesting situations where their strength and wit shine through—no Mary Sues allowed. She lives in Florida with her husband and two children.
+								</p>
+								
+								<p class="text-gray-700 leading-relaxed">
+									When she's not writing about interstellar love affairs, she's researching alien biology, dreaming up new worlds where humans and aliens find their perfect matches, and connecting with readers who appreciate stories with both heat and heart.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Stats Section -->
+		<section class="py-16 bg-gradient-cosmic text-solar-white">
+			<div class="container mx-auto px-4">
+				<div class="text-center mb-12">
+					<h2 class="text-3xl md:text-4xl font-primary font-bold mb-4">
+						By the Numbers
+					</h2>
+					<p class="text-xl text-solar-white/90">
+						The impact of storytelling across the galaxy
+					</p>
+				</div>
+				
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+					<div class="text-center">
+						<div class="text-4xl md:text-5xl font-bold text-stellar-gold mb-2">
+							{siteConfig.stats?.booksPublished || 13}
+						</div>
+						<div class="text-solar-white/80">Books Published</div>
+					</div>
+					
+					<div class="text-center">
+						<div class="text-4xl md:text-5xl font-bold text-stellar-gold mb-2">
+							{siteConfig.stats?.pagesRead || "200M+"}
+						</div>
+						<div class="text-solar-white/80">Pages Read</div>
+					</div>
+					
+					<div class="text-center">
+						<div class="text-4xl md:text-5xl font-bold text-stellar-gold mb-2">
+							{siteConfig.stats?.readerRatings || "9.3K+"}
+						</div>
+						<div class="text-solar-white/80">Reader Ratings</div>
+					</div>
+					
+					<div class="text-center">
+						<div class="text-4xl md:text-5xl font-bold text-stellar-gold mb-2">
+							{siteConfig.stats?.averageRating || "4.3"}
+						</div>
+						<div class="text-solar-white/80">Average Rating</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Writing Philosophy Section -->
+		<section class="py-16 bg-bg-secondary">
+			<div class="container mx-auto px-4">
+				<div class="max-w-4xl mx-auto">
+					<div class="text-center mb-12">
+						<h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+							My Writing Philosophy
+						</h2>
+						<p class="text-lg text-gray-600">
+							What makes my cosmic romances different
+						</p>
+					</div>
+					
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div class="bg-white rounded-xl p-8 shadow-lg">
+							<div class="text-4xl mb-4">🧠</div>
+							<h3 class="text-xl font-bold text-deep-space-navy mb-4">No Mary Sues Allowed</h3>
+							<p class="text-gray-600">
+								My heroines are skilled professionals who solve problems with their brains, not just their beauty. They're doctors, engineers, scientists—women with real expertise and genuine competence.
+							</p>
+						</div>
+						
+						<div class="bg-white rounded-xl p-8 shadow-lg">
+							<div class="text-4xl mb-4">🌌</div>
+							<h3 class="text-xl font-bold text-deep-space-navy mb-4">Rich World-Building</h3>
+							<p class="text-gray-600">
+								Meticulously crafted alien cultures with their own societies, customs, and believable biology. Every species has evolutionary logic and cultural depth that enhances the romance.
+							</p>
+						</div>
+						
+						<div class="bg-white rounded-xl p-8 shadow-lg">
+							<div class="text-4xl mb-4">💝</div>
+							<h3 class="text-xl font-bold text-deep-space-navy mb-4">Heart & Humor</h3>
+							<p class="text-gray-600">
+								Steamy romance with emotional depth, laugh-out-loud moments, and happily ever afters. Love should be fun, passionate, and built on mutual respect and understanding.
+							</p>
+						</div>
+						
+						<div class="bg-white rounded-xl p-8 shadow-lg">
+							<div class="text-4xl mb-4">🔬</div>
+							<h3 class="text-xl font-bold text-deep-space-navy mb-4">Scientific Foundation</h3>
+							<p class="text-gray-600">
+								Extensive research goes into every alien species, medical procedure, and technological element. The fantasy is grounded in plausible science and realistic consequences.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Connect Section -->
+		<section class="py-16 bg-deep-space-navy text-solar-white">
+			<div class="container mx-auto px-4 text-center">
+				<div class="max-w-3xl mx-auto">
+					<h2 class="text-3xl md:text-4xl font-primary font-bold mb-6">
+						Let's Connect
+					</h2>
+					<p class="text-xl text-solar-white/90 mb-8">
+						Join thousands of readers who love competent heroines, swoon-worthy aliens, and romances that combine heat with heart.
+					</p>
+					
+					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+						<a href="/books" class="btn btn-primary btn-lg px-8 py-4">
+							Explore My Books
+						</a>
+						<a href="/contact" class="btn btn-secondary btn-lg px-8 py-4">
+							Get in Touch
+						</a>
+					</div>
+					
+					{siteConfig.socialLinks && (
+						<div class="mt-12">
+							<p class="text-solar-white/80 mb-4">Find me online:</p>
+							<div class="flex justify-center space-x-6">
+								{siteConfig.socialLinks.facebook && (
+									<a href={siteConfig.socialLinks.facebook} class="text-stellar-gold hover:text-solar-white transition-colors">
+										Facebook
+									</a>
+								)}
+								{siteConfig.socialLinks.goodreads && (
+									<a href={siteConfig.socialLinks.goodreads} class="text-stellar-gold hover:text-solar-white transition-colors">
+										Goodreads
+									</a>
+								)}
+								{siteConfig.socialLinks.email && (
+									<a href={`mailto:${siteConfig.socialLinks.email}`} class="text-stellar-gold hover:text-solar-white transition-colors">
+										Email
+									</a>
+								)}
+							</div>
+						</div>
+					)}
+				</div>
+			</div>
+		</section>
 	</main>
+	
 	<Footer />
 </Layout>

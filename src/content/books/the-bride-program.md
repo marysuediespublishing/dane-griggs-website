@@ -5,9 +5,9 @@ description: "Maya wants nothing more than to be paired with her perfect alien m
 cover: "/favicon.svg"
 series: "Saving Ceraste"
 seriesOrder: 1
-pubDate: 2022-03-15T00:00:00.000Z
-rating: 4.6
-ratingCount: 2847
+pubDate: 2019-01-01T00:00:00.000Z
+rating: 3.97
+ratingCount: 1042
 alienSpecies: ["cerastean", "human"]
 heatLevel: "medium"
 setting: ["space-station", "alien-planet"]
