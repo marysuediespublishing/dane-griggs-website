@@ -1,6 +1,6 @@
 ---
-title: 'Why I Don't Write Mary Sues (And You Shouldn't Either)'
-description: 'My philosophy on creating competent heroines who solve problems with their brains, not just their beauty.'
+title: "Why I Don't Write Mary Sues (And You Shouldn't Either)"
+description: "My philosophy on creating competent heroines who solve problems with their brains, not just their beauty."
 pubDate: '2019-01-15'
 heroImage: '../../assets/blog-placeholder-3.jpg'
 tags: ['writing-process', 'character-development', 'romance-tropes']

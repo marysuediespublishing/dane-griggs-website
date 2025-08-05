@@ -1,6 +1,6 @@
 ---
-title: 'Alien Romance Tropes: The Good, The Bad, and The Tentacled'
-description: 'A deep dive into the most common alien romance tropes, why they work (or don't), and how to use them effectively in your own writing.'
+title: "Alien Romance Tropes: The Good, The Bad, and The Tentacled"
+description: "A deep dive into the most common alien romance tropes, why they work (or don't), and how to use them effectively in your own writing."
 pubDate: '2019-08-18'
 heroImage: '../../assets/blog-placeholder-3.jpg'
 tags: ['writing-process', 'romance-tropes', 'alien-romance']

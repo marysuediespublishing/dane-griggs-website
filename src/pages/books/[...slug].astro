@@ -6,6 +6,15 @@ import BookCard from '../../components/ui/BookCard.tsx';
 import { SITE_TITLE } from '../../consts';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
+// Helper function to map series names to slugs
+function getSeriesSlug(seriesName: string): string | null {
+  const seriesMap: Record<string, string> = {
+    'Saving Ceraste': 'saving-ceraste',
+    'Koko\'s Harbor for Wayward Fated Mates': 'kokos-harbor'
+  };
+  return seriesMap[seriesName] || null;
+}
+
 export async function getStaticPaths() {
   const books = await getCollection('books');
   return books.map((book) => ({
@@ -21,8 +30,9 @@ interface Props {
 const { book } = Astro.props;
 // const { Content } = await book.render();
 
-// Get all books for related recommendations
+// Get all books and series for related recommendations
 const allBooks = await getCollection('books');
+const allSeries = await getCollection('series');
 
 // Get books from the same series
 const seriesBooks = book.data.series 
@@ -74,7 +84,7 @@ const estimatedReadingTime = book.data.wordCount
               {book.data.series && (
                 <>
                   <li class="text-solar-white/40">›</li>
-                  <li><a href={`/series/${book.data.series.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-solar-white transition-colors">{book.data.series}</a></li>
+                  <li><a href={`/series/${getSeriesSlug(book.data.series) || book.data.series.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-solar-white transition-colors">{book.data.series}</a></li>
                 </>
               )}
               <li class="text-solar-white/40">›</li>
@@ -140,7 +150,7 @@ const estimatedReadingTime = book.data.wordCount
                       <div class="flex justify-between">
                         <span class="text-solar-white/70">Series:</span>
                         <span class="text-stellar-gold font-medium">
-                          <a href={`/series/${book.data.series.toLowerCase().replace(/\s+/g, '-')}`} class="hover:underline">
+                          <a href={`/series/${getSeriesSlug(book.data.series) || book.data.series.toLowerCase().replace(/\s+/g, '-')}`} class="hover:underline">
                             {book.data.series}
                           </a>
                         </span>
@@ -365,7 +375,7 @@ const estimatedReadingTime = book.data.wordCount
           {seriesBooks.length > 4 && (
             <div class="text-center mt-8">
               <a 
-                href={`/series/${book.data.series?.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/series/${getSeriesSlug(book.data.series!) || book.data.series?.toLowerCase().replace(/\s+/g, '-')}`}
                 class="btn btn-primary btn-lg"
               >
                 View Complete Series

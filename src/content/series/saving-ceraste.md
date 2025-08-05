@@ -11,15 +11,15 @@ overallRating: 4.32
 totalRatings: 3879
 worldBuilding: "Advanced medical space station, complex alien culture, interspecies cooperation"
 readingOrder: [
-  "The Bride Program",
-  "Bedside Manners For Aliens", 
-  "Threesome's Guide to the Galaxy",
-  "The Bride Program Honeymoon",
-  "Insatiable Curiosity",
-  "The Alien's Gossip Queen",
-  "Marshmallow",
-  "War Brides",
-  "The Chancellor's Pilot"
+  "the-bride-program",
+  "bedside-manners-for-aliens", 
+  "threesomes-guide-to-the-galaxy",
+  "the-bride-program-honeymoon",
+  "insatiable-curiosity",
+  "the-aliens-gossip-queen",
+  "marshmallow",
+  "war-brides",
+  "the-chancellors-pilot"
 ]
 featured: true
 ---

@@ -10,7 +10,7 @@ alienSpecies: ["kraken", "human"]
 overallRating: 4.34
 totalRatings: 121
 worldBuilding: "Earth's oceans hide advanced civilizations of Krakens—evolved cephalopods who left Earth millennia ago and are now returning to reclaim their ancestral waters. These aquatic aliens possess advanced technology, complex social structures, and the ability to shift between tentacled and more humanoid forms."
-readingOrder: ["Lily Saves An Alien", "Rescued By A Kraken"]
+readingOrder: ["lily-saves-an-alien", "rescued-by-a-kraken"]
 featured: false
 ---
 

@@ -1,6 +1,6 @@
 ---
-title: 'The Science Behind Cerastean Biology'
-description: 'Exploring the medical and biological research that went into creating the alien species in the Saving Ceraste series.'
+title: "The Science Behind Cerastean Biology"
+description: "Exploring the medical and biological research that went into creating the alien species in the Saving Ceraste series."
 pubDate: '2019-03-22'
 heroImage: '../../assets/blog-placeholder-3.jpg'
 tags: ['world-building', 'sci-fi-research', 'alien-cultures']

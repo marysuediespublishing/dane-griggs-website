@@ -1,6 +1,6 @@
 ---
-title: 'Writing Medical Romance: Research Without the PhD'
-description: 'How to write compelling medical storylines without spending years in medical school. Tips, resources, and research strategies for authors.'
+title: "Writing Medical Romance: Research Without the PhD"
+description: "How to write compelling medical storylines without spending years in medical school. Tips, resources, and research strategies for authors."
 pubDate: '2019-05-10'
 heroImage: '../../assets/blog-placeholder-3.jpg'
 tags: ['writing-process', 'research-tips', 'medical-romance']
