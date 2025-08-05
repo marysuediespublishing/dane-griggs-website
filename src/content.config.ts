@@ -12,7 +12,7 @@ const blog = defineCollection({
 			updatedDate: z.coerce.date().optional(),
 			heroImage: image().optional(),
 			tags: z.array(z.string()).default([]),
-			category: z.enum(['alien-cultures', 'world-building', 'writing-process', 'behind-scenes']).default('writing-process'),
+			category: z.enum(['alien-cultures', 'world-building', 'writing-process', 'behind-scenes', 'book-launches', 'series', 'about']).default('writing-process'),
 			readingTime: z.string().optional(),
 		}),
 });

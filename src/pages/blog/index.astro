@@ -18,32 +18,48 @@ const posts = (await getCollection('blog')).sort(
 		<section>
 			<ul class="grid gap-8 md:grid-cols-2">
 				{
-					posts.map((post, index) => (
-						<li class={index === 0 ? "md:col-span-2" : ""}>
-							<a 
-								href={`/blog/${post.id}/`}
-								class="block group bg-dark-surface border border-dark-border rounded-lg overflow-hidden hover:border-blue-400 transition-colors"
-							>
-								{post.data.heroImage && (
-									<Image 
-										width={720} 
-										height={360} 
-										src={post.data.heroImage} 
-										alt=""
-										class="w-full h-48 object-cover group-hover:opacity-90 transition-opacity"
-									/>
-								)}
+					posts.map((post, index) => {
+						// Create a dynamic gradient overlay based on post category or index
+						const gradientOverlays = [
+							'bg-gradient-to-br from-cosmic-rose/20 via-transparent to-nebula-purple/30',
+							'bg-gradient-to-tr from-stellar-gold/25 via-transparent to-cosmic-rose/20',
+							'bg-gradient-to-bl from-nebula-purple/20 via-transparent to-stellar-gold/25',
+							'bg-gradient-to-tl from-ocean-teal/20 via-transparent to-cosmic-rose/25',
+							'bg-gradient-to-br from-mars-red/15 via-transparent to-nebula-purple/20'
+						];
+						const overlayClass = gradientOverlays[index % gradientOverlays.length];
+						
+						return (
+							<li class={index === 0 ? "md:col-span-2" : ""}>
+								<a 
+									href={`/blog/${post.id}/`}
+									class="block group bg-dark-surface border border-dark-border rounded-lg overflow-hidden hover:border-cosmic-rose/50 transition-all duration-300 hover:shadow-cosmic"
+								>
+									{post.data.heroImage && (
+										<div class="relative overflow-hidden">
+											<Image 
+												width={720} 
+												height={360} 
+												src={post.data.heroImage} 
+												alt=""
+												class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+											/>
+											<div class={`absolute inset-0 ${overlayClass} mix-blend-overlay group-hover:opacity-75 transition-opacity duration-300`}></div>
+											<div class="absolute inset-0 bg-gradient-to-t from-dark-surface/20 via-transparent to-transparent"></div>
+										</div>
+									)}
 								<div class="p-6">
-									<h4 class="text-xl font-semibold text-dark-text group-hover:text-blue-400 transition-colors mb-2">
+									<h4 class="text-xl font-semibold text-dark-text group-hover:text-cosmic-rose transition-colors mb-2">
 										{post.data.title}
 									</h4>
 									<p class="text-dark-text-muted text-sm">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
 								</div>
-							</a>
-						</li>
-					))
+								</a>
+							</li>
+						);
+					})
 				}
 			</ul>
 		</section>

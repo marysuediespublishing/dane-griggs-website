@@ -15,6 +15,7 @@
     "format": "prettier --write src/**/*.{ts,tsx,astro,md}"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^4.3.1",
     "@astrojs/react": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
@@ -41,6 +42,6 @@
     "@types/react-dom": "^18.3.0",
     "@types/three": "^0.164.0",
     "jest": "^29.7.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.9.2"
   }
 }
