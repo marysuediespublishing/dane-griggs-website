@@ -2,7 +2,7 @@
 title: "Bedside Manners for Aliens"
 author: "Dane Griggs"
 description: "Dr. Serena volunteers to work with Cerastean physicians who can cure cancer, but she wasn't prepared for L'Vect—brilliant, awkward, and completely clueless about human patient care. Their professional partnership becomes something much deeper."
-cover: "/favicon.svg"
+cover: "../../assets/bedside-manners-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 2
 pubDate: 2019-05-06T00:00:00.000Z

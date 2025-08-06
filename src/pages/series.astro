@@ -5,8 +5,11 @@ import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
 
-// Get all series
-const allSeries = await getCollection('series');
+// Get all series and add slug property
+const allSeries = (await getCollection('series')).map(series => ({
+	...series,
+	slug: series.id
+}));
 const featuredSeries = allSeries.filter(series => series.data.featured);
 const otherSeries = allSeries.filter(series => !series.data.featured);
 ---

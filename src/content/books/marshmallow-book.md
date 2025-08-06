@@ -2,7 +2,7 @@
 title: "Marshmallow"
 author: "Dane Griggs"
 description: "General D'Annon has been watching over Sara for months, but when she needs to return to Earth to help her mom, he personally escorts her home—and finally gets the chance to show his true feelings. Sometimes the gruffest exteriors hide the sweetest hearts."
-cover: "/favicon.svg"
+cover: "../../assets/marshmallow-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 7
 pubDate: 2020-04-15T00:00:00.000Z

@@ -1,7 +1,6 @@
 ---
 title: "Koko's Harbor for Wayward Fated Mates"
 description: "Lublin Harbor operates as a sanctuary for supernatural beings and the humans who are destined to love them. The town itself seems to guide lost souls to exactly where they need to be, whether that's a secluded cabin where a spaceship might crash-land, or the perfect coastal houseboat for recovering from burnout."
-cover: "/favicon.svg"
 bookCount: 2
 completionStatus: "ongoing"
 startDate: 2024-06-21T00:00:00.000Z
@@ -10,7 +9,7 @@ alienSpecies: ["kraken", "human"]
 overallRating: 4.34
 totalRatings: 121
 worldBuilding: "Nestled in the scenic coastline, the charming town of Lublin Harbor appears to be just another quaint small town. But appearances can be deceiving. This is a place where magic happens, where people find exactly what they need when they need it most, and where the mayor happens to be an enigmatic being named Koko who runs both the town and a bakery shop."
-readingOrder: ["lily-saves-an-alien", "rescued-by-a-kraken"]
+readingOrder: ["lily-saves-alien-book", "rescued-by-kraken-book"]
 featured: false
 ---
 

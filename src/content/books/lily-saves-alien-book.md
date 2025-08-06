@@ -2,7 +2,7 @@
 title: "Lily Saves An Alien"
 author: "Dane Griggs"
 description: "After dumping her loser ex-boyfriend, nurse Lily Blackwell takes a detour through the magical town of Lublin Harbor during their spring love festival. When an alien spaceship crash-lands near her cabin, her nursing skills and Mango the cat help save more than just a life."
-cover: "/favicon.svg"
+cover: "../../assets/lily-saves-alien-cover.jpg"
 series: "Koko's Harbor for Wayward Fated Mates"
 seriesOrder: 1
 pubDate: 2024-06-21T00:00:00.000Z

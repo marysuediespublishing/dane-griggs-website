@@ -2,7 +2,7 @@
 title: "War Brides"
 author: "Dane Griggs"
 description: "Trinh lives every day to the fullest after surviving cancer, while L'Corte's job is keeping all the bride volunteers safe and following protocols. When the rule-maker falls for the ultimate rule-breaker, sparks fly just as war becomes inevitable."
-cover: "/favicon.svg"
+cover: "../../assets/war-brides-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 8
 pubDate: 2020-09-15T00:00:00.000Z

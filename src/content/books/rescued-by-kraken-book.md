@@ -2,7 +2,7 @@
 title: "Rescued By A Kraken"
 author: "Dane Griggs"
 description: "Rose Ashford's quiet vacation to the coastal town of Lublin Harbor turns extraordinary when she meets the mysterious Levi and discovers a hidden world beneath the waves. After being rescued by a legendary sea creature during a storm, Rose finds herself torn between two worlds and two captivating beings – Levi and the kraken who saved her life. As her vacation ends, she faces an impossible choice: return to her ordinary life or dive into a magical realm where love and legend collide."
-cover: "/favicon.svg"
+cover: "../../assets/rescued-by-kraken-cover.jpg"
 series: "Koko's Harbor for Wayward Fated Mates"
 seriesOrder: 2
 pubDate: 2024-11-15T00:00:00.000Z

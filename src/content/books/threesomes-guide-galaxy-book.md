@@ -2,7 +2,7 @@
 title: "Threesome's Guide to the Galaxy"
 author: "Dane Griggs"
 description: "Chelsea didn't volunteer for the Bride Program—she was kidnapped by evil gray aliens and escaped. Now she's learning to trust again with the help of D'Rett and L'Tarne, two nest bonded Cerasteans who prove that sometimes healing requires extra love, patience, and understanding."
-cover: "/favicon.svg"
+cover: "../../assets/threesome-guide-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 3
 pubDate: 2019-08-15T00:00:00.000Z

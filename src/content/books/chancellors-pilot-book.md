@@ -2,7 +2,7 @@
 title: "The Chancellor's Pilot"
 author: "Dane Griggs"
 description: "The epic conclusion to the Saving Ceraste series brings political intrigue, high-stakes action, and one final love story that ties together nine books of human-Cerastean cooperation, romance, and the fight for survival."
-cover: "/favicon.svg"
+cover: "../../assets/chancellors-pilot-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 9
 pubDate: 2022-03-15T00:00:00.000Z

@@ -2,7 +2,7 @@
 title: "The Bride Program Honeymoon"
 author: "Dane Griggs"
 description: "Laney and her bride volunteer friends take their first vacation together to the dulci homeworld of Xerini. What should be paradise becomes adventure when they encounter an Ostium princess with shocking revelations about the galaxy's future."
-cover: "/favicon.svg"
+cover: "../../assets/honeymoon-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 4
 pubDate: 2019-11-20T00:00:00.000Z

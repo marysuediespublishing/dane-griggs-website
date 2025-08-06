@@ -5,12 +5,13 @@ import Footer from '../../components/Footer.astro';
 import BookCard from '../../components/ui/BookCard.tsx';
 import { SITE_TITLE } from '../../consts';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
 
 export async function getStaticPaths() {
   const series = await getCollection('series');
   return series.map((seriesItem) => ({
-    params: { slug: seriesItem.slug },
-    props: { seriesItem },
+    params: { slug: seriesItem.id },
+    props: { seriesItem: { ...seriesItem, slug: seriesItem.id } },
   }));
 }
 
@@ -21,8 +22,32 @@ interface Props {
 const { seriesItem } = Astro.props;
 // const { Content } = await seriesItem.render();
 
-// Get all books for this series
-const books = await getCollection('books');
+// Get all books for this series and add slug property and process images
+const books = await Promise.all(
+	(await getCollection('books')).map(async book => {
+		try {
+			const coverImage = book.data.cover ? await getImage({
+				src: book.data.cover,
+				width: 300,
+				height: 450,
+				format: 'webp'
+			}) : null;
+			
+			return {
+				...book,
+				slug: book.id,
+				coverUrl: coverImage?.src
+			};
+		} catch (error) {
+			console.warn(`Failed to process image for book ${book.id}:`, error);
+			return {
+				...book,
+				slug: book.id,
+				coverUrl: null
+			};
+		}
+	})
+);
 const seriesBooks = books.filter(book => book.data.series === seriesItem.data.title);
 
 // Sort books by series order
@@ -32,8 +57,11 @@ const sortedSeriesBooks = seriesBooks.sort((a, b) => {
   return orderA - orderB;
 });
 
-// Get related series (same alien species)
-const allSeries = await getCollection('series');
+// Get related series (same alien species) and add slug property
+const allSeries = (await getCollection('series')).map(series => ({
+	...series,
+	slug: series.id
+}));
 const relatedSeries = allSeries.filter(s => 
   s.id !== seriesItem.id && 
   s.data.alienSpecies.some(species => 
@@ -174,7 +202,13 @@ const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCo
                             <span class="w-6 h-6 bg-stellar-gold text-deep-space-navy rounded-full flex items-center justify-center text-sm font-bold">
                               {index + 1}
                             </span>
-                            <span>{book?.data.title || bookSlug}</span>
+                            {book ? (
+                              <a href={`/books/${book.slug}`} class="hover:text-stellar-gold transition-colors">
+                                {book.data.title}
+                              </a>
+                            ) : (
+                              <span class="text-solar-white/50">{bookSlug}</span>
+                            )}
                           </li>
                         );
                       })}

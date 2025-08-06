@@ -2,7 +2,7 @@
 title: "The Alien's Gossip Queen"
 author: "Dane Griggs"
 description: "Janet accepted a job at a Cerastean healing center to focus on saving cancer patients, but there's one problem—she absolutely loves gossip. When she meets D'Xurrl, the sweet security chief who loves dogs and has a body to die for, she discovers she might love someone more than spilling tea."
-cover: "/favicon.svg"
+cover: "../../assets/gossip-queen-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 6
 pubDate: 2020-02-14T00:00:00.000Z

@@ -25,7 +25,7 @@ const books = defineCollection({
 			title: z.string(),
 			author: z.string().default('Dane Griggs'),
 			description: z.string(),
-			cover: z.string(),
+			cover: image(),
 			series: z.string().optional(),
 			seriesOrder: z.number().optional(),
 			pubDate: z.coerce.date(),
@@ -53,7 +53,7 @@ const series = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
-			cover: z.string().optional(),
+			cover: image().optional(),
 			bookCount: z.number(),
 			completionStatus: z.enum(['ongoing', 'complete']).default('ongoing'),
 			startDate: z.coerce.date(),

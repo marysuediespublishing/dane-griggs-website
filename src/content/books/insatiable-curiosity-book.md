@@ -2,7 +2,7 @@
 title: "Insatiable Curiosity"
 author: "Dane Griggs"
 description: "Ally has wanted to be an astronaut for as long as she can remember, but an eye condition ended that dream. Working with Cerastean Scientist L'Zaen to re-engineer alien technology gives her everything she ever wanted: space exploration and a brilliant partner who appreciates her insatiable curiosity."
-cover: "/favicon.svg"
+cover: "../../assets/insatiable-curiosity-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 5
 pubDate: 2019-12-10T00:00:00.000Z

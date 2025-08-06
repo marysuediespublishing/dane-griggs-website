@@ -2,7 +2,7 @@
 title: "A Rosie Christmas"
 author: "Dane Griggs"
 description: "A special holiday novella returning to the Saving Ceraste universe with Christmas magic, new romance, and all the warmth of the season—alien style. When traditions meet advanced technology, love finds a way."
-cover: "/favicon.svg"
+cover: "../../assets/rosie-christmas-cover.jpg"
 series: "Saving Ceraste"
 seriesOrder: 10
 pubDate: 2023-12-01T00:00:00.000Z

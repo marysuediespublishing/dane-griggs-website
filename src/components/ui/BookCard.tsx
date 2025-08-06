@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import type { CollectionEntry } from 'astro:content';
 
 interface BookCardProps {
-  book: CollectionEntry<'books'>;
+  book: CollectionEntry<'books'> & { slug: string; coverUrl?: string };
   variant?: 'standard' | 'compact' | 'featured';
   showDescription?: boolean;
   showSeriesOrder?: boolean;
@@ -17,7 +17,6 @@ const BookCard: React.FC<BookCardProps> = ({
   showSeriesOrder = false,
   className = '' 
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const getSpeciesBadgeColor = (species: string) => {
@@ -116,33 +115,29 @@ const BookCard: React.FC<BookCardProps> = ({
             boxShadow: '0 20px 40px rgba(212, 51, 106, 0.3), 0 0 30px rgba(244, 162, 97, 0.2)'
           }}
         >
-          {/* Loading Skeleton */}
-          {!imageLoaded && !imageError && (
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
-          )}
-          
           {/* Book Cover Image */}
-          {!imageError && (
+          {book.coverUrl && !imageError && (
             <img
-              src={book.data.cover}
+              src={book.coverUrl}
               alt={`${book.data.title} book cover`}
               className={`
                 w-full h-full object-cover transition-all duration-400
                 group-hover:scale-105
-                ${imageLoaded ? 'opacity-100' : 'opacity-0'}
               `}
-              onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
               loading="lazy"
             />
           )}
           
           {/* Fallback for missing covers */}
-          {imageError && (
+          {(imageError || !book.coverUrl) && (
             <div className="w-full h-full bg-gradient-cosmic flex items-center justify-center">
               <div className="text-center text-solar-white">
                 <div className="text-4xl mb-2">📖</div>
                 <div className="text-sm font-medium">{book.data.title}</div>
+                {!book.coverUrl && (
+                  <div className="text-xs text-solar-white/60 mt-1">No cover processed</div>
+                )}
               </div>
             </div>
           )}
