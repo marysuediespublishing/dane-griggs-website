@@ -3,6 +3,7 @@ title: "Insatiable Curiosity is Live! An Engineer's Dream Come True"
 description: "Book 5 brings us Ally's story—the astronaut who never made it to space finally gets her chance, plus alien technology and a brilliant scientist mate."
 pubDate: '2019-12-10'
 heroImage: '../../assets/insatiable-curiosity-cover.jpg'
+bookSlug: 'insatiable-curiosity-book'
 tags: ['book-launch', 'saving-ceraste', 'engineer-romance', 'space-exploration']
 category: 'book-launches'
 readingTime: '4 min read'

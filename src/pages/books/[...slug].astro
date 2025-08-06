@@ -4,7 +4,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import BookCard from '../../components/ui/BookCard.tsx';
 import { SITE_TITLE } from '../../consts';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry, render } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 
 // Helper function to map series names to slugs
@@ -29,8 +29,7 @@ interface Props {
 }
 
 const { book } = Astro.props;
-// TODO: Fix render() function - temporarily disabled to fix build
-// const { Content } = await book.render();
+const { Content } = await render(book);
 // Add slug property for consistency
 const bookWithSlug = { ...book, slug: book.id };
 
@@ -296,9 +295,11 @@ const estimatedReadingTime = book.data.wordCount
                     )}
                   </div>
                   
-                  <p class="text-xl text-solar-white/90 leading-relaxed">
-                    {book.data.description}
-                  </p>
+                  <div class="text-xl text-solar-white/90 leading-relaxed max-w-none space-y-6">
+                    <div class="prose prose-xl max-w-none [&>h1]:text-3xl [&>h1]:font-primary [&>h1]:font-bold [&>h1]:bg-gradient-aurora [&>h1]:bg-clip-text [&>h1]:text-transparent [&>h1]:mb-4 [&>h2]:text-2xl [&>h2]:font-primary [&>h2]:font-bold [&>h2]:text-stellar-gold [&>h2]:mb-4 [&>h2]:mt-8 [&>p]:text-lg [&>p]:text-solar-white/90 [&>p]:leading-relaxed [&>p]:mb-4 [&>ul]:space-y-3 [&>ul]:ml-6 [&>ul>li]:text-solar-white/90 [&>ul>li]:leading-relaxed [&>ul>li]:relative [&>ul>li]:pl-6 [&>ul>li]:before:content-['✨'] [&>ul>li]:before:absolute [&>ul>li]:before:left-0 [&>ul>li]:before:text-stellar-gold [&>strong]:text-stellar-gold [&>strong]:font-semibold">
+                      <Content />
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Social Sharing -->
@@ -329,18 +330,6 @@ const estimatedReadingTime = book.data.wordCount
       </div>
     </section>
 
-    <!-- Book Content/Description -->
-    <section class="py-16 bg-bg-secondary">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto prose prose-lg prose-invert">
-          <!-- TODO: Replace with markdown content when render() is fixed -->
-          <div class="text-solar-white">
-            <h2>About This Book</h2>
-            <p>Full book description and content will appear here once the markdown rendering is fixed.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Reader Reviews -->
     {bookTestimonials.length > 0 && (

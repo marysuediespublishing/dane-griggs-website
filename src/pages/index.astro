@@ -17,7 +17,7 @@ const siteConfig = settingsCollection[0]?.data || {
 		readerRatings: "9.3K+",
 		seriesComplete: 2
 	},
-	authorBio: "Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building.",
+	authorBio: "Dane Griggs writes sci-fi romance novels featuring strong heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building.",
 	newsletter: {
 		leadMagnetTitle: "Get Your FREE Alien Romance Pack",
 		leadMagnetDescription: "Join 10,000+ sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights.",
@@ -35,13 +35,13 @@ const siteConfig = settingsCollection[0]?.data || {
 	<Header />
 	
 	<!-- Starfield Background -->
-	<StarfieldBackground client:load />
+	<StarfieldBackground starCount={250} client:load />
 	
 	<main class="relative z-10">
 		<!-- Hero Section -->
 		<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
 			<!-- Cosmic Background Elements -->
-			<div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+			<div class="absolute inset-0 bg-starfield opacity-35 animate-starfield"></div>
 			<div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
 			
 			<div class="container mx-auto px-4 text-center relative z-10">
@@ -85,7 +85,7 @@ const siteConfig = settingsCollection[0]?.data || {
 						</a>
 						<NewsletterCTA 
 							variant="hero" 
-							class="btn btn-secondary btn-lg px-8 py-4 text-lg"
+							className="btn btn-secondary btn-lg px-8 py-4 text-lg"
 							client:load 
 						/>
 					</div>
@@ -94,7 +94,7 @@ const siteConfig = settingsCollection[0]?.data || {
 					<div class="max-w-2xl mx-auto animate-fade-in [animation-delay:0.8s]">
 						<p class="text-lg text-solar-white/90 leading-relaxed">
 							{siteConfig.authorBio?.split('.').slice(0, 2).join('.') + '.' || 
-							"Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building."}
+							"Dane Griggs writes sci-fi romance novels featuring strong heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building."}
 						</p>
 					</div>
 				</div>
@@ -123,7 +123,7 @@ const siteConfig = settingsCollection[0]?.data || {
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 					<div class="bg-white rounded-xl p-8 shadow-lg text-center">
 						<div class="text-4xl mb-4">🧠</div>
-						<h3 class="text-xl font-bold text-deep-space-navy mb-4">Competent Heroines</h3>
+						<h3 class="text-xl font-bold text-deep-space-navy mb-4">Strong Heroines</h3>
 						<p class="text-gray-600">
 							No Mary Sues here! My heroines are skilled professionals who solve problems with their brains, not just their beauty.
 						</p>

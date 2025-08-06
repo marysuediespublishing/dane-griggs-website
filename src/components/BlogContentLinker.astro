@@ -1,0 +1,26 @@
+---
+// Simple component that adds styles for auto-linked content
+// The linking logic will be handled by the blog post layout
+---
+
+<div class="blog-content-with-links">
+  <slot />
+</div>
+
+<style>
+  :global(.book-series-link) {
+    color: var(--color-cosmic-rose);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 51, 106, 0.3);
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+  
+  :global(.book-series-link:hover) {
+    color: #c12d5e;
+    text-decoration-color: #c12d5e;
+    background-color: rgba(212, 51, 106, 0.05);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+</style>

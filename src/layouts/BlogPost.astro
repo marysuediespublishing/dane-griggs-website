@@ -5,10 +5,13 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { ALL_MAPPINGS } from '../utils/book-mappings.ts';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	bookSlug?: string;
+};
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.props;
 ---
 
 <html lang="en">
@@ -22,12 +25,30 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			.hero-image {
 				width: 100%;
+				margin-top: 2rem;
 			}
 			.hero-image img {
 				display: block;
 				margin: 0 auto;
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
+				max-height: 60vh;
+				object-fit: contain;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+			.cover-link {
+				display: block;
+				cursor: pointer;
+			}
+			.cover-link:hover img {
+				transform: scale(1.02);
+				box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+			}
+			.book-link-section {
+				text-align: center;
+				margin-top: 3rem;
+				padding-top: 2rem;
+				border-top: 1px solid rgb(var(--gray-light));
 			}
 			.prose {
 				width: 720px;
@@ -60,7 +81,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					{heroImage && bookSlug ? (
+						<a href={`/books/${bookSlug}`} class="cover-link">
+							<Image width={1020} height={510} src={heroImage} alt={`${title} - Click to view book details`} />
+						</a>
+					) : heroImage && (
+						<Image width={1020} height={510} src={heroImage} alt="" />
+					)}
 				</div>
 				<div class="prose">
 					<div class="title">
@@ -78,9 +105,101 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						<hr />
 					</div>
 					<slot />
+					
+					{bookSlug && (
+						<div class="book-link-section">
+							<a href={`/books/${bookSlug}`} class="btn btn-primary btn-lg">
+								View Book Details
+							</a>
+						</div>
+					)}
 				</div>
 			</article>
 		</main>
 		<Footer />
+		
+		<script define:vars={{ mappings: ALL_MAPPINGS }}>
+			// Auto-link book and series mentions in blog content
+			document.addEventListener('DOMContentLoaded', () => {
+				const proseContent = document.querySelector('.prose');
+				if (!proseContent) return;
+				
+				// Function to add links while preserving existing links and markdown formatting
+				function addBookLinks(element) {
+					const walker = document.createTreeWalker(
+						element,
+						NodeFilter.SHOW_TEXT,
+						{
+							acceptNode: function(node) {
+								// Skip if already inside a link
+								return node.parentElement.tagName === 'A' ? 
+									NodeFilter.FILTER_REJECT : 
+									NodeFilter.FILTER_ACCEPT;
+							}
+						}
+					);
+					
+					const textNodes = [];
+					let node;
+					while (node = walker.nextNode()) {
+						textNodes.push(node);
+					}
+					
+					// Process each text node
+					textNodes.forEach(textNode => {
+						let content = textNode.textContent;
+						let hasChanges = false;
+						
+						// Sort mappings by length (longest first) to avoid partial matches
+						const sortedMappings = Object.entries(mappings)
+							.sort(([a], [b]) => b.length - a.length);
+						
+						sortedMappings.forEach(([text, url]) => {
+							// Create regex that matches whole words/phrases
+							const regex = new RegExp(`\\b${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+							
+							if (regex.test(content)) {
+								content = content.replace(regex, `<a href="${url}" class="book-series-link">${text}</a>`);
+								hasChanges = true;
+							}
+						});
+						
+						if (hasChanges) {
+							// Replace the text node with HTML
+							const wrapper = document.createElement('span');
+							wrapper.innerHTML = content;
+							textNode.parentNode.replaceChild(wrapper, textNode);
+							
+							// Move the children out of the wrapper
+							while (wrapper.firstChild) {
+								textNode.parentNode.insertBefore(wrapper.firstChild, wrapper);
+							}
+							wrapper.remove();
+						}
+					});
+				}
+				
+				// Add links to the prose content
+				addBookLinks(proseContent);
+			});
+		</script>
+		
+		<style is:global>
+			.book-series-link {
+				color: var(--color-cosmic-rose);
+				text-decoration: underline;
+				text-decoration-color: rgba(212, 51, 106, 0.3);
+				transition: all 0.2s ease;
+				font-weight: 500;
+			}
+			
+			.book-series-link:hover {
+				color: #c12d5e;
+				text-decoration-color: #c12d5e;
+				background-color: rgba(212, 51, 106, 0.05);
+				padding: 2px 4px;
+				border-radius: 3px;
+			}
+		</style>
 	</body>
 </html>

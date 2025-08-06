@@ -3,6 +3,7 @@ title: "Marshmallow is LIVE! General D'Annon Finally Gets His Love Story"
 description: "Book 7 in the Saving Ceraste series brings us the long-awaited romance between Sara and the gruff General D'Annon—with a marshmallow-soft center."
 pubDate: '2020-04-15'
 heroImage: '../../assets/marshmallow-cover.jpg'
+bookSlug: 'marshmallow-book'
 tags: ['book-launch', 'saving-ceraste', 'general-romance', 'marshmallow']
 category: 'book-launches'
 readingTime: '4 min read'

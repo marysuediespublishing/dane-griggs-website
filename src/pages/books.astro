@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BookCard from '../components/ui/BookCard.tsx';
+import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
 import { SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
@@ -63,7 +64,10 @@ const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMon
 <Layout title={`Books - ${SITE_TITLE}`}>
   <Header />
   
-  <main class="min-h-screen bg-bg-primary">
+  <!-- Starfield Background -->
+  <StarfieldBackground client:load />
+  
+  <main class="relative z-10 min-h-screen bg-bg-primary">
     <!-- Hero Section -->
     <section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
       <!-- Cosmic Background Elements -->
@@ -78,7 +82,7 @@ const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMon
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-stellar-gold font-medium">
-            Sexy sci-fi romance with competent heroines and swoon-worthy aliens
+            Sexy sci-fi romance with strong heroines and swoon-worthy aliens
           </p>
           <p class="text-lg text-solar-white/90 max-w-2xl mx-auto leading-relaxed">
             Explore my collection of alien romance novels featuring strong heroines, detailed world-building, and steamy relationships that go beyond the surface.
@@ -167,64 +171,25 @@ const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMon
       </section>
     )}
 
-    <!-- Series Section -->
-    <section class="py-16 bg-bg-secondary">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
+    <!-- Series CTA Section -->
+    <section class="py-16 bg-gradient-to-r from-nebula-purple/10 to-cosmic-rose/10">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto">
           <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
             Explore My Series
           </h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-            Dive deep into interconnected worlds and follow character arcs across multiple books
+          <p class="text-lg text-gray-600 mb-8">
+            Dive deep into interconnected worlds with rich character development across multiple books
           </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {series.map((seriesItem) => (
-            <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <div class="mb-4">
-                {seriesItem.data.cover && (
-                  <img 
-                    src={seriesItem.data.cover} 
-                    alt={`${seriesItem.data.title} series cover`}
-                    class="w-20 h-28 object-cover rounded-lg mx-auto mb-4"
-                  />
-                )}
-              </div>
-              
-              <div class="text-center">
-                <h3 class="text-xl font-bold text-deep-space-navy mb-2">
-                  {seriesItem.data.title}
-                </h3>
-                <p class="text-gray-600 mb-4 text-sm">
-                  {seriesItem.data.description}
-                </p>
-                
-                <div class="flex justify-center items-center space-x-4 text-sm text-gray-500 mb-4">
-                  <span>{seriesItem.data.bookCount} Books</span>
-                  <span>•</span>
-                  <span class="capitalize">{seriesItem.data.completionStatus}</span>
-                </div>
-                
-                {seriesItem.data.alienSpecies && seriesItem.data.alienSpecies.length > 0 && (
-                  <div class="flex flex-wrap justify-center gap-2 mb-4">
-                    {seriesItem.data.alienSpecies.map((species) => (
-                      <span class="badge badge-primary text-xs">
-                        {species}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                
-                <a 
-                  href={`/series/${seriesItem.slug}`}
-                  class="btn btn-secondary btn-sm w-full"
-                >
-                  Explore Series
-                </a>
-              </div>
-            </div>
-          ))}
+          <a 
+            href="/series"
+            class="btn btn-primary btn-lg px-8 py-4 text-lg inline-flex items-center space-x-2"
+          >
+            <span>View All Series</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>

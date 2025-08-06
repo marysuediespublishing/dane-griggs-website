@@ -1,6 +1,6 @@
 ---
 title: "Saving Ceraste"
-description: "Ten-book sci-fi romance series following human women who volunteer as alien brides to save lives and find love. Features competent heroines, no Mary Sue characters, and relationships that develop naturally over time."
+description: "Ten-book sci-fi romance series following human women who volunteer as alien brides to save lives and find love. Features strong heroines, no Mary Sue characters, and relationships that develop naturally over time."
 bookCount: 10
 completionStatus: "ongoing"
 startDate: 2019-03-25T00:00:00.000Z
@@ -15,7 +15,7 @@ featured: true
 
 # Saving Ceraste
 
-The complete ten-book series that established Dane Griggs as the author who writes competent heroines and aliens who respect human intelligence.
+The complete ten-book series that established Dane Griggs as the author who writes strong heroines and aliens who respect human intelligence.
 
 ## Series Overview
 
@@ -41,7 +41,7 @@ Throughout the series, the growing threat of the Ostium—the species responsibl
 ## Content Notes
 
 - No Mary Sue characters allowed
-- Competent heroines who solve problems with their skills
+- Strong heroines who solve problems with their skills
 - Slow-burn romance that builds naturally
 - No silly misunderstandings as plot drivers
 - Respectful, emotionally intelligent alien heroes
@@ -54,4 +54,4 @@ Throughout the series, the growing threat of the Ostium—the species responsibl
 
 *"I appreciate consent and respectful, strong heroes. I like plucky, brave heroines. Put those together with well developed world building and great storytelling and I am happy."* - Amazon Reviewer
 
-*"Finally, romance where the heroines are competent professionals who contribute equally to their relationships!"* - Goodreads Reviewer
+*"Finally, romance where the heroines are strong professionals who contribute equally to their relationships!"* - Goodreads Reviewer

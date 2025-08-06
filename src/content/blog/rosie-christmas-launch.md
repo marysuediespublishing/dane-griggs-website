@@ -3,6 +3,7 @@ title: "A Rosie Christmas is Here! Holiday Magic in the Saving Ceraste Universe"
 description: "A special holiday novella returns us to the Saving Ceraste world with Christmas magic, new romance, and all the warmth of the season—alien style!"
 pubDate: '2023-12-01'
 heroImage: '../../assets/rosie-christmas-cover.jpg'
+bookSlug: 'rosie-christmas-book'
 tags: ['book-launch', 'saving-ceraste', 'holiday-romance', 'christmas-story']
 category: 'book-launches'
 readingTime: '3 min read'

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
 
 // Get all series and add slug property
@@ -10,8 +11,43 @@ const allSeries = (await getCollection('series')).map(series => ({
 	...series,
 	slug: series.id
 }));
-const featuredSeries = allSeries.filter(series => series.data.featured);
-const otherSeries = allSeries.filter(series => !series.data.featured);
+
+// Get all books with processed images for each series
+const allBooks = await Promise.all(
+	(await getCollection('books')).map(async book => {
+		try {
+			const coverImage = book.data.cover ? await getImage({
+				src: book.data.cover,
+				width: 300,
+				height: 450,
+				format: 'webp'
+			}) : null;
+			
+			return {
+				...book,
+				slug: book.id,
+				coverUrl: coverImage?.src
+			};
+		} catch (error) {
+			console.warn(`Failed to process image for book ${book.id}:`, error);
+			return {
+				...book,
+				slug: book.id,
+				coverUrl: null
+			};
+		}
+	})
+);
+
+// Group books by series
+const seriesWithBooks = allSeries.map(series => {
+	const seriesBooks = allBooks.filter(book => book.data.series === series.data.title)
+		.sort((a, b) => (a.data.seriesOrder || 999) - (b.data.seriesOrder || 999));
+	return {
+		...series,
+		books: seriesBooks
+	};
+});
 ---
 
 <Layout title="Series - Dane Griggs">
@@ -22,174 +58,175 @@ const otherSeries = allSeries.filter(series => !series.data.featured);
 	
 	<main class="relative z-10">
 		<!-- Hero Section -->
-		<section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy">
-			<div class="absolute inset-0 bg-starfield opacity-30"></div>
+		<section class="relative py-20 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+			<div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+			<div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
 			<div class="container mx-auto px-4 relative z-10">
-				<div class="max-w-4xl mx-auto text-center">
-					<h1 class="text-4xl md:text-6xl font-primary font-bold text-solar-white mb-6">
+				<div class="max-w-5xl mx-auto text-center">
+					<h1 class="text-5xl md:text-7xl font-primary font-bold text-solar-white mb-6">
 						<span class="bg-gradient-aurora bg-clip-text text-transparent">
-							Book Series
+							Epic Series
 						</span>
 					</h1>
-					<p class="text-xl text-stellar-gold font-medium mb-8">
-						Discover interconnected worlds of romance, adventure, and alien cultures
+					<p class="text-2xl text-stellar-gold font-medium mb-4">
+						Interconnected worlds of romance & adventure
+					</p>
+					<p class="text-lg text-solar-white/90 max-w-3xl mx-auto leading-relaxed">
+						Dive deep into rich universes where every book builds on the last, following beloved characters across multiple adventures in alien romance.
 					</p>
 				</div>
 			</div>
 		</section>
 
-		<!-- Featured Series -->
-		{featuredSeries.length > 0 && (
-			<section class="py-16 bg-bg-secondary">
+		<!-- Series Showcase -->
+		{seriesWithBooks.map((series, index) => (
+			<section class={`py-20 ${index % 2 === 0 ? 'bg-bg-secondary' : 'bg-white'}`}>
 				<div class="container mx-auto px-4">
-					<div class="text-center mb-12">
-						<h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
-							Featured Series
-						</h2>
-						<p class="text-lg text-gray-600">
-							My most popular and beloved series
-						</p>
-					</div>
-					
-					<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-						{featuredSeries.map((series) => (
-							<div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-								<div class="p-8">
-									<div class="flex items-start justify-between mb-4">
-										<div>
-											<h3 class="text-2xl font-bold text-deep-space-navy mb-2">
-												<a href={`/series/${series.slug}`} class="hover:text-cosmic-rose transition-colors">
-													{series.data.title}
-												</a>
-											</h3>
-											<div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-												<span class="flex items-center">
-													<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-														<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-													</svg>
-													{series.data.completionStatus === 'complete' ? 'Complete' : 'Ongoing'}
-												</span>
-												<span>{series.data.bookCount} books</span>
-												<span class="flex items-center">
-													<svg class="w-4 h-4 mr-1 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
-														<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-													</svg>
-													{series.data.overallRating}
-												</span>
-											</div>
-										</div>
+					<div class="max-w-7xl mx-auto">
+						<!-- Series Header -->
+						<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-16">
+							<!-- Series Info -->
+							<div class={`space-y-6 ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
+								<div class="space-y-4">
+									<div class="flex items-center space-x-4">
+										<h2 class="text-4xl md:text-5xl font-primary font-bold text-deep-space-navy">
+											{series.data.title}
+										</h2>
+										{series.data.completionStatus === 'complete' && (
+											<span class="px-3 py-1 bg-stellar-gold text-deep-space-navy rounded-full text-sm font-bold uppercase tracking-wide">
+												Complete
+											</span>
+										)}
 									</div>
 									
-									<p class="text-gray-700 leading-relaxed mb-6">
-										{series.data.description}
+									<div class="flex items-center space-x-6 text-lg text-gray-600">
+										<span class="flex items-center space-x-2">
+											<svg class="w-5 h-5 text-cosmic-rose" fill="currentColor" viewBox="0 0 20 20">
+												<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+											</svg>
+											<span class="font-medium">{series.data.bookCount} Books</span>
+										</span>
+										<span class="flex items-center space-x-2">
+											<svg class="w-5 h-5 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
+												<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+											</svg>
+											<span class="font-medium">{series.data.overallRating} ({series.data.totalRatings?.toLocaleString()} ratings)</span>
+										</span>
+									</div>
+								</div>
+								
+								<p class="text-xl text-gray-700 leading-relaxed">
+									{series.data.description}
+								</p>
+								
+								{series.data.worldBuilding && (
+									<p class="text-lg text-gray-600 italic border-l-4 border-cosmic-rose pl-4">
+										{series.data.worldBuilding}
 									</p>
-									
-									{series.data.alienSpecies && series.data.alienSpecies.length > 0 && (
-										<div class="flex flex-wrap gap-2 mb-6">
+								)}
+								
+								{series.data.alienSpecies && series.data.alienSpecies.length > 0 && (
+									<div class="space-y-3">
+										<h4 class="text-lg font-semibold text-deep-space-navy">Featured Species:</h4>
+										<div class="flex flex-wrap gap-3">
 											{series.data.alienSpecies.map((species) => (
-												<span class="px-3 py-1 bg-cosmic-rose/10 text-cosmic-rose rounded-full text-sm font-medium capitalize">
+												<span class="px-4 py-2 bg-cosmic-rose text-solar-white rounded-lg text-sm font-medium capitalize shadow-lg">
 													{species}
 												</span>
 											))}
 										</div>
-									)}
-									
-									<div class="flex justify-between items-center">
-										<a 
-											href={`/series/${series.slug}`} 
-											class="btn btn-primary px-6 py-3"
-										>
-											Explore Series
-										</a>
-										<div class="text-right text-sm text-gray-600">
-											<div>{series.data.totalRatings?.toLocaleString()} ratings</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
-		)}
-
-		<!-- All Series -->
-		<section class="py-16 bg-gradient-cosmic text-solar-white">
-			<div class="container mx-auto px-4">
-				<div class="text-center mb-12">
-					<h2 class="text-3xl md:text-4xl font-primary font-bold mb-4">
-						All Series
-					</h2>
-					<p class="text-xl text-solar-white/90">
-						Complete collection of interconnected stories
-					</p>
-				</div>
-				
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{allSeries.map((series) => (
-						<div class="bg-solar-white/10 backdrop-blur-sm rounded-xl border border-cosmic-rose/30 overflow-hidden hover:bg-solar-white/20 transition-all">
-							<div class="p-6">
-								<div class="flex items-start justify-between mb-4">
-									<h3 class="text-xl font-bold text-solar-white mb-2">
-										<a href={`/series/${series.slug}`} class="hover:text-stellar-gold transition-colors">
-											{series.data.title}
-										</a>
-									</h3>
-									{series.data.completionStatus === 'complete' && (
-										<span class="px-2 py-1 bg-stellar-gold text-deep-space-navy rounded text-xs font-medium">
-											Complete
-										</span>
-									)}
-								</div>
-								
-								<p class="text-solar-white/80 text-sm leading-relaxed mb-4 line-clamp-3">
-									{series.data.description}
-								</p>
-								
-								<div class="flex items-center justify-between text-sm text-solar-white/70 mb-4">
-									<span>{series.data.bookCount} books</span>
-									<span class="flex items-center">
-										<svg class="w-4 h-4 mr-1 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
-											<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-										</svg>
-										{series.data.overallRating}
-									</span>
-								</div>
-								
-								{series.data.alienSpecies && series.data.alienSpecies.length > 0 && (
-									<div class="flex flex-wrap gap-1 mb-4">
-										{series.data.alienSpecies.map((species) => (
-											<span class="px-2 py-1 bg-cosmic-rose/20 text-cosmic-rose rounded text-xs capitalize">
-												{species}
-											</span>
-										))}
 									</div>
 								)}
 								
-								<a 
-									href={`/series/${series.slug}`} 
-									class="btn btn-secondary btn-sm w-full justify-center"
-								>
-									View Series
-								</a>
+								<div class="flex flex-col sm:flex-row gap-4">
+									<a 
+										href={`/series/${series.slug}`} 
+										class="btn btn-primary btn-lg px-8 py-4 text-lg"
+									>
+										Explore Series
+									</a>
+									{series.books.length > 0 && (
+										<a 
+											href={`/books/${series.books[0].slug}`} 
+											class="btn btn-outline btn-lg px-8 py-4 text-lg"
+										>
+											Start Reading
+										</a>
+									)}
+								</div>
+							</div>
+							
+							<!-- Book Stack Visualization -->
+							<div class={`relative ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
+								<div class="relative w-full max-w-sm mx-auto">
+									<!-- Base container to establish dimensions -->
+									<div class="relative aspect-[2/3] w-full">
+										<!-- Create stacked book effect -->
+										{series.books.slice(0, 4).map((book, bookIndex) => (
+											<div 
+												class="absolute top-0 left-0 w-full h-full transition-transform duration-300 hover:scale-105 hover:z-20"
+												style={{
+													transform: `rotate(${(bookIndex - 1.5) * 2}deg) translate(${bookIndex * 6}px, ${bookIndex * 3}px)`,
+													zIndex: 4 - bookIndex
+												}}
+											>
+												{book.coverUrl ? (
+													<img 
+														src={book.coverUrl} 
+														alt={`${book.data.title} cover`}
+														class="w-full h-full object-cover rounded-xl shadow-2xl transition-shadow duration-300 hover:shadow-3xl"
+													/>
+												) : (
+													<div class="w-full h-full bg-gradient-cosmic rounded-xl shadow-2xl flex items-center justify-center">
+														<div class="text-center text-solar-white p-4">
+															<div class="text-4xl mb-2">📖</div>
+															<div class="text-sm font-bold">{book.data.title}</div>
+														</div>
+													</div>
+												)}
+												
+												<!-- Book info overlay on hover -->
+												<div class="absolute inset-0 bg-deep-space-navy/90 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl flex items-center justify-center p-3">
+													<div class="text-center text-solar-white">
+														<h4 class="text-sm font-bold mb-1">{book.data.title}</h4>
+														<p class="text-xs text-stellar-gold mb-2">Book #{book.data.seriesOrder}</p>
+														<a 
+															href={`/books/${book.slug}`} 
+															class="btn btn-secondary btn-sm text-xs px-3 py-1"
+														>
+															View Book
+														</a>
+													</div>
+												</div>
+											</div>
+										))}
+										
+										{/* Add book count indicator if more than 4 books */}
+										{series.books.length > 4 && (
+											<div class="absolute -bottom-3 -right-3 bg-stellar-gold text-deep-space-navy rounded-full w-10 h-10 flex items-center justify-center font-bold text-xs shadow-lg">
+												+{series.books.length - 4}
+											</div>
+										)}
+									</div>
+								</div>
 							</div>
 						</div>
-					))}
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+		))}
 		
 		<!-- Browse Books CTA -->
-		<section class="py-16 bg-bg-secondary">
+		<section class="py-16 bg-gradient-cosmic text-solar-white">
 			<div class="container mx-auto px-4 text-center">
 				<div class="max-w-3xl mx-auto">
-					<h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-6">
+					<h2 class="text-3xl md:text-4xl font-primary font-bold mb-6">
 						Ready to Start Reading?
 					</h2>
-					<p class="text-lg text-gray-600 mb-8">
+					<p class="text-lg text-solar-white/90 mb-8">
 						Browse all books to find the perfect starting point for your cosmic romance journey
 					</p>
-					<a href="/books" class="btn btn-primary btn-lg px-8 py-4">
+					<a href="/books" class="btn btn-secondary btn-lg px-8 py-4">
 						Browse All Books
 					</a>
 				</div>
@@ -201,10 +238,8 @@ const otherSeries = allSeries.filter(series => !series.data.featured);
 </Layout>
 
 <style>
-	.line-clamp-3 {
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	/* Add some custom 3D effects for the book stacking */
+	.shadow-3xl {
+		box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
 	}
 </style>

@@ -3,6 +3,7 @@ title: "War Brides is Here! Trinh and L'Corte's Rule-Breaking Romance"
 description: "Book 8 brings us the Director of the Bride Program's love story—when the rule-maker falls for the ultimate rule-breaker in this action-packed romance."
 pubDate: '2020-09-15'
 heroImage: '../../assets/war-brides-cover.jpg'
+bookSlug: 'war-brides-book'
 tags: ['book-launch', 'saving-ceraste', 'opposites-attract', 'war-brides']
 category: 'book-launches'
 readingTime: '4 min read'

@@ -3,6 +3,7 @@ title: "Bedside Manners for Aliens is Here! Serena and L'Vect's Medical Romance"
 description: "Book 2 in the Saving Ceraste series is live! Join Dr. Serena as she teaches an alien physician how to connect with human patients—and discovers love in the process."
 pubDate: '2019-05-06'
 heroImage: '../../assets/bedside-manners-cover.jpg'
+bookSlug: 'bedside-manners-aliens-book'
 tags: ['book-launch', 'saving-ceraste', 'medical-romance', 'alien-romance']
 category: 'book-launches'
 readingTime: '4 min read'

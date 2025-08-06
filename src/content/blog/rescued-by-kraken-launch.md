@@ -3,6 +3,7 @@ title: "Rescued By A Kraken is Here! Rose Meets Her Sea Monster Match"
 description: "Book 2 in Koko's Harbor brings us Rose's story—when a woman afraid of water meets a kraken who'll change everything she thought she knew about the ocean."
 pubDate: '2024-11-15'
 heroImage: '../../assets/rescued-by-kraken-cover.jpg'
+bookSlug: 'rescued-by-kraken-book'
 tags: ['book-launch', 'kokos-harbor', 'kraken-romance', 'paranormal-romance']
 category: 'book-launches'
 readingTime: '4 min read'

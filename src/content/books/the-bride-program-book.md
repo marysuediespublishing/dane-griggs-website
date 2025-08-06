@@ -24,7 +24,7 @@ featured: false
 
 # The Bride Program
 
-The first book in the **Saving Ceraste** series that launched Dane Griggs' commitment to writing competent heroines who solve problems with their brains, not just their beauty.
+The first book in the **Saving Ceraste** series that launched Dane Griggs' commitment to writing strong heroines who solve problems with their brains, not just their beauty.
 
 ## Synopsis
 

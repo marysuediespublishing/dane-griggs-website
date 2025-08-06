@@ -3,6 +3,7 @@ title: "The Alien's Gossip Queen is Here! Janet Spills the Tea with D'Xurrl"
 description: "Book 6 brings us Janet's story—when a gossip-loving medical professional meets the sweetest, most protective alien security chief, sparks fly!"
 pubDate: '2020-02-14'
 heroImage: '../../assets/gossip-queen-cover.jpg'
+bookSlug: 'aliens-gossip-queen-book'
 tags: ['book-launch', 'saving-ceraste', 'gossip-queen', 'medical-romance']
 category: 'book-launches'
 readingTime: '3 min read'

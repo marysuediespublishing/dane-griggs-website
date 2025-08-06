@@ -3,6 +3,7 @@ title: "The Chancellor's Pilot is Live! The Epic Conclusion to Saving Ceraste"
 description: "Book 9 brings the Saving Ceraste series to its thrilling conclusion with high-stakes action, political intrigue, and one final love story that ties everything together."
 pubDate: '2022-03-15'
 heroImage: '../../assets/chancellors-pilot-cover.jpg'
+bookSlug: 'chancellors-pilot-book'
 tags: ['book-launch', 'saving-ceraste', 'series-finale', 'political-romance']
 category: 'book-launches'
 readingTime: '5 min read'

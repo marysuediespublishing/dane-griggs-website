@@ -3,6 +3,7 @@ title: "The Bride Program is LIVE! My First Sci-Fi Romance Adventure"
 description: "Announcing the launch of The Bride Program, the first book in the Saving Ceraste series - where human women volunteer as alien brides to save lives and find love."
 pubDate: '2019-03-25'
 heroImage: '../../assets/bride-program-cover.jpg'
+bookSlug: 'the-bride-program-book'
 tags: ['book-launch', 'saving-ceraste', 'alien-romance', 'new-release']
 category: 'book-launches'
 readingTime: '3 min read'

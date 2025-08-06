@@ -3,6 +3,7 @@ title: "Lily Saves An Alien is Live! Welcome to Koko's Harbor for Wayward Fated 
 description: "A brand new series launches! When a nurse on a cross-country road trip stumbles into a magical town and finds a crashed alien, everything changes."
 pubDate: '2024-06-21'
 heroImage: '../../assets/lily-saves-alien-cover.jpg'
+bookSlug: 'lily-saves-alien-book'
 tags: ['book-launch', 'kokos-harbor', 'new-series', 'paranormal-romance']
 category: 'book-launches'
 readingTime: '4 min read'
@@ -36,7 +37,7 @@ As she nurses him back to health, a bond develops that transcends language barri
 
 ## A Different Kind of Alien Romance
 
-While this book shares DNA with my Saving Ceraste series (competent heroines, no Mary Sues, relationships that develop naturally), Koko's Harbor has its own unique flavor. There's more of a paranormal small-town romance feel mixed with the sci-fi elements.
+While this book shares DNA with my Saving Ceraste series (strong heroines, no Mary Sues, relationships that develop naturally), Koko's Harbor has its own unique flavor. There's more of a paranormal small-town romance feel mixed with the sci-fi elements.
 
 The setting allows for a more intimate, cozy romance while still delivering the alien culture clash and mysterious world-building elements my readers love.
 

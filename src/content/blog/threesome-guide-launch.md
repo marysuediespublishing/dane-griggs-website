@@ -3,6 +3,7 @@ title: "Threesome's Guide to the Galaxy is Live! Chelsea's Unexpected Adventure"
 description: "Book 3 brings us Chelsea's story—a kidnapping victim who finds healing and love with not one but two alien mates in this sci-fi romance adventure."
 pubDate: '2019-08-15'
 heroImage: '../../assets/threesome-guide-cover.jpg'
+bookSlug: 'threesomes-guide-galaxy-book'
 tags: ['book-launch', 'saving-ceraste', 'alien-romance', 'healing-journey']
 category: 'book-launches'
 readingTime: '4 min read'

@@ -3,6 +3,7 @@ title: "The Bride Program Honeymoon is Live! Paradise, Secrets, and Shocking Twi
 description: "Book 4 takes our favorite couples on their first vacation to an alien paradise—where relaxation turns into adventure and shocking discoveries await."
 pubDate: '2019-11-20'
 heroImage: '../../assets/honeymoon-cover.jpg'
+bookSlug: 'bride-program-honeymoon-book'
 tags: ['book-launch', 'saving-ceraste', 'honeymoon-adventure', 'alien-paradise']
 category: 'book-launches'
 readingTime: '4 min read'

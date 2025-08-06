@@ -1,8 +1,8 @@
 ---
 siteTitle: "Dane Griggs - Sci-Fi Romance Author"
-siteDescription: "Sexy alien romance with heart, humor, and no Mary Sues. Explore completed series featuring competent heroines and swoon-worthy aliens in meticulously crafted worlds."
+siteDescription: "Sexy alien romance with heart, humor, and no Mary Sues. Explore completed series featuring strong heroines and swoon-worthy aliens in meticulously crafted worlds."
 authorName: "Dane Griggs"
-authorBio: "Dane Griggs writes sci-fi romance novels featuring competent heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building and characters who solve problems with their brains, not just their beauty. When she's not writing about interstellar love affairs, she's researching alien biology and dreaming up new worlds where humans and aliens find their perfect matches."
+authorBio: "Dane Griggs writes sci-fi romance novels featuring strong heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building and characters who solve problems with their brains, not just their beauty. When she's not writing about interstellar love affairs, she's researching alien biology and dreaming up new worlds where humans and aliens find their perfect matches."
 tagline: "Sexy escapes with heart, humor, and no Mary Sues"
 socialLinks:
   facebook: "https://facebook.com/danegriggsauthor"
@@ -34,13 +34,13 @@ This file contains the global site settings and configuration for the Dane Grigg
 
 ## Author Information
 
-Dane Griggs is a bestselling sci-fi romance author known for creating intelligent heroines and complex alien worlds. Her commitment to "no Mary Sue" characters has earned her a dedicated following of readers who appreciate competent, skilled protagonists.
+Dane Griggs is a bestselling sci-fi romance author known for creating intelligent heroines and complex alien worlds. Her commitment to "no Mary Sue" characters has earned her a dedicated following of readers who appreciate strong, skilled protagonists.
 
 ## Brand Promise
 
 The core brand promise is "Sexy escapes with heart, humor, and no Mary Sues" - this differentiates Dane's work in the crowded alien romance market by emphasizing:
 
-- **Competent heroines** who solve problems with their skills
+- **Strong heroines** who solve problems with their skills
 - **Emotional depth** beyond just physical attraction  
 - **Humor** that makes characters relatable and stories enjoyable
 - **Strong rejection** of the Mary Sue trope that many readers find frustrating

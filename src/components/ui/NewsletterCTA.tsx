@@ -141,10 +141,9 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
       {/* CTA Button */}
       <button
         onClick={() => setShowModal(true)}
-        className={`
-          transition-all duration-200 hover:-translate-y-0.5 
+        className={className || `
+          btn btn-primary transition-all duration-200 hover:-translate-y-0.5 
           focus:outline-none focus:ring-2 focus:ring-stellar-gold focus:ring-offset-2
-          ${className || 'btn btn-primary'}
         `}
         aria-label={`Open newsletter signup - ${getButtonText()}`}
       >
