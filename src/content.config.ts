@@ -11,6 +11,7 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: image().optional(),
+			bookSlug: z.string().optional(),
 			tags: z.array(z.string()).default([]),
 			category: z.enum(['alien-cultures', 'world-building', 'writing-process', 'behind-scenes', 'book-launches', 'series', 'about']).default('writing-process'),
 			readingTime: z.string().optional(),

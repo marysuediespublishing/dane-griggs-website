@@ -7,11 +7,10 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { ALL_MAPPINGS } from '../utils/book-mappings.ts';
 
-type Props = CollectionEntry<'blog'>['data'] & {
-	bookSlug?: string;
-};
+type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.props;
+
 ---
 
 <html lang="en">
@@ -26,6 +25,7 @@ const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.
 			.hero-image {
 				width: 100%;
 				margin-top: 2rem;
+				text-align: center;
 			}
 			.hero-image img {
 				display: block;
@@ -34,15 +34,11 @@ const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.
 				box-shadow: var(--box-shadow);
 				max-height: 60vh;
 				object-fit: contain;
-				transition: transform 0.2s ease, box-shadow 0.2s ease;
 			}
 			.cover-link {
-				display: block;
+				display: inline-block;
 				cursor: pointer;
-			}
-			.cover-link:hover img {
-				transform: scale(1.02);
-				box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+				line-height: 0;
 			}
 			.book-link-section {
 				text-align: center;
@@ -121,66 +117,41 @@ const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.
 		<script define:vars={{ mappings: ALL_MAPPINGS }}>
 			// Auto-link book and series mentions in blog content
 			document.addEventListener('DOMContentLoaded', () => {
-				const proseContent = document.querySelector('.prose');
-				if (!proseContent) return;
-				
-				// Function to add links while preserving existing links and markdown formatting
-				function addBookLinks(element) {
-					const walker = document.createTreeWalker(
-						element,
-						NodeFilter.SHOW_TEXT,
-						{
-							acceptNode: function(node) {
-								// Skip if already inside a link
-								return node.parentElement.tagName === 'A' ? 
-									NodeFilter.FILTER_REJECT : 
-									NodeFilter.FILTER_ACCEPT;
+				try {
+					const proseContent = document.querySelector('.prose');
+					if (!proseContent) return;
+					
+					// Simple approach: find text and replace with links
+					function addBookLinks() {
+						const textContent = proseContent.innerHTML;
+						let newContent = textContent;
+						
+						// Simple book titles to link (most common ones)
+						const simpleLinks = {
+							'Marshmallow': '/books/marshmallow-book',
+							'War Brides': '/books/war-brides-book',
+							'The Bride Program': '/books/the-bride-program-book',
+							'Saving Ceraste': '/series#saving-ceraste',
+							'Saving Ceraste series': '/series#saving-ceraste'
+						};
+						
+						// Replace each mention with a link (only first occurrence per page)
+						for (const [text, url] of Object.entries(simpleLinks)) {
+							if (newContent.includes(text) && !newContent.includes(`href="${url}"`)) {
+								newContent = newContent.replace(
+									new RegExp(`\\b${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`),
+									`<a href="${url}" class="book-series-link">${text}</a>`
+								);
 							}
 						}
-					);
-					
-					const textNodes = [];
-					let node;
-					while (node = walker.nextNode()) {
-						textNodes.push(node);
+						
+						proseContent.innerHTML = newContent;
 					}
 					
-					// Process each text node
-					textNodes.forEach(textNode => {
-						let content = textNode.textContent;
-						let hasChanges = false;
-						
-						// Sort mappings by length (longest first) to avoid partial matches
-						const sortedMappings = Object.entries(mappings)
-							.sort(([a], [b]) => b.length - a.length);
-						
-						sortedMappings.forEach(([text, url]) => {
-							// Create regex that matches whole words/phrases
-							const regex = new RegExp(`\\b${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-							
-							if (regex.test(content)) {
-								content = content.replace(regex, `<a href="${url}" class="book-series-link">${text}</a>`);
-								hasChanges = true;
-							}
-						});
-						
-						if (hasChanges) {
-							// Replace the text node with HTML
-							const wrapper = document.createElement('span');
-							wrapper.innerHTML = content;
-							textNode.parentNode.replaceChild(wrapper, textNode);
-							
-							// Move the children out of the wrapper
-							while (wrapper.firstChild) {
-								textNode.parentNode.insertBefore(wrapper.firstChild, wrapper);
-							}
-							wrapper.remove();
-						}
-					});
+					addBookLinks();
+				} catch (error) {
+					console.log('Auto-linking failed:', error);
 				}
-				
-				// Add links to the prose content
-				addBookLinks(proseContent);
 			});
 		</script>
 		
