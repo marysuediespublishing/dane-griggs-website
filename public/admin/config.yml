@@ -1,7 +1,7 @@
 backend:
   name: github
   repo: oftomorrowinc/dane-griggs-website
-  branch: subagents
+  branch: main
   client_id: Ov23lifvgEycs9bqcDmo
 
 # Disable local backend for GitHub OAuth
