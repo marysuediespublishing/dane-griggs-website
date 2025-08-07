@@ -1,9 +1,11 @@
 backend:
-  name: git-gateway
-  branch: main
+  name: github
+  repo: oftomorrowinc/dane-griggs-website
+  branch: subagents
+  client_id: Ov23lifvgEycs9bqcDmo
 
-# Enable local development mode
-local_backend: true
+# Disable local backend for GitHub OAuth
+# local_backend: true
 
 # Media storage configuration
 media_folder: "public/images"
