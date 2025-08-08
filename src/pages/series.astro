@@ -125,18 +125,21 @@ const seriesWithBooks = allSeries.map(series => {
 									</p>
 								)}
 								
-								{series.data.alienSpecies && series.data.alienSpecies.length > 0 && (
-									<div class="space-y-3">
-										<h4 class="text-lg font-semibold text-deep-space-navy">Featured Species:</h4>
-										<div class="flex flex-wrap gap-3">
-											{series.data.alienSpecies.map((species) => (
-												<span class="px-4 py-2 bg-cosmic-rose text-solar-white rounded-lg text-sm font-medium capitalize shadow-lg">
-													{species}
-												</span>
-											))}
+								{(() => {
+									const currentSpecies = series.data.species || series.data.alienSpecies || [];
+									return currentSpecies.length > 0 && (
+										<div class="space-y-3">
+											<h4 class="text-lg font-semibold text-deep-space-navy">Featured Species:</h4>
+											<div class="flex flex-wrap gap-3">
+												{currentSpecies.map((species) => (
+													<span class="px-4 py-2 bg-cosmic-rose text-solar-white rounded-lg text-sm font-medium capitalize shadow-lg">
+														{species}
+													</span>
+												))}
+											</div>
 										</div>
-									</div>
-								)}
+									);
+								})()}
 								
 								<div class="flex flex-col sm:flex-row gap-4">
 									<a 

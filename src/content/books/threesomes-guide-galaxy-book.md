@@ -9,7 +9,7 @@ cover: ../../assets/threesome-guide-cover.jpg
 series: Saving Ceraste
 seriesOrder: 3
 pubDate: 2019-08-15T00:00:00.000Z
-rating: 3.9
+rating: 4.4
 ratingCount: 668
 species:
   - cerastean

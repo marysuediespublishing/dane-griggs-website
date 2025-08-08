@@ -62,12 +62,15 @@ const allSeries = (await getCollection('series')).map(series => ({
 	...series,
 	slug: series.id
 }));
-const relatedSeries = allSeries.filter(s => 
-  s.id !== seriesItem.id && 
-  s.data.alienSpecies.some(species => 
-    seriesItem.data.alienSpecies.includes(species)
-  )
-).slice(0, 3);
+const relatedSeries = allSeries.filter(s => {
+  const currentSpecies = seriesItem.data.species || seriesItem.data.alienSpecies || [];
+  const otherSpecies = s.data.species || s.data.alienSpecies || [];
+  
+  return s.id !== seriesItem.id && 
+    otherSpecies.some(species => 
+      currentSpecies.includes(species)
+    );
+}).slice(0, 3);
 
 // Calculate series statistics
 const totalRatings = seriesBooks.reduce((sum, book) => sum + (book.data.ratingCount || 0), 0);
@@ -153,18 +156,21 @@ const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCo
                   )}
                 </div>
                 
-                {seriesItem.data.alienSpecies && seriesItem.data.alienSpecies.length > 0 && (
-                  <div class="mt-4 pt-4 border-t border-solar-white/20">
-                    <h4 class="text-sm font-medium text-solar-white mb-2">Featured Species:</h4>
-                    <div class="flex flex-wrap gap-2">
-                      {seriesItem.data.alienSpecies.map((species) => (
-                        <span class="badge badge-primary text-xs">
-                          {species}
-                        </span>
-                      ))}
+                {(() => {
+                  const currentSpecies = seriesItem.data.species || seriesItem.data.alienSpecies || [];
+                  return currentSpecies.length > 0 && (
+                    <div class="mt-4 pt-4 border-t border-solar-white/20">
+                      <h4 class="text-sm font-medium text-solar-white mb-2">Featured Species:</h4>
+                      <div class="flex flex-wrap gap-2">
+                        {currentSpecies.map((species) => (
+                          <span class="badge badge-primary text-xs">
+                            {species}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </div>
 
@@ -297,15 +303,18 @@ const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCo
                     <span class="capitalize">{related.data.completionStatus}</span>
                   </div>
                   
-                  {related.data.alienSpecies && related.data.alienSpecies.length > 0 && (
-                    <div class="flex flex-wrap justify-center gap-2 mb-4">
-                      {related.data.alienSpecies.slice(0, 3).map((species) => (
-                        <span class="badge badge-outline text-xs">
-                          {species}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {(() => {
+                    const relatedSpecies = related.data.species || related.data.alienSpecies || [];
+                    return relatedSpecies.length > 0 && (
+                      <div class="flex flex-wrap justify-center gap-2 mb-4">
+                        {relatedSpecies.slice(0, 3).map((species) => (
+                          <span class="badge badge-outline text-xs">
+                            {species}
+                          </span>
+                        ))}
+                      </div>
+                    );
+                  })()}
                   
                   <a 
                     href={`/series/${related.slug}`}
