@@ -11,7 +11,13 @@ const siteConfig = settingsCollection[0]?.data || {};
 
 // Get about page content from CMS
 const pagesCollection = await getCollection('pages');
-const aboutPage = pagesCollection.find(page => page.data.pageType === 'about')?.data || {};
+const aboutPageData = pagesCollection.find(page => page.data.pageType === 'about')?.data;
+const aboutPage = aboutPageData || {
+	hero: { title: '', tagline: '' },
+	authorBio: { mainBio: '', secondaryBio: '', tertiaryBio: '' },
+	philosophyCards: [],
+	connectSection: { title: '', description: '' }
+};
 ---
 
 <Layout title="About - Dane Griggs">
@@ -137,7 +143,7 @@ const aboutPage = pagesCollection.find(page => page.data.pageType === 'about')?.
 					</div>
 					
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-						{aboutPage.philosophyCards && aboutPage.philosophyCards.length > 0 ? aboutPage.philosophyCards.map((card) => (
+						{aboutPage.philosophyCards && aboutPage.philosophyCards.length > 0 ? aboutPage.philosophyCards.map((card: any) => (
 							<div class="bg-white rounded-xl p-8 shadow-lg">
 								<div class="text-4xl mb-4">{card.icon}</div>
 								<h3 class="text-xl font-bold text-deep-space-navy mb-4">{card.title}</h3>

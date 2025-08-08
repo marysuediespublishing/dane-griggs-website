@@ -36,7 +36,7 @@ philosophyCards:
     description: Steamy romance with emotional depth, laugh-out-loud moments, and
       happily ever afters. Love should be fun, passionate, and built on mutual
       respect and understanding.
-  - icon: 🔬
+  - icon: 💏
     title: Real Love, Real Partnership
     description: My couples don't just fall into bed—they fall into friendship,
       trust, and deep admiration for each other's strengths. They're the kind of

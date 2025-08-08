@@ -11,13 +11,15 @@ seriesOrder: 3
 pubDate: 2019-08-15T00:00:00.000Z
 rating: 4.3
 ratingCount: 668
-alienSpecies:
+species:
   - cerastean
+  - dulci
   - human
 heatLevel: medium
 setting:
   - space-station
-  - alien-mothership
+  - ostium-space-station
+  - spaceship
 genres:
   - sci-fi romance
   - alien romance
@@ -31,6 +33,9 @@ wordCount: 38688
 pageCount: 110
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # Threesome's Guide to the Galaxy

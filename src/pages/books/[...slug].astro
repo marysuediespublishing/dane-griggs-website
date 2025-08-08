@@ -16,6 +16,40 @@ function getSeriesSlug(seriesName: string): string | null {
   return seriesMap[seriesName] || null;
 }
 
+// Helper functions for name resolution
+async function getSpeciesName(slug: string): Promise<string> {
+  try {
+    const speciesCollection = await getCollection('species');
+    const species = speciesCollection.find(s => s.data.slug === slug);
+    return species?.data.name || formatSlugToName(slug);
+  } catch (error) {
+    return formatSlugToName(slug);
+  }
+}
+
+async function getLocationName(slug: string): Promise<string> {
+  try {
+    const locationsCollection = await getCollection('locations');
+    const location = locationsCollection.find(l => l.data.slug === slug);
+    return location?.data.name || formatSlugToName(slug);
+  } catch (error) {
+    return formatSlugToName(slug);
+  }
+}
+
+function formatSlugToName(slug: string): string {
+  return slug.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+}
+
+function formatGenreName(genre: string): string {
+  // Genres are already in proper format, just ensure consistent capitalization
+  return genre.split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+}
+
 export async function getStaticPaths() {
   const books = await getCollection('books');
   return books.map((book) => ({
@@ -88,6 +122,19 @@ const bookTestimonials = testimonials.filter(t =>
 const estimatedReadingTime = book.data.wordCount 
   ? Math.round((book.data.wordCount / 250) / 60) // Convert to hours
   : null;
+
+// Resolve names for display
+const speciesNames = book.data.alienSpecies 
+  ? await Promise.all(book.data.alienSpecies.map(slug => getSpeciesName(slug)))
+  : [];
+
+const settingNames = book.data.setting 
+  ? await Promise.all(book.data.setting.map(slug => getLocationName(slug)))
+  : [];
+
+const genreNames = book.data.genres 
+  ? book.data.genres.map(genre => formatGenreName(genre))
+  : [];
 ---
 
 <Layout title={`${book.data.title} - ${SITE_TITLE}`}>
@@ -235,39 +282,39 @@ const estimatedReadingTime = book.data.wordCount
                   
                   {/* Tags/Categories */}
                   <div class="mt-6 pt-4 border-t border-solar-white/20">
-                    {book.data.alienSpecies && book.data.alienSpecies.length > 0 && (
+                    {speciesNames.length > 0 && (
                       <div class="mb-3">
                         <h4 class="text-sm font-medium text-solar-white mb-2">Species:</h4>
                         <div class="flex flex-wrap gap-2">
-                          {book.data.alienSpecies.map((species) => (
-                            <span class="badge badge-primary text-xs">
-                              {species}
+                          {speciesNames.map((speciesName, index) => (
+                            <span class="badge badge-primary text-xs" key={index}>
+                              {speciesName}
                             </span>
                           ))}
                         </div>
                       </div>
                     )}
                     
-                    {book.data.setting && book.data.setting.length > 0 && (
+                    {settingNames.length > 0 && (
                       <div class="mb-3">
                         <h4 class="text-sm font-medium text-solar-white mb-2">Setting:</h4>
                         <div class="flex flex-wrap gap-2">
-                          {book.data.setting.map((setting) => (
-                            <span class="badge badge-secondary text-xs">
-                              {setting.replace('-', ' ')}
+                          {settingNames.map((settingName, index) => (
+                            <span class="badge badge-secondary text-xs" key={index}>
+                              {settingName}
                             </span>
                           ))}
                         </div>
                       </div>
                     )}
                     
-                    {book.data.genres && book.data.genres.length > 0 && (
+                    {genreNames.length > 0 && (
                       <div>
                         <h4 class="text-sm font-medium text-solar-white mb-2">Genres:</h4>
                         <div class="flex flex-wrap gap-2">
-                          {book.data.genres.map((genre) => (
-                            <span class="badge badge-outline text-xs">
-                              {genre}
+                          {genreNames.map((genreName, index) => (
+                            <span class="badge badge-outline text-xs" key={index}>
+                              {genreName}
                             </span>
                           ))}
                         </div>

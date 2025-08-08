@@ -155,6 +155,15 @@ export default {
         '.badge-human': {
           '@apply bg-ocean-teal/10 text-ocean-teal border border-ocean-teal/30': {},
         },
+        '.badge-primary': {
+          '@apply bg-cosmic-rose/15 text-cosmic-rose border border-cosmic-rose/40': {},
+        },
+        '.badge-secondary': {
+          '@apply bg-stellar-gold/15 text-deep-space-navy border border-stellar-gold/40': {},
+        },
+        '.badge-outline': {
+          '@apply bg-transparent text-deep-space-navy border border-deep-space-navy/40': {},
+        },
       })
     }
   ],

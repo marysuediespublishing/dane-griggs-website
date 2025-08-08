@@ -32,9 +32,10 @@ const books = defineCollection({
 			pubDate: z.coerce.date(),
 			rating: z.number().min(0).max(5).default(0),
 			ratingCount: z.number().default(0),
-			alienSpecies: z.array(z.enum(['cerastean', 'kraken', 'dulci', 'human', 'ostium', 'hisk', 'unknown-alien-species'])).default([]),
+			alienSpecies: z.array(z.string()).default([]).optional(),
+			species: z.array(z.string()).default([]).optional(),
 			heatLevel: z.enum(['mild', 'medium', 'spicy', 'high', 'medium-high']).default('medium'),
-			setting: z.array(z.enum(['space-station', 'alien-planet', 'earth', 'spaceship', 'tropical-paradise', 'xerini', 'medical-facility', 'healing-center', 'political-chambers', 'multiple-worlds', 'alien-mothership', 'hisk-homeworld', 'small-town', 'magical-harbor', 'cabin', 'coastal-town', 'ocean', 'holiday-setting', 'travel', 'ceremonial-venues'])).default([]),
+			setting: z.array(z.string()).default([]),
 			genres: z.array(z.string()).default([]),
 			isKU: z.boolean().default(true),
 			amazonUrl: z.string().url().optional(),
@@ -59,7 +60,8 @@ const series = defineCollection({
 			completionStatus: z.enum(['ongoing', 'complete']).default('ongoing'),
 			startDate: z.coerce.date(),
 			completionDate: z.coerce.date().optional(),
-			alienSpecies: z.array(z.enum(['cerastean', 'kraken', 'dulci', 'human', 'ostium', 'hisk', 'unknown-alien-species'])).default([]),
+			alienSpecies: z.array(z.string()).default([]).optional(),
+			species: z.array(z.string()).default([]).optional(),
 			overallRating: z.number().min(0).max(5).default(0),
 			totalRatings: z.number().default(0),
 			worldBuilding: z.string().optional(),
@@ -116,10 +118,68 @@ const settings = defineCollection({
 	}),
 });
 
+// Species collection
+const species = defineCollection({
+	loader: glob({ base: './src/content/species', pattern: '**/*.{md,mdx}' }),
+	schema: ({ image }) =>
+		z.object({
+			name: z.string(),
+			slug: z.string(),
+			description: z.string().optional(),
+			image: image().optional(),
+			physicalTraits: z.string().optional(),
+			cultureNotes: z.string().optional(),
+			biologyNotes: z.string().optional(),
+		}),
+});
+
+// Locations collection
+const locations = defineCollection({
+	loader: glob({ base: './src/content/locations', pattern: '**/*.{md,mdx}' }),
+	schema: ({ image }) =>
+		z.object({
+			name: z.string(),
+			slug: z.string(),
+			description: z.string().optional(),
+			image: image().optional(),
+			environmentType: z.string().optional(),
+		}),
+});
+
+// Pages collection
+const pages = defineCollection({
+	loader: glob({ base: './src/content/pages', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		pageType: z.string(),
+		hero: z.object({
+			title: z.string().optional(),
+			tagline: z.string().optional(),
+		}).optional(),
+		authorBio: z.object({
+			mainBio: z.string().optional(),
+			secondaryBio: z.string().optional(),
+			tertiaryBio: z.string().optional(),
+		}).optional(),
+		philosophyCards: z.array(z.object({
+			icon: z.string().optional(),
+			title: z.string(),
+			description: z.string(),
+		})).optional(),
+		connectSection: z.object({
+			title: z.string().optional(),
+			description: z.string().optional(),
+		}).optional(),
+	}),
+});
+
 export const collections = { 
 	blog, 
 	books, 
 	series, 
 	testimonials, 
-	settings 
+	settings,
+	species,
+	locations,
+	pages
 };

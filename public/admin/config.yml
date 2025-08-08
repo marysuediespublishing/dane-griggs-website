@@ -45,9 +45,12 @@ collections:
         default: "medium"
       - label: "Setting"
         name: "setting"
-        widget: "select"
+        widget: "relation"
+        collection: "locations"
+        search_fields: ["name"]
+        value_field: "slug"
+        display_fields: ["name"]
         multiple: true
-        options: ["space-station", "alien-planet", "earth", "spaceship"]
         default: []
       - { label: "Genres", name: "genres", widget: "list", default: [] }
       - { label: "Available on Kindle Unlimited", name: "isKU", widget: "boolean", default: true }
@@ -211,6 +214,22 @@ collections:
       - { label: "Biology Notes", name: "biologyNotes", widget: "text", required: false }
       - { label: "Content", name: "body", widget: "markdown", required: false }
 
+  # Locations collection
+  - name: "locations"
+    label: "Locations"
+    folder: "src/content/locations"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Environment Type", name: "environmentType", widget: "string", required: false }
+      - { label: "Content", name: "body", widget: "markdown", required: false }
+
   # Pages collection
   - name: "pages"
     label: "Pages"
@@ -240,7 +259,64 @@ collections:
         widget: "list"
         required: false
         fields:
-          - { label: "Icon", name: "icon", widget: "string", required: false }
+          - label: "Icon"
+            name: "icon"
+            widget: "select"
+            required: false
+            options:
+              - { label: "🔬 Microscope", value: "🔬" }
+              - { label: "🧬 DNA", value: "🧬" }
+              - { label: "🌌 Galaxy", value: "🌌" }
+              - { label: "⚗️ Alembic", value: "⚗️" }
+              - { label: "🧪 Test Tube", value: "🧪" }
+              - { label: "🔭 Telescope", value: "🔭" }
+              - { label: "⚛️ Atom", value: "⚛️" }
+              - { label: "🌠 Shooting Star", value: "🌠" }
+              - { label: "💝 Gift Heart", value: "💝" }
+              - { label: "❤️ Red Heart", value: "❤️" }
+              - { label: "💕 Two Hearts", value: "💕" }
+              - { label: "💖 Sparkling Heart", value: "💖" }
+              - { label: "🥰 Smiling Face with Hearts", value: "🥰" }
+              - { label: "😍 Heart Eyes", value: "😍" }
+              - { label: "💘 Heart with Arrow", value: "💘" }
+              - { label: "💗 Growing Heart", value: "💗" }
+              - { label: "🧠 Brain", value: "🧠" }
+              - { label: "💡 Light Bulb", value: "💡" }
+              - { label: "🎯 Target", value: "🎯" }
+              - { label: "📚 Books", value: "📚" }
+              - { label: "🤓 Nerd Face", value: "🤓" }
+              - { label: "✨ Sparkles", value: "✨" }
+              - { label: "💭 Thought Bubble", value: "💭" }
+              - { label: "🎲 Die", value: "🎲" }
+              - { label: "✍️ Writing Hand", value: "✍️" }
+              - { label: "📖 Open Book", value: "📖" }
+              - { label: "📝 Memo", value: "📝" }
+              - { label: "📜 Scroll", value: "📜" }
+              - { label: "✒️ Pen", value: "✒️" }
+              - { label: "🖋️ Fountain Pen", value: "🖋️" }
+              - { label: "📑 Bookmark Tabs", value: "📑" }
+              - { label: "🌹 Rose", value: "🌹" }
+              - { label: "💫 Dizzy", value: "💫" }
+              - { label: "💍 Ring", value: "💍" }
+              - { label: "👫 Couple", value: "👫" }
+              - { label: "💏 Kiss", value: "💏" }
+              - { label: "🌺 Hibiscus", value: "🌺" }
+              - { label: "🚀 Rocket", value: "🚀" }
+              - { label: "🛸 UFO", value: "🛸" }
+              - { label: "🌟 Star", value: "🌟" }
+              - { label: "⭐ White Star", value: "⭐" }
+              - { label: "🌙 Moon", value: "🌙" }
+              - { label: "💻 Laptop", value: "💻" }
+              - { label: "🤖 Robot", value: "🤖" }
+              - { label: "🛰️ Satellite", value: "🛰️" }
+              - { label: "🤝 Handshake", value: "🤝" }
+              - { label: "👥 People", value: "👥" }
+              - { label: "💑 Couple with Heart", value: "💑" }
+              - { label: "🫶 Heart Hands", value: "🫶" }
+              - { label: "🙌 Raising Hands", value: "🙌" }
+              - { label: "🎭 Theater Masks", value: "🎭" }
+              - { label: "🎪 Circus Tent", value: "🎪" }
+              - { label: "🌈 Rainbow", value: "🌈" }
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Description", name: "description", widget: "text" }
       - label: "Connect Section"
