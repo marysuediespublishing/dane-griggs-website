@@ -30,9 +30,6 @@ wordCount: 130542
 pageCount: 394
 status: published
 featured: true
-alienSpecies:
-  - unknown-alien-species
-  - human
 ---
 
 # Lily Saves An Alien

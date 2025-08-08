@@ -10,10 +10,10 @@ seriesOrder: 9
 pubDate: 2022-03-15T00:00:00.000Z
 rating: 4.5
 ratingCount: 275
-alienSpecies:
+species:
   - cerastean
+  - dulci
   - human
-  - ostium
 heatLevel: medium
 setting:
   - space-station
@@ -32,6 +32,10 @@ wordCount: 58919
 pageCount: 200
 status: published
 featured: true
+alienSpecies:
+  - cerastean
+  - human
+  - ostium
 ---
 
 # The Chancellor's Pilot

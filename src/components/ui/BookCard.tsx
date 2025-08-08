@@ -226,23 +226,26 @@ const BookCard: React.FC<BookCardProps> = ({
         )}
         
         {/* Species Tags */}
-        {book.data.alienSpecies && book.data.alienSpecies.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {book.data.alienSpecies.slice(0, variant === 'compact' ? 2 : 4).map((species) => (
-              <span 
-                key={species}
-                className={`text-xs px-2 py-1 rounded capitalize ${getSpeciesBadgeColor(species)}`}
-              >
-                {species}
-              </span>
-            ))}
-            {book.data.alienSpecies.length > (variant === 'compact' ? 2 : 4) && (
-              <span className="text-xs text-gray-500">
-                +{book.data.alienSpecies.length - (variant === 'compact' ? 2 : 4)} more
-              </span>
-            )}
-          </div>
-        )}
+        {(() => {
+          const currentSpecies = book.data.species || book.data.alienSpecies || [];
+          return currentSpecies.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {currentSpecies.slice(0, variant === 'compact' ? 2 : 4).map((species) => (
+                <span 
+                  key={species}
+                  className={`text-xs px-2 py-1 rounded capitalize ${getSpeciesBadgeColor(species)}`}
+                >
+                  {species}
+                </span>
+              ))}
+              {currentSpecies.length > (variant === 'compact' ? 2 : 4) && (
+                <span className="text-xs text-gray-500">
+                  +{currentSpecies.length - (variant === 'compact' ? 2 : 4)} more
+                </span>
+              )}
+            </div>
+          );
+        })()}
         
         {/* Description */}
         {showDescription && variant !== 'compact' && (

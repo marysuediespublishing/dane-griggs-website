@@ -101,10 +101,12 @@ const seriesBooks = book.data.series
   : [];
 
 // Get books with similar alien species
-const similarBooks = allBooks.filter(b => 
-  b.id !== book.id &&
-  b.data.alienSpecies.some(species => book.data.alienSpecies.includes(species))
-).slice(0, 4);
+const similarBooks = allBooks.filter(b => {
+  const currentSpecies = book.data.species || book.data.alienSpecies || [];
+  const bookSpecies = b.data.species || b.data.alienSpecies || [];
+  return b.id !== book.id &&
+    bookSpecies.some(species => currentSpecies.includes(species));
+}).slice(0, 4);
 
 // Get other books by same author (if different than current book)
 const otherBooks = allBooks.filter(b => 
@@ -124,8 +126,9 @@ const estimatedReadingTime = book.data.wordCount
   : null;
 
 // Resolve names for display
-const speciesNames = book.data.alienSpecies 
-  ? await Promise.all(book.data.alienSpecies.map(slug => getSpeciesName(slug)))
+const currentSpecies = book.data.species || book.data.alienSpecies || [];
+const speciesNames = currentSpecies.length > 0
+  ? await Promise.all(currentSpecies.map(slug => getSpeciesName(slug)))
   : [];
 
 const settingNames = book.data.setting 
