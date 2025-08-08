@@ -29,11 +29,14 @@ collections:
       - { label: "Publication Date", name: "pubDate", widget: "datetime" }
       - { label: "Rating", name: "rating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, default: 0 }
       - { label: "Rating Count", name: "ratingCount", widget: "number", default: 0 }
-      - label: "Alien Species"
-        name: "alienSpecies"
-        widget: "select"
+      - label: "Species"
+        name: "species"
+        widget: "relation"
+        collection: "species"
+        search_fields: ["name"]
+        value_field: "slug"
+        display_fields: ["name"]
         multiple: true
-        options: ["cerastean", "kraken", "dulci", "human"]
         default: []
       - label: "Heat Level"
         name: "heatLevel"
@@ -81,11 +84,14 @@ collections:
         default: "ongoing"
       - { label: "Start Date", name: "startDate", widget: "datetime" }
       - { label: "Completion Date", name: "completionDate", widget: "datetime", required: false }
-      - label: "Alien Species"
-        name: "alienSpecies"
-        widget: "select"
+      - label: "Species"
+        name: "species"
+        widget: "relation"
+        collection: "species"
+        search_fields: ["name"]
+        value_field: "slug"
+        display_fields: ["name"]
         multiple: true
-        options: ["cerastean", "kraken", "dulci", "human"]
         default: []
       - { label: "Overall Rating", name: "overallRating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, default: 0 }
       - { label: "Total Ratings", name: "totalRatings", widget: "number", default: 0 }
@@ -185,6 +191,65 @@ collections:
           - { label: "Lead Magnet Title", name: "leadMagnetTitle", widget: "string", required: false }
           - { label: "Lead Magnet Description", name: "leadMagnetDescription", widget: "text", required: false }
           - { label: "Benefits", name: "benefits", widget: "list", required: false }
+      - { label: "Content", name: "body", widget: "markdown", required: false }
+
+  # Species collection
+  - name: "species"
+    label: "Species"
+    folder: "src/content/species"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Physical Traits", name: "physicalTraits", widget: "text", required: false }
+      - { label: "Culture Notes", name: "cultureNotes", widget: "text", required: false }
+      - { label: "Biology Notes", name: "biologyNotes", widget: "text", required: false }
+      - { label: "Content", name: "body", widget: "markdown", required: false }
+
+  # Pages collection
+  - name: "pages"
+    label: "Pages"
+    folder: "src/content/pages"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Page Type", name: "pageType", widget: "string" }
+      - label: "Hero Section"
+        name: "hero"
+        widget: "object"
+        fields:
+          - { label: "Title", name: "title", widget: "string", required: false }
+          - { label: "Tagline", name: "tagline", widget: "string", required: false }
+      - label: "Author Bio"
+        name: "authorBio"
+        widget: "object"
+        fields:
+          - { label: "Main Bio", name: "mainBio", widget: "text", required: false }
+          - { label: "Secondary Bio", name: "secondaryBio", widget: "text", required: false }
+          - { label: "Tertiary Bio", name: "tertiaryBio", widget: "text", required: false }
+      - label: "Philosophy Cards"
+        name: "philosophyCards"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Icon", name: "icon", widget: "string", required: false }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+      - label: "Connect Section"
+        name: "connectSection"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Title", name: "title", widget: "string", required: false }
+          - { label: "Description", name: "description", widget: "text", required: false }
       - { label: "Content", name: "body", widget: "markdown", required: false }
 
 # Site configuration

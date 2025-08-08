@@ -11,14 +11,12 @@ seriesOrder: 1
 pubDate: 2024-06-21T00:00:00.000Z
 rating: 4.4
 ratingCount: 110
-alienSpecies:
-  - unknown-alien-species
+species:
   - human
+  - cryzorian
 heatLevel: medium
 setting:
-  - small-town
-  - magical-harbor
-  - cabin
+  - earth
 genres:
   - paranormal romance
   - alien romance
@@ -32,6 +30,9 @@ wordCount: 130542
 pageCount: 394
 status: published
 featured: true
+alienSpecies:
+  - unknown-alien-species
+  - human
 ---
 
 # Lily Saves An Alien
