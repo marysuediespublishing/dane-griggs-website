@@ -1,7 +1,7 @@
 ---
 siteTitle: Dane Griggs - Sci-Fi Romance Author
 siteDescription: Sexy alien romance with heart, humor, and no Mary Sues. Explore
-  completed series featuring strong heroines and swoon-worthy aliens in
+  completed series featuring strong heroines and swoon-worthy heroes in
   meticulously crafted worlds.
 authorName: Dane Griggs
 authorBio: Dane Griggs writes sci-fi romance novels featuring strong heroines

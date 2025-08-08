@@ -20,17 +20,14 @@ authorBio:
 philosophyCards:
   - icon: 🧠
     title: No Mary Sues Allowed
-    description: My heroines are real people first—flawed, opinionated, and
-      refreshingly human. They're not interchangeable archetypes or helpless
-      victims; they're women with backbone, blind spots, and the kind of
-      authentic decision-making that comes from having actual character traits
-      driving their actions. They solve problems with their brains, not just
-      their beauty.
+    description: My heroines are real people first — flawed, opinionated, and
+      refreshingly human. They're women with backbone who solve problems with 
+      their brains, not just their beauty.
   - icon: 🌌
     title: Rich World-Building
-    description: Meticulously crafted alien cultures with their own societies,
-      customs, and believable biology. Every species has evolutionary logic and
-      cultural depth that enhances the romance.
+    description: Meticulously crafted cultures – alien civilizations,
+      fantasy realms, and original societies – each with their own customs,
+      and believable worldbuilding.
   - icon: 💝
     title: Heart & Humor
     description: Steamy romance with emotional depth, laugh-out-loud moments, and
