@@ -41,21 +41,25 @@ const BookCard: React.FC<BookCardProps> = ({
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+    const hasHalfStar = rating % 1 >= 0.4; // Show half star for 0.4 and above
     
+    // Full stars
     for (let i = 0; i < fullStars; i++) {
       stars.push(
         <span key={i} className="text-stellar-gold">★</span>
       );
     }
     
+    // Half star - using a simpler approach
     if (hasHalfStar) {
       stars.push(
-        <span key="half" className="text-stellar-gold">☆</span>
+        <span key="half" className="text-stellar-gold">✬</span>
       );
     }
     
-    const remainingStars = 5 - Math.ceil(rating);
+    // Empty stars
+    const totalStars = fullStars + (hasHalfStar ? 1 : 0);
+    const remainingStars = 5 - totalStars;
     for (let i = 0; i < remainingStars; i++) {
       stars.push(
         <span key={`empty-${i}`} className="text-gray-300">☆</span>

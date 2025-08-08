@@ -12,7 +12,7 @@ cover: ../../assets/rescued-by-kraken-cover.jpg
 series: Koko's Harbor for Wayward Fated Mates
 seriesOrder: 2
 pubDate: 2024-11-15T00:00:00.000Z
-rating: 4.1
+rating: 4.6
 ratingCount: 42
 species:
   - kraken
