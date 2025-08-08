@@ -1,24 +1,35 @@
 ---
-title: "Threesome's Guide to the Galaxy"
-author: "Dane Griggs"
-description: "Chelsea didn't volunteer for the Bride Program—she was kidnapped by evil gray aliens and escaped. Now she's learning to trust again with the help of D'Rett and L'Tarne, two nest bonded Cerasteans who prove that sometimes healing requires extra love, patience, and understanding."
-cover: "../../assets/threesome-guide-cover.jpg"
-series: "Saving Ceraste"
+title: Threesome's Guide to the Galaxy
+author: Dane Griggs
+description: Chelsea didn't volunteer for the Bride Program—she was kidnapped by
+  evil gray aliens and escaped. Now she's learning to trust again with the help
+  of D'Rett and L'Tarne, two nest bonded Cerasteans who prove that sometimes
+  healing requires extra love, patience, and understanding.
+cover: ../../assets/threesome-guide-cover.jpg
+series: Saving Ceraste
 seriesOrder: 3
 pubDate: 2019-08-15T00:00:00.000Z
-rating: 4.30
-ratingCount: 384
-alienSpecies: ["cerastean", "human"]
-heatLevel: "high"
-setting: ["space-station", "alien-mothership"]
-genres: ["sci-fi romance", "alien romance", "trauma recovery", "menage"]
+rating: 4.3
+ratingCount: 668
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: medium
+setting:
+  - space-station
+  - alien-mothership
+genres:
+  - sci-fi romance
+  - alien romance
+  - trauma recovery
+  - menage
 isKU: true
-amazonUrl: "https://amazon.com/dp/threesomes-guide-galaxy"
-goodreadsUrl: "https://goodreads.com/book/show/threesomes-guide-galaxy"
-price: "$3.99"
-wordCount: 88000
-pageCount: 340
-status: "published"
+amazonUrl: https://amazon.com/dp/threesomes-guide-galaxy
+goodreadsUrl: https://www.goodreads.com/book/show/49962721-threesome-s-guide-to-the-galaxy
+price: $2.99
+wordCount: 38688
+pageCount: 110
+status: published
 featured: false
 ---
 

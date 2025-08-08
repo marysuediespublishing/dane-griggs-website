@@ -27,7 +27,7 @@ collections:
       - { label: "Series", name: "series", widget: "string", required: false }
       - { label: "Series Order", name: "seriesOrder", widget: "number", required: false }
       - { label: "Publication Date", name: "pubDate", widget: "datetime" }
-      - { label: "Rating", name: "rating", widget: "number", min: 0, max: 5, step: 0.1, default: 0 }
+      - { label: "Rating", name: "rating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, default: 0 }
       - { label: "Rating Count", name: "ratingCount", widget: "number", default: 0 }
       - label: "Alien Species"
         name: "alienSpecies"
@@ -87,7 +87,7 @@ collections:
         multiple: true
         options: ["cerastean", "kraken", "dulci", "human"]
         default: []
-      - { label: "Overall Rating", name: "overallRating", widget: "number", min: 0, max: 5, step: 0.1, default: 0 }
+      - { label: "Overall Rating", name: "overallRating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, default: 0 }
       - { label: "Total Ratings", name: "totalRatings", widget: "number", default: 0 }
       - { label: "World Building Notes", name: "worldBuilding", widget: "text", required: false }
       - { label: "Reading Order", name: "readingOrder", widget: "list", default: [] }
@@ -176,7 +176,7 @@ collections:
           - { label: "Books Published", name: "booksPublished", widget: "number", required: false }
           - { label: "Pages Read", name: "pagesRead", widget: "string", required: false }
           - { label: "Reader Ratings", name: "readerRatings", widget: "string", required: false }
-          - { label: "Series Complete", name: "seriesComplete", widget: "number", required: false }
+          - { label: "Series", name: "seriesComplete", widget: "number", required: false }
       - label: "Newsletter"
         name: "newsletter"
         widget: "object"

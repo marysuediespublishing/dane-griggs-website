@@ -1,24 +1,36 @@
 ---
-title: "War Brides"
-author: "Dane Griggs"
-description: "Trinh lives every day to the fullest after surviving cancer, while L'Corte's job is keeping all the bride volunteers safe and following protocols. When the rule-maker falls for the ultimate rule-breaker, sparks fly just as war becomes inevitable."
-cover: "../../assets/war-brides-cover.jpg"
-series: "Saving Ceraste"
+title: War Brides
+author: Dane Griggs
+description: Trinh lives every day to the fullest after surviving cancer, while
+  L'Corte's job is keeping all the bride volunteers safe and following
+  protocols. When the rule-maker falls for the ultimate rule-breaker, sparks fly
+  just as war becomes inevitable.
+cover: ../../assets/war-brides-cover.jpg
+series: Saving Ceraste
 seriesOrder: 8
 pubDate: 2020-09-15T00:00:00.000Z
 rating: 4.6
-ratingCount: 395
-alienSpecies: ["cerastean", "human"]
-heatLevel: "high"
-setting: ["space-station", "alien-mothership", "ceremonial-venues"]
-genres: ["sci-fi romance", "alien romance", "opposites attract", "wartime romance"]
+ratingCount: 422
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: medium
+setting:
+  - space-station
+  - alien-mothership
+  - ceremonial-venues
+genres:
+  - sci-fi romance
+  - alien romance
+  - opposites attract
+  - wartime romance
 isKU: true
-amazonUrl: "https://amazon.com/dp/war-brides"
-goodreadsUrl: "https://goodreads.com/book/show/war-brides"
-price: "$3.99"
-wordCount: 98000
-pageCount: 380
-status: "published"
+amazonUrl: https://amazon.com/dp/war-brides
+goodreadsUrl: https://www.goodreads.com/book/show/55523227-war-brides
+price: $2.99
+wordCount: 49673
+pageCount: 216
+status: published
 featured: false
 ---
 

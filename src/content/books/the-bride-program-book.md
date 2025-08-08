@@ -1,24 +1,34 @@
 ---
-title: "The Bride Program"
-author: "Dane Griggs"
-description: "Maya Arnold leads a normal life until the Cerasteans arrive offering a cure for cancer in exchange for human brides. To save her sister, Maya volunteers for the Bride Program and finds adventure, friendship, and unexpected love with Commander D'Avii."
-cover: "../../assets/bride-program-cover.jpg"
-series: "Saving Ceraste"
+title: The Bride Program
+author: Dane Griggs
+description: Maya Arnold leads a normal life until the Cerasteans arrive
+  offering a cure for cancer in exchange for human brides. To save her sister,
+  Maya volunteers for the Bride Program and finds adventure, friendship, and
+  unexpected love with Commander D'Avii.
+cover: ../../assets/bride-program-cover.jpg
+series: Saving Ceraste
 seriesOrder: 1
 pubDate: 2019-03-25T00:00:00.000Z
 rating: 4.2
-ratingCount: 1474
-alienSpecies: ["cerastean", "human"]
-heatLevel: "medium"
-setting: ["space-station", "alien-mothership"]
-genres: ["sci-fi romance", "alien romance", "medical romance"]
+ratingCount: 1501
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: medium
+setting:
+  - space-station
+  - alien-mothership
+genres:
+  - sci-fi romance
+  - alien romance
+  - medical romance
 isKU: true
-amazonUrl: "https://amazon.com/dp/the-bride-program"
-goodreadsUrl: "https://goodreads.com/book/show/49973729-the-bride-program"
-price: "$3.99"
-wordCount: 75000
-pageCount: 280
-status: "published"
+amazonUrl: https://amazon.com/dp/the-bride-program
+goodreadsUrl: https://www.goodreads.com/book/show/49973729-the-bride-program
+price: $0.99
+wordCount: 30229
+pageCount: 101
+status: published
 featured: false
 ---
 

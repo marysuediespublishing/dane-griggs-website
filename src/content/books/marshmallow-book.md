@@ -1,24 +1,36 @@
 ---
-title: "Marshmallow"
-author: "Dane Griggs"
-description: "General D'Annon has been watching over Sara for months, but when she needs to return to Earth to help her mom, he personally escorts her home—and finally gets the chance to show his true feelings. Sometimes the gruffest exteriors hide the sweetest hearts."
-cover: "../../assets/marshmallow-cover.jpg"
-series: "Saving Ceraste"
+title: Marshmallow
+author: Dane Griggs
+description: General D'Annon has been watching over Sara for months, but when
+  she needs to return to Earth to help her mom, he personally escorts her
+  home—and finally gets the chance to show his true feelings. Sometimes the
+  gruffest exteriors hide the sweetest hearts.
+cover: ../../assets/marshmallow-cover.jpg
+series: Saving Ceraste
 seriesOrder: 7
 pubDate: 2020-04-15T00:00:00.000Z
 rating: 4.49
-ratingCount: 1210
-alienSpecies: ["cerastean", "human"]
-heatLevel: "high"
-setting: ["space-station", "earth", "travel"]
-genres: ["sci-fi romance", "alien romance", "protective hero", "domestic violence recovery"]
+ratingCount: 372
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: high
+setting:
+  - space-station
+  - earth
+  - travel
+genres:
+  - sci-fi romance
+  - alien romance
+  - protective hero
+  - domestic violence recovery
 isKU: true
-amazonUrl: "https://amazon.com/dp/marshmallow"
-goodreadsUrl: "https://goodreads.com/book/show/52321075-marshmallow"
-price: "$3.99"
-wordCount: 95000
-pageCount: 370
-status: "published"
+amazonUrl: https://amazon.com/dp/marshmallow
+goodreadsUrl: https://www.goodreads.com/book/show/52321075-marshmallow
+price: $2.99
+wordCount: 55737
+pageCount: 232
+status: published
 featured: true
 ---
 

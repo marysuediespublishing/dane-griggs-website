@@ -1,24 +1,37 @@
 ---
-title: "Rescued By A Kraken"
-author: "Dane Griggs"
-description: "Rose Ashford's quiet vacation to the coastal town of Lublin Harbor turns extraordinary when she meets the mysterious Levi and discovers a hidden world beneath the waves. After being rescued by a legendary sea creature during a storm, Rose finds herself torn between two worlds and two captivating beings – Levi and the kraken who saved her life. As her vacation ends, she faces an impossible choice: return to her ordinary life or dive into a magical realm where love and legend collide."
-cover: "../../assets/rescued-by-kraken-cover.jpg"
-series: "Koko's Harbor for Wayward Fated Mates"
+title: Rescued By A Kraken
+author: Dane Griggs
+description: "Rose Ashford's quiet vacation to the coastal town of Lublin Harbor
+  turns extraordinary when she meets the mysterious Levi and discovers a hidden
+  world beneath the waves. After being rescued by a legendary sea creature
+  during a storm, Rose finds herself torn between two worlds and two captivating
+  beings – Levi and the kraken who saved her life. As her vacation ends, she
+  faces an impossible choice: return to her ordinary life or dive into a magical
+  realm where love and legend collide."
+cover: ../../assets/rescued-by-kraken-cover.jpg
+series: Koko's Harbor for Wayward Fated Mates
 seriesOrder: 2
 pubDate: 2024-11-15T00:00:00.000Z
 rating: 4.5
-ratingCount: 39
-alienSpecies: ["kraken", "human"]
-heatLevel: "medium-high"
-setting: ["coastal-town", "magical-harbor", "ocean"]
-genres: ["paranormal romance", "kraken romance", "small-town romance", "magical realism"]
+ratingCount: 42
+alienSpecies:
+  - kraken
+  - human
+heatLevel: medium
+setting:
+  - earth
+genres:
+  - paranormal romance
+  - kraken romance
+  - small-town romance
+  - magical realism
 isKU: true
-amazonUrl: "https://amazon.com/dp/rescued-by-kraken"
-goodreadsUrl: "https://goodreads.com/book/show/rescued-by-kraken"
-price: "$3.99"
-wordCount: 95000
-pageCount: 380
-status: "published"
+amazonUrl: https://amazon.com/dp/rescued-by-kraken
+goodreadsUrl: https://www.goodreads.com/book/show/220363393-rescued-by-a-kraken
+price: $3.99
+wordCount: 74513
+pageCount: 252
+status: published
 featured: false
 ---
 

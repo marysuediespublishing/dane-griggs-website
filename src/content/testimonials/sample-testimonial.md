@@ -1,13 +1,15 @@
 ---
-reviewerName: "Sarah M."
-reviewerPlatform: "amazon"
+reviewerName: Meduzza
+reviewerPlatform: amazon
 rating: 5
-quote: "Finally, an alien romance where the heroine actually has skills! Maya is a strong doctor who solves problems with her brain, not just her beauty. The Cerastean culture feels so real and detailed. This is exactly what I've been looking for in sci-fi romance."
-bookTitle: "The Bride Program"
+quote: The characters are fabulous. The banter & sarcasm had me giggling
+  throughout the entire book. The storyline is cute & interesting. I really
+  enjoyed it & hope the rest of the series is this much fun.
+bookTitle: The Bride Program
 verified: true
-date: 2023-08-15T00:00:00.000Z
+date: 1904-04-17T20:00:00.000-05:00
 featured: true
-category: "character-development"
+category: character-development
 ---
 
 # Featured Reader Review
