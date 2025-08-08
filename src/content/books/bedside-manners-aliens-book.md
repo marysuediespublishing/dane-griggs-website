@@ -10,7 +10,7 @@ series: Saving Ceraste
 seriesOrder: 2
 pubDate: 2019-05-06T00:00:00.000Z
 rating: 4.4
-ratingCount: 965
+ratingCount: 966
 species:
   - cerastean
   - human
@@ -26,7 +26,7 @@ genres:
   - medical romance
   - workplace-romance
 isKU: true
-amazonUrl: https://amazon.com/dp/bedside-manners-aliens
+amazonUrl: https://amzn.to/41td3iY
 goodreadsUrl: https://www.goodreads.com/book/show/49604676-bedside-manners-for-aliens
 price: $2.99
 wordCount: 29619

@@ -9,11 +9,12 @@ cover: ../../assets/war-brides-cover.jpg
 series: Saving Ceraste
 seriesOrder: 8
 pubDate: 2020-09-15T00:00:00.000Z
-rating: 4.6
+rating: 4.5
 ratingCount: 422
-alienSpecies:
+species:
   - cerastean
   - human
+  - hisk
 heatLevel: medium
 setting:
   - space-station
@@ -25,13 +26,16 @@ genres:
   - opposites attract
   - wartime romance
 isKU: true
-amazonUrl: https://amazon.com/dp/war-brides
+amazonUrl: https://amzn.to/457xgNE
 goodreadsUrl: https://www.goodreads.com/book/show/55523227-war-brides
 price: $2.99
 wordCount: 49673
 pageCount: 216
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # War Brides

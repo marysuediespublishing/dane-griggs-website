@@ -12,8 +12,8 @@ rating: 4.5
 ratingCount: 275
 species:
   - cerastean
-  - dulci
   - human
+  - ostium
 heatLevel: medium
 setting:
   - space-station
@@ -25,7 +25,7 @@ genres:
   - political intrigue
   - series finale
 isKU: true
-amazonUrl: https://amazon.com/dp/chancellors-pilot
+amazonUrl: https://amzn.to/40ZHRrz
 goodreadsUrl: https://www.goodreads.com/book/show/60641815-the-chancellor-s-pilot
 price: $2.99
 wordCount: 58919

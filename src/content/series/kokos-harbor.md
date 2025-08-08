@@ -9,11 +9,13 @@ bookCount: 2
 completionStatus: ongoing
 startDate: 2024-06-21T00:00:00.000Z
 completionDate: null
-alienSpecies:
-  - kraken
+species:
   - human
-overallRating: 4.34
-totalRatings: 151
+  - slavic-goddess
+  - cryzorian
+  - kraken
+overallRating: 4.5
+totalRatings: 152
 worldBuilding: Nestled in the scenic coastline, the charming town of Lublin
   Harbor appears to be just another quaint small town. But appearances can be
   deceiving. This is a place where magic happens, where people find exactly what
@@ -23,6 +25,9 @@ readingOrder:
   - lily-saves-alien-book
   - rescued-by-kraken-book
 featured: false
+alienSpecies:
+  - kraken
+  - human
 ---
 
 # Koko's Harbor for Wayward Fated Mates

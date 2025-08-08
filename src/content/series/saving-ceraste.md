@@ -7,11 +7,15 @@ bookCount: 10
 completionStatus: ongoing
 startDate: 2019-03-25T00:00:00.000Z
 completionDate: null
-alienSpecies:
-  - cerastean
+species:
   - human
-overallRating: 4.35
-totalRatings: 6347
+  - cerastean
+  - dulci
+  - hisk
+  - ostium
+  - feline
+overallRating: 4.5
+totalRatings: 7344
 worldBuilding: The Cerasteans are snake-like aliens who lost their homeworld and
   most of their women to a mysterious catastrophe. Now they offer Earth a cure
   for cancer in exchange for human brides to help rebuild their civilization.
@@ -30,6 +34,9 @@ readingOrder:
   - chancellors-pilot-book
   - rosie-christmas-book
 featured: true
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # Saving Ceraste

@@ -8,9 +8,9 @@ cover: ../../assets/rosie-christmas-cover.jpg
 series: Saving Ceraste
 seriesOrder: 10
 pubDate: 2023-12-01T00:00:00.000Z
-rating: 4.6
+rating: 4.7
 ratingCount: 103
-alienSpecies:
+species:
   - cerastean
   - human
 heatLevel: medium
@@ -23,13 +23,16 @@ genres:
   - holiday romance
   - alien romance
 isKU: true
-amazonUrl: https://amazon.com/dp/rosie-christmas
+amazonUrl: https://amzn.to/3J6jp1C
 goodreadsUrl: https://www.goodreads.com/book/show/203055678-a-rosie-christmas
 price: $1.99
 wordCount: 47039
 pageCount: 180
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # A Rosie Christmas

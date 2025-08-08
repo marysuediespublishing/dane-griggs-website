@@ -12,11 +12,12 @@ cover: ../../assets/rescued-by-kraken-cover.jpg
 series: Koko's Harbor for Wayward Fated Mates
 seriesOrder: 2
 pubDate: 2024-11-15T00:00:00.000Z
-rating: 4.5
+rating: 4.1
 ratingCount: 42
-alienSpecies:
+species:
   - kraken
   - human
+  - slavic-goddess
 heatLevel: medium
 setting:
   - earth
@@ -26,13 +27,16 @@ genres:
   - small-town romance
   - magical realism
 isKU: true
-amazonUrl: https://amazon.com/dp/rescued-by-kraken
+amazonUrl: https://amzn.to/3H3teNd
 goodreadsUrl: https://www.goodreads.com/book/show/220363393-rescued-by-a-kraken
 price: $3.99
 wordCount: 74513
 pageCount: 252
 status: published
 featured: false
+alienSpecies:
+  - kraken
+  - human
 ---
 
 # Rescued By A Kraken

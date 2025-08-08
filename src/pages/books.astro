@@ -206,14 +206,6 @@ const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMon
           </p>
         </div>
 
-        <!-- Filter Options -->
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-          <button class="btn btn-outline active" data-filter="all">All Books</button>
-          <button class="btn btn-outline" data-filter="series">Series Books</button>
-          <button class="btn btn-outline" data-filter="standalone">Standalone</button>
-          <button class="btn btn-outline" data-filter="cerastean">Cerastean</button>
-          <button class="btn btn-outline" data-filter="featured">Featured</button>
-        </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {sortedBooks.map((book) => (
@@ -284,31 +276,3 @@ const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMon
   <Footer />
 </Layout>
 
-<script>
-// Simple filtering functionality
-document.addEventListener('DOMContentLoaded', () => {
-  const filterButtons = document.querySelectorAll('[data-filter]');
-  const bookCards = document.querySelectorAll('[data-book]');
-  
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Update active button
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-      
-      const filter = button.getAttribute('data-filter');
-      
-      // Show/hide books based on filter
-      bookCards.forEach(card => {
-        if (filter === 'all') {
-          card.style.display = 'block';
-        } else {
-          // This would need to be implemented based on the BookCard component structure
-          const shouldShow = card.getAttribute('data-categories')?.includes(filter);
-          card.style.display = shouldShow ? 'block' : 'none';
-        }
-      });
-    });
-  });
-});
-</script>

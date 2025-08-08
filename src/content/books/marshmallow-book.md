@@ -9,12 +9,12 @@ cover: ../../assets/marshmallow-cover.jpg
 series: Saving Ceraste
 seriesOrder: 7
 pubDate: 2020-04-15T00:00:00.000Z
-rating: 4.49
+rating: 4.5
 ratingCount: 372
-alienSpecies:
+species:
   - cerastean
   - human
-heatLevel: high
+heatLevel: medium
 setting:
   - space-station
   - earth
@@ -25,13 +25,16 @@ genres:
   - protective hero
   - domestic violence recovery
 isKU: true
-amazonUrl: https://amazon.com/dp/marshmallow
+amazonUrl: https://amzn.to/4fwyTYX
 goodreadsUrl: https://www.goodreads.com/book/show/52321075-marshmallow
 price: $2.99
 wordCount: 55737
 pageCount: 232
 status: published
 featured: true
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # Marshmallow

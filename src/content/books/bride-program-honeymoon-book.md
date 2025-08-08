@@ -9,13 +9,12 @@ cover: ../../assets/honeymoon-cover.jpg
 series: Saving Ceraste
 seriesOrder: 4
 pubDate: 2019-11-20T00:00:00.000Z
-rating: 4.21
-ratingCount: 611
-alienSpecies:
+rating: 4.4
+ratingCount: 612
+species:
   - cerastean
-  - dulci
-  - ostium
   - human
+  - dulci
 heatLevel: medium
 setting:
   - alien-planet
@@ -26,13 +25,18 @@ genres:
   - alien romance
   - vacation-adventure
 isKU: true
-amazonUrl: https://amazon.com/dp/bride-program-honeymoon
+amazonUrl: https://amzn.to/3HiiJWo
 goodreadsUrl: https://www.goodreads.com/book/show/50045815-the-bride-program-honeymoon
 price: $2.99
 wordCount: 45983
 pageCount: 130
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - dulci
+  - ostium
+  - human
 ---
 
 # The Bride Program Honeymoon

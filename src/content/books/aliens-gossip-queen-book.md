@@ -9,7 +9,7 @@ cover: ../../assets/gossip-queen-cover.jpg
 series: Saving Ceraste
 seriesOrder: 6
 pubDate: 2020-02-14T00:00:00.000Z
-rating: 4.38
+rating: 4.4
 ratingCount: 397
 species:
   - cerastean
@@ -25,7 +25,7 @@ genres:
   - medical romance
   - workplace romance
 isKU: true
-amazonUrl: https://amazon.com/dp/aliens-gossip-queen
+amazonUrl: https://amzn.to/4mwFX9U
 goodreadsUrl: https://www.goodreads.com/book/show/50518075-the-alien-s-gossip-queen
 price: $2.99
 wordCount: 46431

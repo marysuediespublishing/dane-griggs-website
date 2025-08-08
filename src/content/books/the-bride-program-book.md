@@ -11,9 +11,9 @@ seriesOrder: 1
 pubDate: 2019-03-25T00:00:00.000Z
 rating: 4.2
 ratingCount: 1501
-alienSpecies:
-  - cerastean
+species:
   - human
+  - cerastean
 heatLevel: medium
 setting:
   - space-station
@@ -23,13 +23,16 @@ genres:
   - alien romance
   - medical romance
 isKU: true
-amazonUrl: https://amazon.com/dp/the-bride-program
+amazonUrl: https://amzn.to/4myjNUO
 goodreadsUrl: https://www.goodreads.com/book/show/49973729-the-bride-program
 price: $0.99
 wordCount: 30229
 pageCount: 101
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # The Bride Program

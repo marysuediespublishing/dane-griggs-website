@@ -14,6 +14,8 @@ ratingCount: 110
 species:
   - human
   - cryzorian
+  - feline
+  - slavic-goddess
 heatLevel: medium
 setting:
   - earth
@@ -23,7 +25,7 @@ genres:
   - small-town romance
   - magical realism
 isKU: true
-amazonUrl: https://amazon.com/dp/lily-saves-alien
+amazonUrl: https://amzn.to/45rtNZ6
 goodreadsUrl: https://www.goodreads.com/book/show/212197419-lily-saves-an-alien
 price: $3.99
 wordCount: 130542

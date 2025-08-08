@@ -198,7 +198,7 @@ Deliver the core book discovery experience that drives engagement and conversion
 ---
 
 ## Sprint 3: Search & Discovery Engine (Days 13-18)
-**Theme**: "Help readers find their perfect alien romance"
+**Theme**: "Help readers find their perfect romance"
 
 ### Sprint Goal
 Implement powerful search and filtering capabilities that help users discover books based on their preferences.

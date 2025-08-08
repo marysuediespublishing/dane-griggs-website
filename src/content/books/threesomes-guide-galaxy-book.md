@@ -9,7 +9,7 @@ cover: ../../assets/threesome-guide-cover.jpg
 series: Saving Ceraste
 seriesOrder: 3
 pubDate: 2019-08-15T00:00:00.000Z
-rating: 4.3
+rating: 3.9
 ratingCount: 668
 species:
   - cerastean
@@ -20,13 +20,14 @@ setting:
   - space-station
   - ostium-space-station
   - spaceship
+  - alien-planet
 genres:
   - sci-fi romance
   - alien romance
   - trauma recovery
   - menage
 isKU: true
-amazonUrl: https://amazon.com/dp/threesomes-guide-galaxy
+amazonUrl: https://amzn.to/3J8oRkq
 goodreadsUrl: https://www.goodreads.com/book/show/49962721-threesome-s-guide-to-the-galaxy
 price: $2.99
 wordCount: 38688

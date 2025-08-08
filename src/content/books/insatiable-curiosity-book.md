@@ -10,9 +10,9 @@ cover: ../../assets/insatiable-curiosity-cover.jpg
 series: Saving Ceraste
 seriesOrder: 5
 pubDate: 2019-12-10T00:00:00.000Z
-rating: 4.6
+rating: 4.5
 ratingCount: 480
-alienSpecies:
+species:
   - cerastean
   - human
   - hisk
@@ -26,13 +26,17 @@ genres:
   - alien romance
   - engineering romance
 isKU: true
-amazonUrl: https://amazon.com/dp/insatiable-curiosity
+amazonUrl: https://amzn.to/45h3uVm
 goodreadsUrl: https://www.goodreads.com/book/show/52665365-insatiable-curiosity
 price: $2.99
 wordCount: 63876
 pageCount: 270
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
+  - hisk
 ---
 
 # Insatiable Curiosity
