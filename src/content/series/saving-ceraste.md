@@ -1,15 +1,34 @@
 ---
-title: "Saving Ceraste"
-description: "Ten-book sci-fi romance series following human women who volunteer as alien brides to save lives and find love. Features strong heroines, no Mary Sue characters, and relationships that develop naturally over time."
+title: Saving Ceraste
+description: Ten-book sci-fi romance series following human women who volunteer
+  as alien brides to save lives and find love. Features strong heroines, no Mary
+  Sue characters, and relationships that develop naturally over time.
 bookCount: 10
-completionStatus: "ongoing"
+completionStatus: ongoing
 startDate: 2019-03-25T00:00:00.000Z
-completionDate: 
-alienSpecies: ["cerastean", "human"]
+completionDate: null
+alienSpecies:
+  - cerastean
+  - human
 overallRating: 4.35
-totalRatings: 8947
-worldBuilding: "The Cerasteans are snake-like aliens who lost their homeworld and most of their women to a mysterious catastrophe. Now they offer Earth a cure for cancer in exchange for human brides to help rebuild their civilization. Each book explores different aspects of Cerastean society, their advanced technology, and the growing alliance between species as they face the Ostium threat."
-readingOrder: ["the-bride-program-book", "bedside-manners-aliens-book", "threesomes-guide-galaxy-book", "bride-program-honeymoon-book", "insatiable-curiosity-book", "aliens-gossip-queen-book", "marshmallow-book", "war-brides-book", "chancellors-pilot-book", "rosie-christmas-book"]
+totalRatings: 6347
+worldBuilding: The Cerasteans are snake-like aliens who lost their homeworld and
+  most of their women to a mysterious catastrophe. Now they offer Earth a cure
+  for cancer in exchange for human brides to help rebuild their civilization.
+  Each book explores different aspects of Cerastean society, their advanced
+  technology, and the growing alliance between species as they face the Ostium
+  threat.
+readingOrder:
+  - the-bride-program-book
+  - bedside-manners-aliens-book
+  - threesomes-guide-galaxy-book
+  - bride-program-honeymoon-book
+  - insatiable-curiosity-book
+  - aliens-gossip-queen-book
+  - marshmallow-book
+  - war-brides-book
+  - chancellors-pilot-book
+  - rosie-christmas-book
 featured: true
 ---
 

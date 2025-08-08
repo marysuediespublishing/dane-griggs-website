@@ -1,24 +1,36 @@
 ---
-title: "Bedside Manners for Aliens"
-author: "Dane Griggs"
-description: "Dr. Serena volunteers to work with Cerastean physicians who can cure cancer, but she wasn't prepared for L'Vect—brilliant, awkward, and completely clueless about human patient care. Their professional partnership becomes something much deeper."
-cover: "../../assets/bedside-manners-cover.jpg"
-series: "Saving Ceraste"
+title: Bedside Manners for Aliens
+author: Dane Griggs
+description: Dr. Serena volunteers to work with Cerastean physicians who can
+  cure cancer, but she wasn't prepared for L'Vect—brilliant, awkward, and
+  completely clueless about human patient care. Their professional partnership
+  becomes something much deeper.
+cover: ../../assets/bedside-manners-cover.jpg
+series: Saving Ceraste
 seriesOrder: 2
 pubDate: 2019-05-06T00:00:00.000Z
 rating: 4.29
-ratingCount: 526
-alienSpecies: ["cerastean", "human"]
-heatLevel: "medium"
-setting: ["medical-facility", "earth", "space-station"]
-genres: ["sci-fi romance", "alien romance", "medical romance", "workplace-romance"]
+ratingCount: 965
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: medium
+setting:
+  - medical-facility
+  - earth
+  - space-station
+genres:
+  - sci-fi romance
+  - alien romance
+  - medical romance
+  - workplace-romance
 isKU: true
-amazonUrl: "https://amazon.com/dp/bedside-manners-aliens"
-goodreadsUrl: "https://goodreads.com/book/show/bedside-manners-aliens"
-price: "$4.99"
-wordCount: 80000
-pageCount: 305
-status: "published"
+amazonUrl: https://amazon.com/dp/bedside-manners-aliens
+goodreadsUrl: https://www.goodreads.com/book/show/49604676-bedside-manners-for-aliens
+price: $2.99
+wordCount: 29619
+pageCount: 104
+status: published
 featured: false
 ---
 

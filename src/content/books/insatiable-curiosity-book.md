@@ -1,24 +1,37 @@
 ---
-title: "Insatiable Curiosity"
-author: "Dane Griggs"
-description: "Ally has wanted to be an astronaut for as long as she can remember, but an eye condition ended that dream. Working with Cerastean Scientist L'Zaen to re-engineer alien technology gives her everything she ever wanted: space exploration and a brilliant partner who appreciates her insatiable curiosity."
-cover: "../../assets/insatiable-curiosity-cover.jpg"
-series: "Saving Ceraste"
+title: Insatiable Curiosity
+author: Dane Griggs
+description: "Ally has wanted to be an astronaut for as long as she can
+  remember, but an eye condition ended that dream. Working with Cerastean
+  Scientist L'Zaen to re-engineer alien technology gives her everything she ever
+  wanted: space exploration and a brilliant partner who appreciates her
+  insatiable curiosity."
+cover: ../../assets/insatiable-curiosity-cover.jpg
+series: Saving Ceraste
 seriesOrder: 5
 pubDate: 2019-12-10T00:00:00.000Z
-rating: 4.37
-ratingCount: 260
-alienSpecies: ["cerastean", "human", "hisk"]
-heatLevel: "medium"
-setting: ["space-station", "alien-mothership", "hisk-homeworld"]
-genres: ["sci-fi romance", "alien romance", "engineering romance"]
+rating: 4.6
+ratingCount: 480
+alienSpecies:
+  - cerastean
+  - human
+  - hisk
+heatLevel: medium
+setting:
+  - space-station
+  - alien-mothership
+  - hisk-homeworld
+genres:
+  - sci-fi romance
+  - alien romance
+  - engineering romance
 isKU: true
-amazonUrl: "https://amazon.com/dp/insatiable-curiosity"
-goodreadsUrl: "https://goodreads.com/book/show/52665365-insatiable-curiosity"
-price: "$3.99"
-wordCount: 92000
-pageCount: 360
-status: "published"
+amazonUrl: https://amazon.com/dp/insatiable-curiosity
+goodreadsUrl: https://www.goodreads.com/book/show/52665365-insatiable-curiosity
+price: $2.99
+wordCount: 63876
+pageCount: 270
+status: published
 featured: false
 ---
 

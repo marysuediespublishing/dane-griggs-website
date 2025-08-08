@@ -8,6 +8,10 @@ import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
 // Get site configuration from CMS
 const settingsCollection = await getCollection('settings');
 const siteConfig = settingsCollection[0]?.data || {};
+
+// Get about page content from CMS
+const pagesCollection = await getCollection('pages');
+const aboutPage = pagesCollection.find(page => page.data.pageType === 'about')?.data || {};
 ---
 
 <Layout title="About - Dane Griggs">
@@ -24,11 +28,11 @@ const siteConfig = settingsCollection[0]?.data || {};
 				<div class="max-w-4xl mx-auto text-center">
 					<h1 class="text-4xl md:text-6xl font-primary font-bold text-solar-white mb-6">
 						<span class="bg-gradient-aurora bg-clip-text text-transparent">
-							About Dane Griggs
+							{aboutPage.hero?.title || "About Dane Griggs"}
 						</span>
 					</h1>
 					<p class="text-xl text-stellar-gold font-medium mb-8">
-						{siteConfig.tagline || "Sexy escapes with heart, humor, and no Mary Sues"}
+						{aboutPage.hero?.tagline || siteConfig.tagline || "Sexy escapes with heart, humor, and no Mary Sues"}
 					</p>
 				</div>
 			</div>
@@ -54,16 +58,20 @@ const siteConfig = settingsCollection[0]?.data || {};
 						<div class="lg:col-span-2">
 							<div class="prose prose-lg max-w-none">
 								<p class="text-gray-700 text-lg leading-relaxed mb-6">
-									{siteConfig.authorBio || "Dane Griggs writes sci-fi romance novels featuring strong heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building and characters who solve problems with their brains, not just their beauty."}
+									{aboutPage.authorBio?.mainBio || siteConfig.authorBio || "Dane Griggs writes sci-fi romance novels featuring strong heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building and characters who solve problems with their brains, not just their beauty."}
 								</p>
 								
-								<p class="text-gray-700 leading-relaxed mb-6">
-									Dane enjoys writing about relationships that evolve and grow over time, with lots of super-hot romance. She strives to put her characters in interesting situations where their strength and wit shine through—no Mary Sues allowed. She lives in Florida with her husband and two children.
-								</p>
+								{aboutPage.authorBio?.secondaryBio && (
+									<p class="text-gray-700 leading-relaxed mb-6">
+										{aboutPage.authorBio.secondaryBio}
+									</p>
+								)}
 								
-								<p class="text-gray-700 leading-relaxed">
-									When she's not writing about interstellar love affairs, she's researching alien biology, dreaming up new worlds where humans and aliens find their perfect matches, and connecting with readers who appreciate stories with both heat and heart.
-								</p>
+								{aboutPage.authorBio?.tertiaryBio && (
+									<p class="text-gray-700 leading-relaxed">
+										{aboutPage.authorBio.tertiaryBio}
+									</p>
+								)}
 							</div>
 						</div>
 					</div>
@@ -129,37 +137,49 @@ const siteConfig = settingsCollection[0]?.data || {};
 					</div>
 					
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-						<div class="bg-white rounded-xl p-8 shadow-lg">
-							<div class="text-4xl mb-4">🧠</div>
-							<h3 class="text-xl font-bold text-deep-space-navy mb-4">No Mary Sues Allowed</h3>
-							<p class="text-gray-600">
-								My heroines are skilled professionals who solve problems with their brains, not just their beauty. They're doctors, engineers, scientists—women with real expertise and genuine competence.
-							</p>
-						</div>
-						
-						<div class="bg-white rounded-xl p-8 shadow-lg">
-							<div class="text-4xl mb-4">🌌</div>
-							<h3 class="text-xl font-bold text-deep-space-navy mb-4">Rich World-Building</h3>
-							<p class="text-gray-600">
-								Meticulously crafted alien cultures with their own societies, customs, and believable biology. Every species has evolutionary logic and cultural depth that enhances the romance.
-							</p>
-						</div>
-						
-						<div class="bg-white rounded-xl p-8 shadow-lg">
-							<div class="text-4xl mb-4">💝</div>
-							<h3 class="text-xl font-bold text-deep-space-navy mb-4">Heart & Humor</h3>
-							<p class="text-gray-600">
-								Steamy romance with emotional depth, laugh-out-loud moments, and happily ever afters. Love should be fun, passionate, and built on mutual respect and understanding.
-							</p>
-						</div>
-						
-						<div class="bg-white rounded-xl p-8 shadow-lg">
-							<div class="text-4xl mb-4">🔬</div>
-							<h3 class="text-xl font-bold text-deep-space-navy mb-4">Scientific Foundation</h3>
-							<p class="text-gray-600">
-								Extensive research goes into every alien species, medical procedure, and technological element. The fantasy is grounded in plausible science and realistic consequences.
-							</p>
-						</div>
+						{aboutPage.philosophyCards && aboutPage.philosophyCards.length > 0 ? aboutPage.philosophyCards.map((card) => (
+							<div class="bg-white rounded-xl p-8 shadow-lg">
+								<div class="text-4xl mb-4">{card.icon}</div>
+								<h3 class="text-xl font-bold text-deep-space-navy mb-4">{card.title}</h3>
+								<p class="text-gray-600">
+									{card.description}
+								</p>
+							</div>
+						)) : (
+							<>
+								<div class="bg-white rounded-xl p-8 shadow-lg">
+									<div class="text-4xl mb-4">🧠</div>
+									<h3 class="text-xl font-bold text-deep-space-navy mb-4">No Mary Sues Allowed</h3>
+									<p class="text-gray-600">
+										My heroines are real people first—flawed, opinionated, and refreshingly human. They're not interchangeable archetypes or helpless victims; they're women with backbone, blind spots, and the kind of authentic decision-making that comes from having actual character traits driving their actions. They solve problems with their brains, not just their beauty.
+									</p>
+								</div>
+								
+								<div class="bg-white rounded-xl p-8 shadow-lg">
+									<div class="text-4xl mb-4">🌌</div>
+									<h3 class="text-xl font-bold text-deep-space-navy mb-4">Rich World-Building</h3>
+									<p class="text-gray-600">
+										Meticulously crafted alien cultures with their own societies, customs, and believable biology. Every species has evolutionary logic and cultural depth that enhances the romance.
+									</p>
+								</div>
+								
+								<div class="bg-white rounded-xl p-8 shadow-lg">
+									<div class="text-4xl mb-4">💝</div>
+									<h3 class="text-xl font-bold text-deep-space-navy mb-4">Heart & Humor</h3>
+									<p class="text-gray-600">
+										Steamy romance with emotional depth, laugh-out-loud moments, and happily ever afters. Love should be fun, passionate, and built on mutual respect and understanding.
+									</p>
+								</div>
+								
+								<div class="bg-white rounded-xl p-8 shadow-lg">
+									<div class="text-4xl mb-4">🔬</div>
+									<h3 class="text-xl font-bold text-deep-space-navy mb-4">Scientific Foundation</h3>
+									<p class="text-gray-600">
+										Extensive research goes into every alien species, medical procedure, and technological element. The fantasy is grounded in plausible science and realistic consequences.
+									</p>
+								</div>
+							</>
+						)}
 					</div>
 				</div>
 			</div>
@@ -170,10 +190,10 @@ const siteConfig = settingsCollection[0]?.data || {};
 			<div class="container mx-auto px-4 text-center">
 				<div class="max-w-3xl mx-auto">
 					<h2 class="text-3xl md:text-4xl font-primary font-bold mb-6">
-						Let's Connect
+						{aboutPage.connectSection?.title || "Let's Connect"}
 					</h2>
 					<p class="text-xl text-solar-white/90 mb-8">
-						Join thousands of readers who love strong heroines, swoon-worthy aliens, and romances that combine heat with heart.
+						{aboutPage.connectSection?.description || "Join thousands of readers who love strong heroines, swoon-worthy aliens, and romances that combine heat with heart."}
 					</p>
 					
 					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">

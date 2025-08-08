@@ -1,31 +1,40 @@
 ---
-siteTitle: "Dane Griggs - Sci-Fi Romance Author"
-siteDescription: "Sexy alien romance with heart, humor, and no Mary Sues. Explore completed series featuring strong heroines and swoon-worthy aliens in meticulously crafted worlds."
-authorName: "Dane Griggs"
-authorBio: "Dane Griggs writes sci-fi romance novels featuring strong heroines and swoon-worthy aliens. With over 200 million pages read, her stories combine steamy romance with detailed world-building and characters who solve problems with their brains, not just their beauty. When she's not writing about interstellar love affairs, she's researching alien biology and dreaming up new worlds where humans and aliens find their perfect matches."
-tagline: "Sexy escapes with heart, humor, and no Mary Sues"
+siteTitle: Dane Griggs - Sci-Fi Romance Author
+siteDescription: Sexy alien romance with heart, humor, and no Mary Sues. Explore
+  completed series featuring strong heroines and swoon-worthy aliens in
+  meticulously crafted worlds.
+authorName: Dane Griggs
+authorBio: Dane Griggs writes sci-fi romance novels featuring strong heroines
+  and swoon-worthy heroes. With over 44 million pages read, her stories combine
+  steamy romance with detailed world-building and characters who solve problems
+  with their brains, not just their beauty. When she's not writing about
+  interstellar love affairs, she's researching alien biology and dreaming up new
+  worlds where humans and aliens find their perfect matches.
+tagline: Sexy escapes with heart, humor, and no Mary Sues
 socialLinks:
-  facebook: "https://facebook.com/danegriggsauthor"
-  goodreads: "https://goodreads.com/author/show/danegriggs"
-  email: "hello@danegriggs.com"
+  facebook: https://facebook.com/danegriggsbooks
+  goodreads: https://www.goodreads.com/author/show/18999548.Dane_Griggs
+  email: info@danegriggs.com
+  instagram: https://www.instagram.com/danegriggsauthor/
 stats:
-  booksPublished: 13
-  pagesRead: "200M+"
-  readerRatings: "9.3K+"
+  booksPublished: 12
+  pagesRead: 44M+
+  readerRatings: 7.3K+
   seriesComplete: 2
   averageRating: "4.3"
-  totalReviews: "3,879"
+  totalReviews: 3,879
 newsletter:
-  leadMagnetTitle: "Get Your FREE Alien Romance Pack"
-  leadMagnetDescription: "Join 10,000+ sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights into alien world-building."
-  benefits: [
-    "Free starter pack with bonus content",
-    "Early access to new releases", 
-    "Exclusive alien species guides",
-    "Behind-the-scenes writing insights",
-    "Reader-only contests and giveaways",
-    "No spam, ever - unsubscribe anytime"
-  ]
+  leadMagnetTitle: Get Your FREE Alien Romance Pack
+  leadMagnetDescription: Join 10,000+ sci-fi romance fans and get exclusive
+    content, early access to new releases, and behind-the-scenes insights into
+    alien world-building.
+  benefits:
+    - Free starter pack with bonus content
+    - Early access to new releases
+    - Exclusive alien species guides
+    - Behind-the-scenes writing insights
+    - Reader-only contests and giveaways
+    - No spam, ever - unsubscribe anytime
 ---
 
 # Site Configuration

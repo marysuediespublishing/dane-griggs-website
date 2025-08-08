@@ -1,24 +1,37 @@
 ---
-title: "The Bride Program Honeymoon"
-author: "Dane Griggs"
-description: "Laney and her bride volunteer friends take their first vacation together to the dulci homeworld of Xerini. What should be paradise becomes adventure when they encounter an Ostium princess with shocking revelations about the galaxy's future."
-cover: "../../assets/honeymoon-cover.jpg"
-series: "Saving Ceraste"
+title: The Bride Program Honeymoon
+author: Dane Griggs
+description: Laney and her bride volunteer friends take their first vacation
+  together to the dulci homeworld of Xerini. What should be paradise becomes
+  adventure when they encounter an Ostium princess with shocking revelations
+  about the galaxy's future.
+cover: ../../assets/honeymoon-cover.jpg
+series: Saving Ceraste
 seriesOrder: 4
 pubDate: 2019-11-20T00:00:00.000Z
 rating: 4.21
-ratingCount: 321
-alienSpecies: ["cerastean", "dulci", "ostium", "human"]
-heatLevel: "high"
-setting: ["alien-planet", "tropical-paradise", "xerini"]
-genres: ["sci-fi romance", "alien romance", "vacation-adventure"]
+ratingCount: 611
+alienSpecies:
+  - cerastean
+  - dulci
+  - ostium
+  - human
+heatLevel: medium
+setting:
+  - alien-planet
+  - tropical-paradise
+  - xerini
+genres:
+  - sci-fi romance
+  - alien romance
+  - vacation-adventure
 isKU: true
-amazonUrl: "https://amazon.com/dp/bride-program-honeymoon"
-goodreadsUrl: "https://goodreads.com/book/show/50045815-the-bride-program-honeymoon"
-price: "$4.99"
-wordCount: 78000
-pageCount: 295
-status: "published"
+amazonUrl: https://amazon.com/dp/bride-program-honeymoon
+goodreadsUrl: https://www.goodreads.com/book/show/50045815-the-bride-program-honeymoon
+price: $2.99
+wordCount: 45983
+pageCount: 130
+status: published
 featured: false
 ---
 

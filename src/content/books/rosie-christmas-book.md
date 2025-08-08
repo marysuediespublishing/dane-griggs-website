@@ -1,24 +1,34 @@
 ---
-title: "A Rosie Christmas"
-author: "Dane Griggs"
-description: "A special holiday novella returning to the Saving Ceraste universe with Christmas magic, new romance, and all the warmth of the season—alien style. When traditions meet advanced technology, love finds a way."
-cover: "../../assets/rosie-christmas-cover.jpg"
-series: "Saving Ceraste"
+title: A Rosie Christmas
+author: Dane Griggs
+description: A special holiday novella returning to the Saving Ceraste universe
+  with Christmas magic, new romance, and all the warmth of the season—alien
+  style. When traditions meet advanced technology, love finds a way.
+cover: ../../assets/rosie-christmas-cover.jpg
+series: Saving Ceraste
 seriesOrder: 10
 pubDate: 2023-12-01T00:00:00.000Z
 rating: 4.6
-ratingCount: 88
-alienSpecies: ["cerastean", "human"]
-heatLevel: "medium"
-setting: ["space-station", "earth", "holiday-setting"]
-genres: ["sci-fi romance", "holiday romance", "alien romance"]
+ratingCount: 103
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: medium
+setting:
+  - space-station
+  - earth
+  - holiday-setting
+genres:
+  - sci-fi romance
+  - holiday romance
+  - alien romance
 isKU: true
-amazonUrl: "https://amazon.com/dp/rosie-christmas"
-goodreadsUrl: "https://goodreads.com/book/show/rosie-christmas"
-price: "$1.99"
-wordCount: 45000
+amazonUrl: https://amazon.com/dp/rosie-christmas
+goodreadsUrl: https://www.goodreads.com/book/show/203055678-a-rosie-christmas
+price: $1.99
+wordCount: 47039
 pageCount: 180
-status: "published"
+status: published
 featured: false
 ---
 

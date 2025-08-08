@@ -1,24 +1,36 @@
 ---
-title: "The Alien's Gossip Queen"
-author: "Dane Griggs"
-description: "Janet accepted a job at a Cerastean healing center to focus on saving cancer patients, but there's one problem—she absolutely loves gossip. When she meets D'Xurrl, the sweet security chief who loves dogs and has a body to die for, she discovers she might love someone more than spilling tea."
-cover: "../../assets/gossip-queen-cover.jpg"
-series: "Saving Ceraste"
+title: The Alien's Gossip Queen
+author: Dane Griggs
+description: Janet accepted a job at a Cerastean healing center to focus on
+  saving cancer patients, but there's one problem—she absolutely loves gossip.
+  When she meets D'Xurrl, the sweet security chief who loves dogs and has a body
+  to die for, she discovers she might love someone more than spilling tea.
+cover: ../../assets/gossip-queen-cover.jpg
+series: Saving Ceraste
 seriesOrder: 6
 pubDate: 2020-02-14T00:00:00.000Z
 rating: 4.38
-ratingCount: 207
-alienSpecies: ["cerastean", "human"]
-heatLevel: "medium"
-setting: ["healing-center", "earth", "medical-facility"]
-genres: ["sci-fi romance", "alien romance", "medical romance", "workplace romance"]
+ratingCount: 397
+alienSpecies:
+  - cerastean
+  - human
+heatLevel: medium
+setting:
+  - healing-center
+  - earth
+  - medical-facility
+genres:
+  - sci-fi romance
+  - alien romance
+  - medical romance
+  - workplace romance
 isKU: true
-amazonUrl: "https://amazon.com/dp/aliens-gossip-queen"
-goodreadsUrl: "https://goodreads.com/book/show/aliens-gossip-queen"
-price: "$3.99"
-wordCount: 78000
-pageCount: 290
-status: "published"
+amazonUrl: https://amazon.com/dp/aliens-gossip-queen
+goodreadsUrl: https://www.goodreads.com/book/show/50518075-the-alien-s-gossip-queen
+price: $2.99
+wordCount: 46431
+pageCount: 198
+status: published
 featured: false
 ---
 

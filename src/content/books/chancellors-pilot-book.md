@@ -1,24 +1,36 @@
 ---
-title: "The Chancellor's Pilot"
-author: "Dane Griggs"
-description: "The epic conclusion to the Saving Ceraste series brings political intrigue, high-stakes action, and one final love story that ties together nine books of human-Cerastean cooperation, romance, and the fight for survival."
-cover: "../../assets/chancellors-pilot-cover.jpg"
-series: "Saving Ceraste"
+title: The Chancellor's Pilot
+author: Dane Griggs
+description: The epic conclusion to the Saving Ceraste series brings political
+  intrigue, high-stakes action, and one final love story that ties together nine
+  books of human-Cerastean cooperation, romance, and the fight for survival.
+cover: ../../assets/chancellors-pilot-cover.jpg
+series: Saving Ceraste
 seriesOrder: 9
 pubDate: 2022-03-15T00:00:00.000Z
 rating: 4.5
-ratingCount: 249
-alienSpecies: ["cerastean", "human", "ostium"]
-heatLevel: "medium"
-setting: ["space-station", "political-chambers", "multiple-worlds"]
-genres: ["sci-fi romance", "alien romance", "political intrigue", "series finale"]
+ratingCount: 275
+alienSpecies:
+  - cerastean
+  - human
+  - ostium
+heatLevel: medium
+setting:
+  - space-station
+  - political-chambers
+  - multiple-worlds
+genres:
+  - sci-fi romance
+  - alien romance
+  - political intrigue
+  - series finale
 isKU: true
-amazonUrl: "https://amazon.com/dp/chancellors-pilot"
-goodreadsUrl: "https://goodreads.com/book/show/chancellors-pilot"
-price: "$4.99"
-wordCount: 105000
-pageCount: 420
-status: "published"
+amazonUrl: https://amazon.com/dp/chancellors-pilot
+goodreadsUrl: https://www.goodreads.com/book/show/60641815-the-chancellor-s-pilot
+price: $2.99
+wordCount: 58919
+pageCount: 200
+status: published
 featured: true
 ---
 

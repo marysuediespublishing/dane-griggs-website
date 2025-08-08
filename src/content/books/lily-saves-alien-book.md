@@ -1,25 +1,38 @@
 ---
-title: "Lily Saves An Alien"
-author: "Dane Griggs"
-description: "After dumping her loser ex-boyfriend, nurse Lily Blackwell takes a detour through the magical town of Lublin Harbor during their spring love festival. When an alien spaceship crash-lands near her cabin, her nursing skills and Mango the cat help save more than just a life."
-cover: "../../assets/lily-saves-alien-cover.jpg"
-series: "Koko's Harbor for Wayward Fated Mates"
+title: Lily Saves An Alien
+author: Dane Griggs
+description: After dumping her loser ex-boyfriend, nurse Lily Blackwell takes a
+  detour through the magical town of Lublin Harbor during their spring love
+  festival. When an alien spaceship crash-lands near her cabin, her nursing
+  skills and Mango the cat help save more than just a life.
+cover: ../../assets/lily-saves-alien-cover.jpg
+series: Koko's Harbor for Wayward Fated Mates
 seriesOrder: 1
 pubDate: 2024-06-21T00:00:00.000Z
 rating: 4.4
-ratingCount: 103
-alienSpecies: ["unknown-alien-species", "human"]
-heatLevel: "medium"
-setting: ["small-town", "magical-harbor", "cabin"]
-genres: ["paranormal romance", "alien romance", "small-town romance", "magical realism"]
+ratingCount: 110
+species:
+  - human
+  - cryzorian
+heatLevel: medium
+setting:
+  - earth
+genres:
+  - paranormal romance
+  - alien romance
+  - small-town romance
+  - magical realism
 isKU: true
-amazonUrl: "https://amazon.com/dp/lily-saves-alien"
-goodreadsUrl: "https://goodreads.com/book/show/lily-saves-alien"
-price: "$3.99"
-wordCount: 108000
-pageCount: 428
-status: "published"
+amazonUrl: https://amazon.com/dp/lily-saves-alien
+goodreadsUrl: https://www.goodreads.com/book/show/212197419-lily-saves-an-alien
+price: $3.99
+wordCount: 130542
+pageCount: 394
+status: published
 featured: true
+alienSpecies:
+  - unknown-alien-species
+  - human
 ---
 
 # Lily Saves An Alien
