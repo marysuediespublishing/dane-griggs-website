@@ -245,7 +245,7 @@ Creating escapist fiction that respects readers' intelligence while delivering t
 2. **Anti-misunderstanding stance** - Conflicts arise from real issues
 3. **Relationship evolution focus** - Chemistry that builds naturally
 4. **Humor integration** - Wit enhances rather than undermines
-5. **Quality consistency** - Reliable delivery across 47+ books
+5. **Quality consistency** - Reliable delivery across 12+ books
 
 #### Positioning Against Competitors
 - **vs. Newer Authors**: Experience and proven track record

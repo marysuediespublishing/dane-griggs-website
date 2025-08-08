@@ -11,7 +11,7 @@ seriesOrder: 6
 pubDate: 2020-02-14T00:00:00.000Z
 rating: 4.38
 ratingCount: 397
-alienSpecies:
+species:
   - cerastean
   - human
 heatLevel: medium
@@ -32,6 +32,9 @@ wordCount: 46431
 pageCount: 198
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # The Alien's Gossip Queen

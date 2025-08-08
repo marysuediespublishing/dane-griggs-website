@@ -55,8 +55,8 @@ NOTE: Use space gradients, starfield backgrounds, cosmic color palette, futurist
 ## ☐ Spec 006: Sci-Fi Romance Homepage Hero
 
 - User loads homepage, sees Dane's author photo with starfield background and "Sexy escapes with no Mary Sues" tagline
-- User views featured book section, sees "The Bride Program" cover with "200M+ pages read" and clear CTA buttons
-- User scrolls down, sees statistics bar showing "47 books", "9,339+ ratings", "Complete series available"
+- User views featured book section, sees "The Bride Program" cover with "44M+ pages read" and clear CTA buttons
+- User scrolls down, sees statistics bar showing "12 books", "7,339+ ratings", "2 series available"
 - User clicks newsletter signup, sees modal with "Free alien romance starter pack" and email capture
 
 WHY: Homepage hero is critical for converting Facebook ad traffic showcasing Dane's sci-fi credentials
@@ -98,7 +98,7 @@ NOTE: Use Fuse.js for fuzzy search, include alien species types, space vs planet
 
 ## ☐ Spec 010: Author Statistics Dashboard
 
-- User views stats section, sees animated counters for "200M+ pages read", "47 published books"
+- User views stats section, sees animated counters for "44M+ pages read", "12 published books"
 - User examines series breakdown chart, sees Saving Ceraste dominating with complete 9-book series
 - User hovers over chart segments, sees tooltips with specific alien romance statistics
 - User views reader demographics, sees sci-fi romance audience data with space-themed visualization

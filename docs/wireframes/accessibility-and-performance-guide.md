@@ -59,8 +59,8 @@ This guide provides comprehensive accessibility and performance specifications f
 <div class="stats-chart" role="img" aria-labelledby="stats-title" aria-describedby="stats-desc">
   <h3 id="stats-title">Dane Griggs Author Statistics</h3>
   <p id="stats-desc">
-    47 published books, 200 million plus pages read by fans, 
-    9,339 ratings with 4.8 average rating, 2 complete series available
+    12 published books, 44 million plus pages read by fans, 
+    7,339 ratings with 4.4 average rating, 2 series available
   </p>
   <!-- Visual chart elements -->
 </div>

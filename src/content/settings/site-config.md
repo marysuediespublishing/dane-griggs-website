@@ -56,9 +56,9 @@ The core brand promise is "Sexy escapes with heart, humor, and no Mary Sues" - t
 
 ## Statistical Achievements
 
-- **47 books published** across multiple series
-- **200M+ pages read** demonstrating strong reader engagement
-- **50K+ reader ratings** showing broad appeal
+- **12 books published** across multiple series
+- **44M+ pages read** demonstrating strong reader engagement
+- **7K+ reader ratings** showing broad appeal
 - **3 completed series** with satisfying conclusions
 
 ## Community Focus

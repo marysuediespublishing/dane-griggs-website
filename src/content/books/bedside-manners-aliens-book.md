@@ -9,11 +9,12 @@ cover: ../../assets/bedside-manners-cover.jpg
 series: Saving Ceraste
 seriesOrder: 2
 pubDate: 2019-05-06T00:00:00.000Z
-rating: 4.29
+rating: 4.4
 ratingCount: 965
-alienSpecies:
+species:
   - cerastean
   - human
+  - feline
 heatLevel: medium
 setting:
   - medical-facility
@@ -32,6 +33,9 @@ wordCount: 29619
 pageCount: 104
 status: published
 featured: false
+alienSpecies:
+  - cerastean
+  - human
 ---
 
 # Bedside Manners for Aliens

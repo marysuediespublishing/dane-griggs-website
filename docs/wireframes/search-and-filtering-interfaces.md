@@ -134,7 +134,7 @@
 │ │ └─────────────┘ │ │ [Newest] [Oldest] [Rating] [Title] ▼   │ │
 │ │                 │ │                                         │ │
 │ │ Content Type    │ │ ┌─────────┐ ┌─────────┐ ┌─────────┐     │ │
-│ │ ☑ All Books (47)│ │ │ Book 1  │ │ Book 2  │ │ Book 3  │     │ │
+│ │ ☑ All Books (12)│ │ │ Book 1  │ │ Book 2  │ │ Book 3  │     │ │
 │ │ ☐ Series (12)   │ │ │ Cover   │ │ Cover   │ │ Cover   │     │ │
 │ │ ☐ Standalones(8)│ │ └─────────┘ └─────────┘ └─────────┘     │ │
 │ │ ☐ Free Books(3) │ │                                         │ │
@@ -246,7 +246,7 @@ Filter Modal (slides up from bottom):
 │ │ └─────┘ └─────┘ └─────┘ └─────┘                           │ │
 │ │                                                             │ │
 │ │ Medical exchange • Cerastean warriors • Space stations     │ │
-│ │ ⭐⭐⭐⭐⭐ 4.8 avg | 200M+ pages read | ✅ Complete        │ │
+│ │ ⭐⭐⭐⭐⭐ 4.4 avg | 44M+ pages read | ✅ Complete        │ │
 │ │                                                             │ │
 │ │ [Start Reading] [Series Page] [Add to Reading List]        │ │
 │ └─────────────────────────────────────────────────────────────┘ │
@@ -272,8 +272,8 @@ Filter Modal (slides up from bottom):
 Series Filters:
 ┌─────────────────────────────────────────┐
 │ Status:                                 │
-│ ☑ Complete Series (2)                  │
-│ ☑ Ongoing Series (1)                   │
+│ ☑ Series (2)                  │
+│ ☑ Ongoing Series (2)                   │
 │ ☐ Standalone Collections (0)           │
 │                                         │
 │ Alien Species:                          │

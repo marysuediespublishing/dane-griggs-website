@@ -32,7 +32,7 @@ Complete UX research and sprint planning for Dane Griggs sci-fi romance website,
 - **Purchase Behavior**: Kindle Unlimited primary, Amazon secondary
 
 ### **Competitive Differentiation**
-- **Quality Positioning**: "200M+ pages read" establishes authority
+- **Quality Positioning**: "44M+ pages read" establishes authority
 - **Series Focus**: Complete vs. ongoing series clearly differentiated
 - **World-Building**: Alien species as key navigation/filtering dimension
 - **No Mary Sue Promise**: Unique value proposition in genre

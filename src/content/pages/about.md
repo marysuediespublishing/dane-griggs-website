@@ -6,7 +6,7 @@ hero:
   tagline: Sexy escapes with heart, humor, and no Mary Sues
 authorBio:
   mainBio: Dane Griggs writes sci-fi romance novels featuring strong heroines and
-    swoon-worthy aliens. With over 44 million pages read, her stories combine
+    swoon-worthy heroes. With over 44 million pages read, her stories combine
     steamy romance with detailed world-building and characters who solve
     problems with their brains, not just their beauty.
   secondaryBio: Dane enjoys writing about relationships that evolve and grow over
@@ -45,7 +45,7 @@ philosophyCards:
 connectSection:
   title: Let's Connect
   description: Join thousands of readers who love strong heroines, swoon-worthy
-    aliens, and romances that combine heat with heart.
+    heroes, and romances that combine heat with heart.
 ---
 
 # About Dane Griggs
