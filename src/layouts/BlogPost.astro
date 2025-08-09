@@ -7,9 +7,12 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { ALL_MAPPINGS } from '../utils/book-mappings.ts';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	previousPost?: CollectionEntry<'blog'> | null;
+	nextPost?: CollectionEntry<'blog'> | null;
+};
 
-const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, bookSlug, previousPost, nextPost } = Astro.props;
 
 ---
 
@@ -69,6 +72,90 @@ const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.
 			.last-updated-on {
 				font-style: italic;
 			}
+			
+			/* Blog Navigation Styles */
+			.blog-navigation {
+				background: #ffffff;
+				border-top: 1px solid #e5e7eb;
+			}
+			
+			.nav-link-card {
+				display: block;
+				background: rgba(212, 51, 106, 0.1);
+				border: 1px solid rgba(212, 51, 106, 0.2);
+				border-radius: 12px;
+				padding: 1.5rem;
+				text-decoration: none;
+				color: #374151;
+				transition: all 0.3s ease;
+				height: 100%;
+			}
+			
+			.nav-link-card:hover {
+				background: rgba(212, 51, 106, 0.15);
+				border-color: #d4336a;
+				transform: translateY(-2px);
+				box-shadow: 0 10px 25px rgba(212, 51, 106, 0.25);
+			}
+			
+			.nav-direction {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				margin-bottom: 0.75rem;
+				font-size: 0.875rem;
+				color: #6b7280;
+				font-weight: 500;
+			}
+			
+			.previous .nav-direction {
+				justify-content: flex-end;
+				text-align: right;
+			}
+			
+			.nav-arrow {
+				font-size: 1rem;
+				color: #d4336a;
+				font-weight: bold;
+			}
+			
+			.nav-title {
+				font-size: 1.125rem;
+				font-weight: 600;
+				line-height: 1.4;
+				margin: 0 0 0.5rem 0;
+				color: #111827;
+				transition: color 0.3s ease;
+			}
+			
+			.previous .nav-title {
+				text-align: right;
+			}
+			
+			.nav-link-card:hover .nav-title {
+				color: #d4336a;
+			}
+			
+			.nav-date {
+				font-size: 0.875rem;
+				color: #6b7280;
+				margin: 0;
+			}
+			
+			.previous .nav-date {
+				text-align: right;
+			}
+			
+			@media (max-width: 768px) {
+				.nav-direction {
+					justify-content: center;
+				}
+				
+				.nav-title,
+				.nav-date {
+					text-align: center !important;
+				}
+			}
 		</style>
 	</head>
 
@@ -101,16 +188,49 @@ const { title, description, pubDate, updatedDate, heroImage, bookSlug } = Astro.
 						<hr />
 					</div>
 					<slot />
-					
-					{bookSlug && (
-						<div class="book-link-section">
-							<a href={`/books/${bookSlug}`} class="btn btn-primary btn-lg">
-								View Book Details
-							</a>
-						</div>
-					)}
 				</div>
 			</article>
+			
+			<!-- Blog Post Navigation -->
+			{(previousPost || nextPost) && (
+				<nav class="blog-navigation">
+					<div class="container mx-auto px-4 py-8">
+						<div class="max-w-4xl mx-auto">
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+								{nextPost && (
+									<div class="navigation-item next">
+										<a href={`/blog/${nextPost.id}/`} class="nav-link-card group">
+											<div class="nav-direction">
+												<span class="nav-arrow">←</span>
+												<span class="nav-label">Next Post</span>
+											</div>
+											<h4 class="nav-title">{nextPost.data.title}</h4>
+											<p class="nav-date">
+												<FormattedDate date={nextPost.data.pubDate} />
+											</p>
+										</a>
+									</div>
+								)}
+								
+								{previousPost && (
+									<div class={`navigation-item previous ${!nextPost ? 'md:col-start-2' : ''}`}>
+										<a href={`/blog/${previousPost.id}/`} class="nav-link-card group">
+											<div class="nav-direction">
+												<span class="nav-label">Previous Post</span>
+												<span class="nav-arrow">→</span>
+											</div>
+											<h4 class="nav-title">{previousPost.data.title}</h4>
+											<p class="nav-date">
+												<FormattedDate date={previousPost.data.pubDate} />
+											</p>
+										</a>
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+				</nav>
+			)}
 		</main>
 		<Footer />
 		
