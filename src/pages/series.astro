@@ -39,6 +39,29 @@ const allBooks = await Promise.all(
 	})
 );
 
+// Function to convert species slugs to proper display names
+const formatSpeciesName = (slug: string): string => {
+	// Handle common species name mappings
+	const speciesMap: Record<string, string> = {
+		'human': 'Human',
+		'slavic-goddess': 'Slavic Goddess',
+		'cryzorian': 'Cryzorian', 
+		'kraken': 'Kraken',
+		'cerastean': 'Cerastean',
+		'alien': 'Alien'
+	};
+	
+	// Return mapped name if it exists, otherwise convert slug to title case
+	if (speciesMap[slug]) {
+		return speciesMap[slug];
+	}
+	
+	// Convert kebab-case to title case (e.g., "love-goddess" → "Love Goddess")
+	return slug.split('-').map(word => 
+		word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+	).join(' ');
+};
+
 // Group books by series
 const seriesWithBooks = allSeries.map(series => {
 	const seriesBooks = allBooks.filter(book => book.data.series === series.data.title)
@@ -132,8 +155,8 @@ const seriesWithBooks = allSeries.map(series => {
 											<h4 class="text-lg font-semibold text-deep-space-navy">Featured Species:</h4>
 											<div class="flex flex-wrap gap-3">
 												{currentSpecies.map((species) => (
-													<span class="px-4 py-2 bg-cosmic-rose text-solar-white rounded-lg text-sm font-medium capitalize shadow-lg">
-														{species}
+													<span class="px-4 py-2 bg-cosmic-rose text-solar-white rounded-lg text-sm font-medium shadow-lg">
+														{formatSpeciesName(species)}
 													</span>
 												))}
 											</div>
