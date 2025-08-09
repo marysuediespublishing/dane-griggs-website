@@ -21,7 +21,7 @@ stats:
   pagesRead: 44M+
   readerRatings: 7.3K+
   seriesComplete: 2
-  averageRating: "4.4"
+  averageRating: "4.5"
   totalReviews: 3,879
 newsletter:
   leadMagnetTitle: Get Your FREE Alien Romance Pack

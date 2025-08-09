@@ -2,56 +2,84 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
 ---
 
 <Layout title="Contact - Dane Griggs">
 	<Header />
-	<main class="container mx-auto px-4 py-8">
-		<h1 class="text-4xl font-bold text-dark-text mb-6">Contact Dane Griggs</h1>
-		<div class="prose prose-invert max-w-none">
-			<p class="text-dark-text-muted text-lg mb-8">
-				I'd love to hear from you. Whether you have a project in mind, want to collaborate, or just want to say hello, feel free to reach out.
-			</p>
+	
+	<!-- Starfield Background -->
+	<StarfieldBackground client:load />
+	
+	<main class="relative z-10">
+		<!-- Hero Section -->
+		<section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+			<!-- Cosmic Background Elements -->
+			<div class="absolute inset-0 bg-starfield opacity-20 animate-starfield"></div>
+			<div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
 			
-			<div class="grid md:grid-cols-2 gap-8">
-				<div>
-					<h2 class="text-2xl font-semibold text-dark-text mb-4">Get in Touch</h2>
-					<div class="space-y-4">
-						<div>
-							<h3 class="text-lg font-medium text-dark-text mb-2">Email</h3>
-							<p class="text-dark-text-muted">
-								<a href="mailto:hello@danegriggs.com" class="text-blue-400 hover:text-blue-300">
-									hello@danegriggs.com
-								</a>
-							</p>
+			<div class="container mx-auto px-4 text-center relative z-10">
+				<div class="max-w-4xl mx-auto space-y-6">
+					<h1 class="text-4xl md:text-6xl font-primary font-bold text-solar-white mb-4">
+						<span class="bg-gradient-aurora bg-clip-text text-transparent">
+							Let's Connect
+						</span>
+					</h1>
+					<p class="text-xl md:text-2xl text-stellar-gold font-medium">
+						I'd love to hear from readers & fellow writers
+					</p>
+					<p class="text-lg text-solar-white/90 max-w-2xl mx-auto leading-relaxed">
+						Whether you have questions about my books, want to collaborate, or just want to say hello, feel free to reach out.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Contact Content Section -->
+		<section class="py-16 bg-bg-secondary">
+			<div class="container mx-auto px-4">
+				<div class="max-w-4xl mx-auto">
+			
+					<div class="grid md:grid-cols-2 gap-8">
+						<div class="bg-white rounded-xl p-8 shadow-lg">
+							<h2 class="text-2xl font-semibold text-deep-space-navy mb-4">Get in Touch</h2>
+							<div class="space-y-4">
+								<div>
+									<h3 class="text-lg font-medium text-deep-space-navy mb-2">Email</h3>
+									<p class="text-gray-600">
+										<a href="mailto:info@danegriggs.com" class="text-cosmic-rose hover:text-stellar-gold transition-colors">
+											info@danegriggs.com
+										</a>
+									</p>
+								</div>
+								
+								<div>
+									<h3 class="text-lg font-medium text-deep-space-navy mb-2">Social Media</h3>
+									<p class="text-gray-600">
+										Follow me on Facebook and Goodreads for updates, book releases, and behind-the-scenes content.
+									</p>
+								</div>
+							</div>
 						</div>
 						
-						<div>
-							<h3 class="text-lg font-medium text-dark-text mb-2">Social Media</h3>
-							<p class="text-dark-text-muted">
-								Follow me on social media for updates and insights.
-							</p>
+						<div class="bg-white rounded-xl p-8 shadow-lg">
+							<h2 class="text-2xl font-semibold text-deep-space-navy mb-4">What I Write About</h2>
+							<ul class="space-y-2 text-gray-600">
+								<li>• Sci-fi romance with strong heroines</li>
+								<li>• Alien worlds and cultures</li>
+								<li>• Character-driven love stories</li>
+								<li>• Behind-the-scenes writing insights</li>
+							</ul>
 						</div>
 					</div>
-				</div>
-				
-				<div>
-					<h2 class="text-2xl font-semibold text-dark-text mb-4">What I Do</h2>
-					<ul class="space-y-2 text-dark-text-muted">
-						<li>• Writing and content creation</li>
-						<li>• Creative consulting</li>
-						<li>• Speaking engagements</li>
-						<li>• Collaborative projects</li>
-					</ul>
+					<div class="mt-8 p-6 bg-gradient-cosmic rounded-xl border border-cosmic-rose/20">
+						<p class="text-solar-white/90">
+							<strong class="text-stellar-gold">Note:</strong> I try to respond to all inquiries within 48 hours. For book recommendations or writing questions, I love hearing from readers!
+						</p>
+					</div>
 				</div>
 			</div>
-			
-			<div class="mt-8 p-6 bg-dark-surface rounded-lg border border-dark-border">
-				<p class="text-dark-text-muted">
-					<strong class="text-dark-text">Note:</strong> I try to respond to all inquiries within 48 hours. For urgent matters, please mention "urgent" in your subject line.
-				</p>
-			</div>
-		</div>
+		</section>
 	</main>
 	<Footer />
 </Layout>
