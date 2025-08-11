@@ -15,5 +15,6 @@ books:
   - chancellors-pilot-book
 cameos:
   - war-brides-book
+image: /images/zoe.jpg
 species: human
 ---

@@ -20,5 +20,6 @@ description: Scientific Officer L'Zaen is a Cerastean scientist with bronze
 books:
   - insatiable-curiosity-book
 cameos: []
+image: /images/toddsampson_handsome_alien_man_in_a_uniform_with_skin_covered_i_b2b5e5f9-5545-4a00-abea-7a3e7a716710.png
 species: cerastean
 ---

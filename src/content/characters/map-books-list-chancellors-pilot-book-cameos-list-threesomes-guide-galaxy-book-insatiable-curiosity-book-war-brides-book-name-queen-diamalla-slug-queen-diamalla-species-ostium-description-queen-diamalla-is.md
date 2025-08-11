@@ -16,5 +16,6 @@ cameos:
   - threesomes-guide-galaxy-book
   - insatiable-curiosity-book
   - war-brides-book
+image: /images/diamalla.jpg
 species: ostium
 ---

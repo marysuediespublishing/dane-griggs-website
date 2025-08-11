@@ -15,5 +15,6 @@ books:
   - aliens-gossip-queen-book
 cameos:
   - bedside-manners-aliens-book
+image: /images/janet.jpg
 species: human
 ---

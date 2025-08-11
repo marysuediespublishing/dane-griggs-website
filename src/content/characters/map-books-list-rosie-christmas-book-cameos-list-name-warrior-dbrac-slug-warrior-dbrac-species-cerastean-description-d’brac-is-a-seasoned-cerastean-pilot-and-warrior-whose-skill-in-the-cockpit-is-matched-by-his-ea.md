@@ -12,5 +12,6 @@ description: D’Brac is a seasoned Cerastean pilot and warrior whose skill in t
 books:
   - rosie-christmas-book
 cameos: []
+image: /images/toddsampson_handsome_alien_man_in_a_uniform_with_skin_covered_i_2a573384-9173-4dff-bc59-46ea825fc575.png
 species: cerastean
 ---

@@ -16,5 +16,6 @@ books:
   - lily-saves-alien-book
 cameos:
   - rescued-by-kraken-book
+image: /images/lily.jpg
 species: human
 ---

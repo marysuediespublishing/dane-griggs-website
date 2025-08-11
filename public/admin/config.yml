@@ -252,6 +252,17 @@ collections:
       - { label: "Name", name: "name", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
       - { label: "Description", name: "description", widget: "text", required: false }
+      - label: "Series"
+        name: "series"
+        widget: "relation"
+        collection: "series"
+        search_fields: ["title"]
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        multiple: true
+        default: []
+        required: false
+        options_length: 200
       - { label: "Image", name: "image", widget: "image", required: false }
       - { label: "Physical Traits", name: "physicalTraits", widget: "text", required: false }
       - { label: "Culture Notes", name: "cultureNotes", widget: "text", required: false }

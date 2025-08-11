@@ -23,5 +23,6 @@ books:
 cameos:
   - the-bride-program-book
   - war-brides-book
+image: /images/toddsampson_handsome_alien_man_with_skin_covered_in_scales_and__154690f6-46fd-40fc-b5e7-929c829960af.png
 species: cerastean
 ---

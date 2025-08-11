@@ -18,5 +18,6 @@ books:
   - bride-program-honeymoon-book
 cameos:
   - the-bride-program-book
+image: /images/laney.jpg
 species: human
 ---

@@ -20,5 +20,6 @@ description: Physician L'Vect is a tall, lean but muscular Cerastean from the
 books:
   - bedside-manners-aliens-book
 cameos: []
+image: /images/toddsampson_handsome_alien_man_in_a_uniform_with_skin_covered_i_319957be-0a3c-4a76-9b3c-60c3d411feaa.png
 species: cerastean
 ---

@@ -20,5 +20,6 @@ books:
   - insatiable-curiosity-book
 cameos:
   - the-bride-program-book
+image: /images/ally.jpg
 species: human
 ---

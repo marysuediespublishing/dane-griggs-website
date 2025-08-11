@@ -17,5 +17,6 @@ description: Warrior D'Xurrl is a towering Cerastean with shimmering
 books:
   - aliens-gossip-queen-book
 cameos: []
+image: /images/toddsampson_handsome_snake_alien_shirtless_facing_away_-ar_916_c8a7669f-f198-4064-8860-4520ddd506eb.png
 species: cerastean
 ---

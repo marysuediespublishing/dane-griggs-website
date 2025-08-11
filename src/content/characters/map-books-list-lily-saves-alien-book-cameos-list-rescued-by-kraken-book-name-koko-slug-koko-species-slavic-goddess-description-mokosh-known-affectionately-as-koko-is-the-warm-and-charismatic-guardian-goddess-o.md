@@ -17,5 +17,6 @@ books:
   - lily-saves-alien-book
 cameos:
   - rescued-by-kraken-book
+image: /images/mokosh.jpg
 species: slavic-goddess
 ---

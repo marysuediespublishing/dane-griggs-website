@@ -14,5 +14,6 @@ books:
   - bedside-manners-aliens-book
 cameos:
   - aliens-gossip-queen-book
+image: /images/herman.jpg
 species: human
 ---

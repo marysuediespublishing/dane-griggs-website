@@ -20,5 +20,6 @@ books:
   - marshmallow-book
 cameos:
   - the-bride-program-book
+image: /images/tribble.jpg
 species: dulci
 ---

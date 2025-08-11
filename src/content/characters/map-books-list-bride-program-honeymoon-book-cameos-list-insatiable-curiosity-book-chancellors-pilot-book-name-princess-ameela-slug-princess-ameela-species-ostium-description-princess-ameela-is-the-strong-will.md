@@ -15,5 +15,6 @@ books:
 cameos:
   - insatiable-curiosity-book
   - chancellors-pilot-book
+image: /images/ameela-2.jpg
 species: ostium
 ---

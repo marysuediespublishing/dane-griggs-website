@@ -24,5 +24,6 @@ books:
 cameos:
   - bedside-manners-aliens-book
   - bride-program-honeymoon-book
+image: /images/toddsampson_handsome_snake_alien_shirtless_-cref_httpss.mj.run_022e1258-5491-44d8-9c4e-0d7daecca51f.png
 species: cerastean
 ---

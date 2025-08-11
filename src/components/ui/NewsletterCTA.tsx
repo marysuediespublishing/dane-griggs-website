@@ -101,34 +101,47 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     setIsSubmitting(true);
     
     try {
-      // Simulate API call to newsletter service
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Submit to Mailchimp API
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          source: `newsletter-${variant}`
+        }),
+      });
+
+      const data = await response.json();
       
-      // In a real implementation, you would submit to your newsletter service
-      // Example: ConvertKit, Mailchimp, etc.
-      console.log('Newsletter signup:', { name, email, source: variant });
-      
-      setIsSuccess(true);
-      
-      // Trigger celebration animation (only in browser)
-      if (typeof window !== 'undefined') {
-        const celebrationEvent = new CustomEvent('newsletter-success', {
-          detail: { name, email, variant }
-        });
-        window.dispatchEvent(celebrationEvent);
+      if (data.success) {
+        setIsSuccess(true);
+        
+        // Trigger celebration animation (only in browser)
+        if (typeof window !== 'undefined') {
+          const celebrationEvent = new CustomEvent('newsletter-success', {
+            detail: { name, email, variant }
+          });
+          window.dispatchEvent(celebrationEvent);
+        }
+        
+        // Close modal after success
+        setTimeout(() => {
+          setShowModal(false);
+          setIsSuccess(false);
+          setEmail('');
+          setName('');
+        }, 3000);
+      } else {
+        // Handle API error response
+        setError(data.error || 'Something went wrong. Please try again.');
       }
-      
-      // Close modal after success
-      setTimeout(() => {
-        setShowModal(false);
-        setIsSuccess(false);
-        setEmail('');
-        setName('');
-      }, 3000);
       
     } catch (error) {
       console.error('Newsletter signup failed:', error);
-      setError('Something went wrong. Please try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }

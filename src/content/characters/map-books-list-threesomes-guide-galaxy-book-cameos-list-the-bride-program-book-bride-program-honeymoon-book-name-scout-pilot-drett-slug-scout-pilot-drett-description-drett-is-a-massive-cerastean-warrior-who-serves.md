@@ -22,5 +22,6 @@ books:
 cameos:
   - the-bride-program-book
   - bride-program-honeymoon-book
+image: /images/toddsampson_handsome_alien_man_in_a_uniform_with_skin_covered_i_df1f80bb-e570-4bfc-9bd6-99d0eed372ca.png
 species: cerastean
 ---

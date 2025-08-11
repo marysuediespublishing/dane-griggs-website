@@ -15,5 +15,6 @@ books:
   - war-brides-book
 cameos:
   - the-bride-program-book
+image: /images/toddsampson_handsome_snake_alien_shirtless_facing_away_-cref_h_b8c2167f-359f-4ba5-8ed5-e3347cc430de.png
 species: cerastean
 ---

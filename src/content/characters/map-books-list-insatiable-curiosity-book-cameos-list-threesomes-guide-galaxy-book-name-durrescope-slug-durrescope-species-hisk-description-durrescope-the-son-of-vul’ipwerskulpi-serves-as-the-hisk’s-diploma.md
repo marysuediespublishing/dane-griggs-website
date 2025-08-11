@@ -14,5 +14,6 @@ books:
   - insatiable-curiosity-book
 cameos:
   - threesomes-guide-galaxy-book
+image: /images/hisk.jpg
 species: hisk
 ---

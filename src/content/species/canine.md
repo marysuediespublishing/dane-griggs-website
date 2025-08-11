@@ -1,4 +1,0 @@
----
-name: Canine
-slug: canine
----

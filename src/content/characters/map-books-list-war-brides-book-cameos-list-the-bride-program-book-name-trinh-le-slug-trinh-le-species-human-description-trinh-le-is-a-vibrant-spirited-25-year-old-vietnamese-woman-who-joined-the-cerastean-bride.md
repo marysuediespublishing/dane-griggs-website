@@ -20,5 +20,6 @@ books:
   - war-brides-book
 cameos:
   - the-bride-program-book
+image: /images/trinh.jpg
 species: human
 ---

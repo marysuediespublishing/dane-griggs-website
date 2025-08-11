@@ -19,5 +19,6 @@ books:
   - bride-program-honeymoon-book
 cameos:
   - the-bride-program-book
+image: /images/toddsampson_handsome_snake_alien_with_long_blonde_hair_-ar_11__8123d912-1cf4-4eba-82d6-ea6b9845903f.png
 species: cerastean
 ---

@@ -14,5 +14,6 @@ description: Rose Ashford is a talented graphic artist and painter from the
 books:
   - rescued-by-kraken-book
 cameos: []
+image: /images/rose.jpg
 species: human
 ---

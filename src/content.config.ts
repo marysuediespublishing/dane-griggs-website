@@ -125,6 +125,7 @@ const species = defineCollection({
 		name: z.string(),
 		slug: z.string(),
 		description: z.string().optional(),
+		series: z.array(z.string()).default([]),
 		image: z.string().optional(), // CMS-style image path as string
 		physicalTraits: z.string().optional(),
 		cultureNotes: z.string().optional(),

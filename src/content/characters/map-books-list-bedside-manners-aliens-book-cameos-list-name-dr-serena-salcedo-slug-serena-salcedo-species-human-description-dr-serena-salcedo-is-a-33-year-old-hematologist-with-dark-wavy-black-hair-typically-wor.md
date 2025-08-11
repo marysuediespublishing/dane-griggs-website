@@ -17,5 +17,6 @@ description: Dr. Serena Salcedo is a 33-year-old hematologist with dark wavy
 books:
   - bedside-manners-aliens-book
 cameos: []
+image: /images/serena.jpg
 species: human
 ---

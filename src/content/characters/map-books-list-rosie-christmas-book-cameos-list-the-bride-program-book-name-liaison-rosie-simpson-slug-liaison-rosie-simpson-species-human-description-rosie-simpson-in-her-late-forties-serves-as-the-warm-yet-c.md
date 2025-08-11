@@ -15,5 +15,6 @@ books:
   - rosie-christmas-book
 cameos:
   - the-bride-program-book
+image: /images/rosie.jpg
 species: human
 ---

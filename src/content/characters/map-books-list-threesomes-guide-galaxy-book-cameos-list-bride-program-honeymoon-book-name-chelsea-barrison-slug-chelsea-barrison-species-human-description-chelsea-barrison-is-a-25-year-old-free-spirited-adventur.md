@@ -18,5 +18,6 @@ books:
   - threesomes-guide-galaxy-book
 cameos:
   - bride-program-honeymoon-book
+image: /images/chelsea.jpg
 species: human
 ---

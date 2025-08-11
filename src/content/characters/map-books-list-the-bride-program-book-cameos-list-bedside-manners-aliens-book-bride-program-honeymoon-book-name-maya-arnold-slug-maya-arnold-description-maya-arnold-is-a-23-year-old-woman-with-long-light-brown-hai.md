@@ -22,5 +22,6 @@ books:
 cameos:
   - bedside-manners-aliens-book
   - bride-program-honeymoon-book
+image: /images/maya.jpg
 species: human
 ---

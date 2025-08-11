@@ -18,5 +18,6 @@ books:
 cameos:
   - bride-program-honeymoon-book
   - war-brides-book
+image: /images/dulci.jpg
 species: dulci
 ---

@@ -15,5 +15,6 @@ description: Beutler is Serena's orange-striped tabby cat who embodies feline
 books:
   - bedside-manners-aliens-book
 cameos: []
+image: /images/beutler.jpg
 species: feline
 ---
