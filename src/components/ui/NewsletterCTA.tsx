@@ -34,7 +34,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
       case 'header':
         return 'Free Books';
       case 'hero':
-        return 'Get Your Free Alien Romance Pack';
+        return 'Get Your Free Alien Romance Book';
       case 'sidebar':
         return 'Join Newsletter';
       case 'footer':
@@ -64,9 +64,9 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
         };
       default:
         return {
-          title: "📧 Get Your Free Alien Romance Pack",
+          title: "📧 Get Your Free Book",
           subtitle: "Join the Cosmic Adventure",
-          description: "Join 10,000+ sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights into alien world-building.",
+          description: "Join your fellow sci-fi romance fans and get exclusive content, early access to new releases, and behind-the-scenes insights into alien world-building.",
           benefits: [
             "Free starter pack with bonus content",
             "Early access to new releases",
@@ -157,7 +157,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start justify-center p-4 pt-16"
             onClick={() => setShowModal(false)}
           >
             <motion.div
@@ -165,7 +165,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-gradient-to-br from-deep-space-navy to-nebula-purple p-8 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-cosmic-rose/30 shadow-2xl"
+              className="relative bg-gradient-to-br from-deep-space-navy to-nebula-purple p-8 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-cosmic-rose/30 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -277,7 +277,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                           <span>Joining...</span>
                         </div>
                       ) : (
-                        'Get Your Free Books Now'
+                        'Get Your Free Book Now'
                       )}
                     </motion.button>
                   </form>

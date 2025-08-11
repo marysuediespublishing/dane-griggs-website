@@ -153,6 +153,48 @@ collections:
         default: "overall"
       - { label: "Content", name: "body", widget: "markdown", required: false }
 
+  # Characters collection
+  - name: "characters"
+    label: "Characters"
+    folder: "src/content/characters"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - label: "Books"
+        name: "books"
+        widget: "relation"
+        collection: "books"
+        search_fields: ["title"]
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        multiple: true
+        default: []
+      - label: "Cameos"
+        name: "cameos"
+        widget: "relation"
+        collection: "books"
+        search_fields: ["title"]
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        multiple: true
+        default: []
+        required: false
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - label: "Species"
+        name: "species"
+        widget: "relation"
+        collection: "species"
+        search_fields: ["name"]
+        value_field: "slug"
+        display_fields: ["name"]
+        required: false
+      - { label: "Content", name: "body", widget: "markdown", required: false }
+
   # Site settings
   - name: "settings"
     label: "Site Settings"

@@ -24,8 +24,8 @@ stats:
   averageRating: "4.5"
   totalReviews: 3,879
 newsletter:
-  leadMagnetTitle: Get Your FREE Alien Romance Pack
-  leadMagnetDescription: Join 10,000+ sci-fi romance fans and get exclusive
+  leadMagnetTitle: Get Your FREE Alien Romance Book
+  leadMagnetDescription: Join your fellow sci-fi romance fans and get exclusive
     content, early access to new releases, and behind-the-scenes insights into
     alien world-building.
   benefits:

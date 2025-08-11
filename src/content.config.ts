@@ -121,16 +121,15 @@ const settings = defineCollection({
 // Species collection
 const species = defineCollection({
 	loader: glob({ base: './src/content/species', pattern: '**/*.{md,mdx}' }),
-	schema: ({ image }) =>
-		z.object({
-			name: z.string(),
-			slug: z.string(),
-			description: z.string().optional(),
-			image: image().optional(),
-			physicalTraits: z.string().optional(),
-			cultureNotes: z.string().optional(),
-			biologyNotes: z.string().optional(),
-		}),
+	schema: z.object({
+		name: z.string(),
+		slug: z.string(),
+		description: z.string().optional(),
+		image: z.string().optional(), // CMS-style image path as string
+		physicalTraits: z.string().optional(),
+		cultureNotes: z.string().optional(),
+		biologyNotes: z.string().optional(),
+	}),
 });
 
 // Locations collection
@@ -173,6 +172,20 @@ const pages = defineCollection({
 	}),
 });
 
+// Characters collection
+const characters = defineCollection({
+	loader: glob({ base: './src/content/characters', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		name: z.string(),
+		slug: z.string(),
+		description: z.string().optional(),
+		books: z.array(z.string()).default([]),
+		cameos: z.array(z.string()).default([]),
+		image: z.string().optional(), // CMS-style image path as string
+		species: z.string().optional(),
+	}),
+});
+
 export const collections = { 
 	blog, 
 	books, 
@@ -180,6 +193,7 @@ export const collections = {
 	testimonials, 
 	settings,
 	species,
+	characters,
 	locations,
 	pages
 };
