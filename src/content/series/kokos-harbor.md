@@ -11,7 +11,7 @@ startDate: 2024-06-21T00:00:00.000Z
 completionDate: null
 species:
   - human
-  - slavic-goddess
+  - slavic-gods
   - cryzorian
   - kraken
 overallRating: 4.5

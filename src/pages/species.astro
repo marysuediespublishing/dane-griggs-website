@@ -15,11 +15,15 @@ const allBooks = await getCollection('books');
 // Function to format species name for display
 const formatSpeciesName = (name: string): string => {
   // Handle special cases
-  if (name.toLowerCase().includes('slavic')) return 'Slavic Goddess';
   if (name.toLowerCase() === 'human') return 'Human';
   
-  // Convert to title case
-  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  // For multi-word names, preserve the original capitalization from the content file
+  // For single-word names, apply title case
+  if (name.includes(' ')) {
+    return name; // Preserve admin-defined capitalization for multi-word names
+  } else {
+    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  }
 };
 
 // Add appearance count for each species

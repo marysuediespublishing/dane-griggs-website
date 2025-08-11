@@ -15,7 +15,7 @@ species:
   - human
   - cryzorian
   - feline
-  - slavic-goddess
+  - slavic-gods
 heatLevel: medium
 setting:
   - earth

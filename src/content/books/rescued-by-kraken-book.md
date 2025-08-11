@@ -17,7 +17,7 @@ ratingCount: 42
 species:
   - kraken
   - human
-  - slavic-goddess
+  - slavic-gods
 heatLevel: medium
 setting:
   - earth
