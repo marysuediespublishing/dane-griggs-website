@@ -19,6 +19,8 @@ description: >-
 
 
   By nature, Ostiums are intelligent, calculating, and persuasive, with a strong aptitude for psychological manipulation and political maneuvering. Females are trained from an early age to control their luxen displays as much as possible, masking their true feelings while exploiting the emotional tells of others. While they field capable warriors and guards, their true power lies in their ability to undermine and dominate without open warfare. Their homeworld, Osti, is a center of opulence and authority, its cities constructed as physical embodiments of the queen’s dominance and the rigid hierarchy that governs every facet of life.
+series:
+  - saving-ceraste
 image: /images/delendo.jpg
 physicalTraits: Gray skin with purplish undertones, bioluminescent luxen grooves
   that change color with emotion, deep red for anger, gold for joy, silver for

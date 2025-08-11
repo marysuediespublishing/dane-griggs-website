@@ -1,6 +1,6 @@
 ---
 name: Slavic Gods
-slug: slavic-goddess
+slug: slavic-gods
 description: >-
   In the intricate tapestry of Slavic mythology, three deities stand out for
   their enduring influence and symbolic weight: Mokosh, Perun, and Veles.
@@ -18,6 +18,8 @@ description: >-
 
 
   Together, Mokosh, Perun, and Veles encapsulate the Slavic worldview: life emerges from the fertile earth under Mokosh’s care, is defended and ordered by Perun’s authority, and is enriched and tested by the cunning of Veles. Their interplay reflects not only the natural rhythms of the seasons but also the moral and spiritual balance between creation, preservation, and transformation. Even today, echoes of their worship persist in folk customs, agricultural festivals, and cultural symbols across Eastern Europe, keeping alive a mythic heritage that once bound entire communities to the rhythms of the gods.
+series:
+  - kokos-harbor
 image: /images/slavic-gods.jpg
 physicalTraits: Tall and imposing forms, strong and muscular builds, long
   flowing or bearded hair, traditional robes or warrior’s armor, crowns or

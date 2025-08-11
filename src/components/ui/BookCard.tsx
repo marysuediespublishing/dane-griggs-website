@@ -235,12 +235,14 @@ const BookCard: React.FC<BookCardProps> = ({
           return currentSpecies.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {currentSpecies.slice(0, variant === 'compact' ? 2 : 4).map((species) => (
-                <span 
+                <a 
                   key={species}
-                  className={`text-xs px-2 py-1 rounded capitalize ${getSpeciesBadgeColor(species)}`}
+                  href={`/species/${species}`}
+                  className={`text-xs px-2 py-1 rounded capitalize hover:opacity-80 transition-opacity duration-200 ${getSpeciesBadgeColor(species)}`}
+                  onClick={(e) => e.stopPropagation()} // Prevent card click when clicking species badge
                 >
                   {species}
-                </span>
+                </a>
               ))}
               {currentSpecies.length > (variant === 'compact' ? 2 : 4) && (
                 <span className="text-xs text-gray-500">

@@ -1,0 +1,335 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import StarfieldBackground from '../../components/ui/StarfieldBackground.tsx';
+
+// Get the slug from URL params
+const { slug } = Astro.params;
+
+// Fetch all species and find the one matching the slug
+const allSpecies = await getCollection('species');
+const species = allSpecies.find(s => s.id === slug);
+
+// Handle species not found - return 404
+if (!species) {
+  return Astro.redirect('/404');
+}
+
+// Get all series, books, and characters to show where this species appears
+const allSeries = await getCollection('series');
+const allBooks = await getCollection('books');
+const allCharacters = await getCollection('characters');
+
+// Find series that feature this species (using species.id which matches the filename)
+const featuredSeries = allSeries.filter(series => 
+  (series.data.species && series.data.species.includes(species.id)) ||
+  (series.data.alienSpecies && series.data.alienSpecies.includes(species.id))
+);
+
+// Find books that feature this species (using species.id which matches the filename)
+const featuredBooks = allBooks.filter(book => 
+  (book.data.species && book.data.species.includes(species.id)) ||
+  (book.data.alienSpecies && book.data.alienSpecies.includes(species.id))
+);
+
+// Find characters of this species
+const featuredCharacters = allCharacters.filter(character => 
+  character.data.species === species.id
+);
+
+// Function to format species name for display
+const formatSpeciesName = (name: string): string => {
+  // Handle special cases
+  if (name.toLowerCase().includes('slavic')) return 'Slavic Goddess';
+  if (name.toLowerCase() === 'human') return 'Human';
+  
+  // Convert to title case
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
+
+// Function to split long text into paragraphs for better readability
+const formatTextWithParagraphs = (text: string): string[] => {
+  if (!text) return [];
+  
+  // Split on double spaces, periods followed by capital letters, or common sentence endings
+  const sentences = text.split(/(?:\.  |\. [A-Z]|\.  [A-Z]|,  [A-Z])/);
+  
+  // If we have multiple sentences, group them into paragraphs
+  if (sentences.length > 2) {
+    const paragraphs = [];
+    let currentParagraph = sentences[0];
+    
+    for (let i = 1; i < sentences.length; i++) {
+      // Add the sentence back with proper punctuation
+      const sentence = sentences[i].trim();
+      if (sentence) {
+        // If current paragraph is getting long (> 300 chars) or we've added 2-3 sentences, start a new paragraph
+        if (currentParagraph.length > 300 || (i % 2 === 0 && currentParagraph.split('.').length > 2)) {
+          paragraphs.push(currentParagraph.trim() + '.');
+          currentParagraph = sentence;
+        } else {
+          currentParagraph += '. ' + sentence;
+        }
+      }
+    }
+    
+    // Add the last paragraph
+    if (currentParagraph.trim()) {
+      paragraphs.push(currentParagraph.trim());
+    }
+    
+    return paragraphs.length > 1 ? paragraphs : [text];
+  }
+  
+  return [text];
+};
+
+const speciesName = formatSpeciesName(species.data.name);
+---
+
+<Layout title={`${speciesName} - Species Guide - Dane Griggs`}>
+  <Header />
+  
+  <!-- Starfield Background -->
+  <StarfieldBackground client:load />
+  
+  <main class="relative z-10">
+    <!-- Hero Section -->
+    <section class="relative py-20 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-6xl mx-auto">
+          <div class="space-y-12">
+            <!-- Species Header -->
+            <div class="text-center">
+              <div class="text-lg text-stellar-gold font-medium mb-2">Species Profile</div>
+              <h1 class="text-5xl md:text-6xl font-primary font-bold text-solar-white mb-8">
+                <span class="bg-gradient-aurora bg-clip-text text-transparent">
+                  {speciesName}
+                </span>
+              </h1>
+            </div>
+            
+            <!-- Species Description, Image and Stats -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+              <!-- Description -->
+              <div class="space-y-6">
+                {species.data.description && (
+                  <div class="text-xl text-solar-white/90 leading-relaxed space-y-4">
+                    {formatTextWithParagraphs(species.data.description).map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <!-- Image and Stats -->
+              <div class="space-y-8">
+                <!-- Species Image -->
+                {species.data.image ? (
+                  <div class="relative max-w-sm mx-auto lg:mx-0">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                      <img 
+                        src={species.data.image} 
+                        alt={`${speciesName} species artwork`}
+                        class="w-full h-auto object-cover"
+                      />
+                      <!-- Overlay gradient for better text readability -->
+                      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/30 to-transparent"></div>
+                    </div>
+                    <!-- Decorative border -->
+                    <div class="absolute inset-0 rounded-2xl border-2 border-stellar-gold/20 -m-1"></div>
+                  </div>
+                ) : (
+                  <div class="relative max-w-sm mx-auto lg:mx-0">
+                    <div class="aspect-[3/4] bg-gradient-cosmic rounded-2xl flex items-center justify-center shadow-2xl">
+                      <div class="text-center text-solar-white">
+                        <div class="text-8xl mb-4">👽</div>
+                        <div class="text-lg font-bold">{speciesName}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <!-- Featured Content Lists -->
+                <div class="space-y-6">
+                  <!-- Series List -->
+                  {featuredSeries.length > 0 && (
+                    <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+                      <h3 class="text-lg font-bold text-solar-white mb-3 flex items-center">
+                        <svg class="w-5 h-5 text-cosmic-rose mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+                        </svg>
+                        Series ({featuredSeries.length})
+                      </h3>
+                      <div class="space-y-2">
+                        {featuredSeries.map((series) => (
+                          <a 
+                            href={`/series/${series.id}`}
+                            class="block text-sm text-solar-white/80 hover:text-stellar-gold transition-colors"
+                          >
+                            {series.data.title}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <!-- Books List -->
+                  {featuredBooks.length > 0 && (
+                    <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+                      <h3 class="text-lg font-bold text-solar-white mb-3 flex items-center">
+                        <svg class="w-5 h-5 text-stellar-gold mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"></path>
+                        </svg>
+                        Books ({featuredBooks.length})
+                      </h3>
+                      <div class="space-y-2 max-h-48 overflow-y-auto">
+                        {featuredBooks.map((book) => (
+                          <a 
+                            href={`/books/${book.id}`}
+                            class="block text-sm text-solar-white/80 hover:text-stellar-gold transition-colors"
+                          >
+                            {book.data.title}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <!-- Characters List -->
+                  {featuredCharacters.length > 0 && (
+                    <div class="bg-solar-white/10 backdrop-blur-sm rounded-lg p-4 border border-cosmic-rose/30">
+                      <h3 class="text-lg font-bold text-solar-white mb-3 flex items-center">
+                        <svg class="w-5 h-5 text-nebula-purple mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path>
+                        </svg>
+                        Characters ({featuredCharacters.length})
+                      </h3>
+                      <div class="space-y-2">
+                        {featuredCharacters.map((character) => (
+                          <a 
+                            href={`/characters/${character.id}`}
+                            class="block text-sm text-solar-white/80 hover:text-stellar-gold transition-colors"
+                          >
+                            {character.data.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Species Details -->
+    <section class="py-20 bg-bg-secondary">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto space-y-16">
+          
+          <!-- Physical Traits -->
+          {species.data.physicalTraits && (
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+              <h2 class="text-3xl font-primary font-bold text-deep-space-navy mb-6 flex items-center">
+                <svg class="w-8 h-8 text-cosmic-rose mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Physical Characteristics
+              </h2>
+              <div class="text-lg text-gray-700 leading-relaxed space-y-4">
+                {formatTextWithParagraphs(species.data.physicalTraits).map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <!-- Culture Notes -->
+          {species.data.cultureNotes && (
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+              <h2 class="text-3xl font-primary font-bold text-deep-space-navy mb-6 flex items-center">
+                <svg class="w-8 h-8 text-stellar-gold mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                </svg>
+                Culture & Society
+              </h2>
+              <div class="text-lg text-gray-700 leading-relaxed space-y-4">
+                {formatTextWithParagraphs(species.data.cultureNotes).map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <!-- Biology Notes -->
+          {species.data.biologyNotes && (
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+              <h2 class="text-3xl font-primary font-bold text-deep-space-navy mb-6 flex items-center">
+                <svg class="w-8 h-8 text-cosmic-rose mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+                Biology & Abilities
+              </h2>
+              <div class="text-lg text-gray-700 leading-relaxed space-y-4">
+                {formatTextWithParagraphs(species.data.biologyNotes).map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <!-- Additional Content -->
+          {species.body && (
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+              <h2 class="text-3xl font-primary font-bold text-deep-space-navy mb-6">Additional Information</h2>
+              <div class="prose prose-lg max-w-none text-gray-700">
+                <Fragment set:html={species.body} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Navigation -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto space-y-8">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold">
+            Explore More
+          </h2>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/species" class="btn btn-secondary btn-lg px-8 py-4">
+              All Species
+            </a>
+            <a href="/series" class="btn btn-outline-light btn-lg px-8 py-4">
+              Browse Series
+            </a>
+            <a href="/books" class="btn btn-outline-light btn-lg px-8 py-4">
+              View Books
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

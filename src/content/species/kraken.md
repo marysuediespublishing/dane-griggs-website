@@ -19,6 +19,8 @@ description: >-
 
 
   The kraken’s abilities are formidable. They possess immense strength, speed, and agility in water, along with heightened senses that allow them to detect pressure shifts, subtle vibrations, and chemical traces in the currents. They can navigate in absolute darkness and communicate through a complex language of sonar pulses, body posture, and bioluminescent signals. Their habitat ranges from warm, sheltered reefs where their young are raised to the crushing, lightless depths where the royal court and the eldest krakens dwell. As apex predators, they maintain the balance of ocean life, upholding an honor-bound culture that values order and the stability of the seas as much as their own survival.
+series:
+  - kokos-harbor
 image: /images/kraken.png
 physicalTraits: Massive leviathan-like full kraken form, smaller streamlined
   scout form, rarely used human form, muscular mantle, tentacles up to a hundred

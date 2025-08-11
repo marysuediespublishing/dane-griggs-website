@@ -186,9 +186,12 @@ const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCo
                       <h4 class="text-sm font-medium text-solar-white mb-2">Featured Species:</h4>
                       <div class="flex flex-wrap gap-2">
                         {currentSpecies.map((species) => (
-                          <span class="badge badge-primary text-xs">
+                          <a 
+                            href={`/species/${species}`}
+                            class="badge badge-primary text-xs hover:bg-stellar-gold hover:text-deep-space-navy transition-colors duration-200"
+                          >
                             {formatSpeciesName(species)}
-                          </span>
+                          </a>
                         ))}
                       </div>
                     </div>
@@ -331,9 +334,12 @@ const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCo
                     return relatedSpecies.length > 0 && (
                       <div class="flex flex-wrap justify-center gap-2 mb-4">
                         {relatedSpecies.slice(0, 3).map((species) => (
-                          <span class="badge badge-outline text-xs">
+                          <a 
+                            href={`/species/${species}`}
+                            class="badge badge-outline text-xs hover:bg-cosmic-rose hover:text-solar-white transition-colors duration-200"
+                          >
                             {formatSpeciesName(species)}
-                          </span>
+                          </a>
                         ))}
                       </div>
                     );

@@ -1,0 +1,193 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
+
+// Get all species
+const allSpecies = await getCollection('species');
+
+// Get all series and books for context
+const allSeries = await getCollection('series');
+const allBooks = await getCollection('books');
+
+// Function to format species name for display
+const formatSpeciesName = (name: string): string => {
+  // Handle special cases
+  if (name.toLowerCase().includes('slavic')) return 'Slavic Goddess';
+  if (name.toLowerCase() === 'human') return 'Human';
+  
+  // Convert to title case
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
+
+// Add appearance count for each species
+const speciesWithStats = allSpecies.map(species => {
+  // Count series appearances
+  const seriesCount = allSeries.filter(series => 
+    (series.data.species && series.data.species.includes(species.id)) ||
+    (series.data.alienSpecies && series.data.alienSpecies.includes(species.id))
+  ).length;
+
+  // Count book appearances
+  const bookCount = allBooks.filter(book => 
+    (book.data.species && book.data.species.includes(species.id)) ||
+    (book.data.alienSpecies && book.data.alienSpecies.includes(species.id))
+  ).length;
+
+  return {
+    ...species,
+    seriesCount,
+    bookCount,
+    displayName: formatSpeciesName(species.data.name)
+  };
+}).sort((a, b) => a.displayName.localeCompare(b.displayName));
+---
+
+<Layout title="Species Guide - Dane Griggs">
+  <Header />
+  
+  <!-- Starfield Background -->
+  <StarfieldBackground client:load />
+  
+  <main class="relative z-10">
+    <!-- Hero Section -->
+    <section class="relative py-20 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-5xl mx-auto text-center">
+          <h1 class="text-5xl md:text-7xl font-primary font-bold text-solar-white mb-6">
+            <span class="bg-gradient-aurora bg-clip-text text-transparent">
+              Species Guide
+            </span>
+          </h1>
+          <p class="text-2xl text-stellar-gold font-medium mb-4">
+            Discover the alien races of the cosmos
+          </p>
+          <p class="text-lg text-solar-white/90 max-w-3xl mx-auto leading-relaxed">
+            From fierce warriors to gentle healers, explore the diverse species that inhabit Dane Griggs' romantic universe. Each brings their own culture, biology, and story to life.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Species Grid -->
+    <section class="py-20 bg-bg-secondary">
+      <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {speciesWithStats.map((species) => (
+              <a 
+                href={`/species/${species.id}`}
+                class="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+              >
+                <!-- Species Image -->
+                <div class="relative aspect-[4/3] overflow-hidden">
+                  {species.data.image ? (
+                    <img 
+                      src={species.data.image} 
+                      alt={`${species.displayName} species artwork`}
+                      class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div class="w-full h-full bg-gradient-cosmic flex items-center justify-center">
+                      <div class="text-center text-solar-white">
+                        <div class="text-6xl mb-4">👽</div>
+                        <div class="text-lg font-bold">{species.displayName}</div>
+                      </div>
+                    </div>
+                  )}
+                  <!-- Overlay -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/40 to-transparent"></div>
+                </div>
+                
+                <!-- Species Info -->
+                <div class="p-6">
+                  <h3 class="text-2xl font-primary font-bold text-deep-space-navy mb-3 group-hover:text-cosmic-rose transition-colors">
+                    {species.displayName}
+                  </h3>
+                  
+                  {species.data.description && (
+                    <p class="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
+                      {species.data.description}
+                    </p>
+                  )}
+                  
+                  <!-- Stats -->
+                  <div class="flex items-center justify-between text-sm text-gray-600">
+                    <div class="flex items-center space-x-4">
+                      {species.seriesCount > 0 && (
+                        <span class="flex items-center space-x-1">
+                          <svg class="w-4 h-4 text-cosmic-rose" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+                          </svg>
+                          <span>{species.seriesCount} series</span>
+                        </span>
+                      )}
+                      
+                      {species.bookCount > 0 && (
+                        <span class="flex items-center space-x-1">
+                          <svg class="w-4 h-4 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"></path>
+                          </svg>
+                          <span>{species.bookCount} books</span>
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div class="text-cosmic-rose font-medium group-hover:text-stellar-gold transition-colors">
+                      Learn More →
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+          
+          {speciesWithStats.length === 0 && (
+            <div class="text-center py-16">
+              <div class="text-6xl mb-4">🌌</div>
+              <h3 class="text-2xl font-bold text-deep-space-navy mb-2">No Species Found</h3>
+              <p class="text-gray-600">Species profiles are being added soon.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Browse More CTA -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto space-y-8">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold">
+            Explore the Universe
+          </h2>
+          <p class="text-lg text-solar-white/90">
+            Discover the books and series where these fascinating species come to life
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/series" class="btn btn-secondary btn-lg px-8 py-4">
+              Browse Series
+            </a>
+            <a href="/books" class="btn btn-outline-light btn-lg px-8 py-4">
+              View All Books
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
