@@ -17,5 +17,6 @@ books:
   - rescued-by-kraken-book
 cameos:
   - lily-saves-alien-book
+image: /images/toddsampson_a_blond_man_without_a_shirt_standing_facing_away_bu_c3edc9ec-ff19-4bcf-81a5-63900b1f0dc0.png
 species: kraken
 ---

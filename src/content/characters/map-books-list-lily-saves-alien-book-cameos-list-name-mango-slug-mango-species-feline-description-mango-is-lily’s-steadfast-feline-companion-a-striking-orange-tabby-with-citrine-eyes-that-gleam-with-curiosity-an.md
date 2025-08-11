@@ -13,5 +13,6 @@ description: Mango is Lily’s steadfast feline companion, a striking orange tab
 books:
   - lily-saves-alien-book
 cameos: []
+image: /images/ravok-holding-cat-cartoon.png
 species: feline
 ---
