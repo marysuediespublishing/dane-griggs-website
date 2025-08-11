@@ -50,26 +50,24 @@ function formatGenreName(genre: string): string {
   ).join(' ');
 }
 
-export async function getStaticPaths() {
-  const books = await getCollection('books');
-  return books.map((book) => ({
-    params: { slug: book.id },
-    props: { book },
-  }));
-}
+// Get the slug from URL params
+const { slug } = Astro.params;
 
-interface Props {
-  book: CollectionEntry<'books'>;
-}
+// Fetch all books and find the one matching the slug
+const allBooks = await getCollection('books');
+const book = allBooks.find(b => b.id === slug);
 
-const { book } = Astro.props;
+// Handle book not found - return 404
+if (!book) {
+  return Astro.redirect('/404');
+}
 const { Content } = await render(book);
 // Add slug property for consistency
 const bookWithSlug = { ...book, slug: book.id };
 
-// Get all books and series for related recommendations, process images
-const allBooks = await Promise.all(
-	(await getCollection('books')).map(async book => {
+// Process all books for related recommendations, process images
+const allBooksProcessed = await Promise.all(
+	allBooks.map(async book => {
 		try {
 			const coverImage = book.data.cover ? await getImage({
 				src: book.data.cover,
@@ -97,11 +95,11 @@ const allSeries = await getCollection('series');
 
 // Get books from the same series
 const seriesBooks = book.data.series 
-  ? allBooks.filter(b => b.data.series === book.data.series && b.id !== book.id)
+  ? allBooksProcessed.filter(b => b.data.series === book.data.series && b.id !== book.id)
   : [];
 
 // Get books with similar alien species
-const similarBooks = allBooks.filter(b => {
+const similarBooks = allBooksProcessed.filter(b => {
   const currentSpecies = book.data.species || book.data.alienSpecies || [];
   const bookSpecies = b.data.species || b.data.alienSpecies || [];
   return b.id !== book.id &&
@@ -109,7 +107,7 @@ const similarBooks = allBooks.filter(b => {
 }).slice(0, 4);
 
 // Get other books by same author (if different than current book)
-const otherBooks = allBooks.filter(b => 
+const otherBooks = allBooksProcessed.filter(b => 
   b.id !== book.id && 
   b.data.author === book.data.author
 ).slice(0, 6);
@@ -125,10 +123,13 @@ const estimatedReadingTime = book.data.wordCount
   ? Math.round((book.data.wordCount / 250) / 60) // Convert to hours
   : null;
 
-// Resolve names for display
+// Resolve names for display with links
 const currentSpecies = book.data.species || book.data.alienSpecies || [];
-const speciesNames = currentSpecies.length > 0
-  ? await Promise.all(currentSpecies.map(slug => getSpeciesName(slug)))
+const speciesData = currentSpecies.length > 0
+  ? await Promise.all(currentSpecies.map(async slug => ({
+      slug: slug,
+      name: await getSpeciesName(slug)
+    })))
   : [];
 
 const settingNames = book.data.setting 
@@ -285,14 +286,18 @@ const genreNames = book.data.genres
                   
                   {/* Tags/Categories */}
                   <div class="mt-6 pt-4 border-t border-solar-white/20">
-                    {speciesNames.length > 0 && (
+                    {speciesData.length > 0 && (
                       <div class="mb-3">
                         <h4 class="text-sm font-medium text-solar-white mb-2">Species:</h4>
                         <div class="flex flex-wrap gap-2">
-                          {speciesNames.map((speciesName, index) => (
-                            <span class="badge badge-primary text-xs" key={index}>
-                              {speciesName}
-                            </span>
+                          {speciesData.map((species) => (
+                            <a 
+                              href={`/species/${species.slug}`}
+                              class="badge badge-primary text-xs hover:badge-secondary transition-colors"
+                              key={species.slug}
+                            >
+                              {species.name}
+                            </a>
                           ))}
                         </div>
                       </div>

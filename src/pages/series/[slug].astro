@@ -7,19 +7,17 @@ import { SITE_TITLE } from '../../consts';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getImage } from 'astro:assets';
 
-export async function getStaticPaths() {
-  const series = await getCollection('series');
-  return series.map((seriesItem) => ({
-    params: { slug: seriesItem.id },
-    props: { seriesItem: { ...seriesItem, slug: seriesItem.id } },
-  }));
-}
+// Get the slug from URL params
+const { slug } = Astro.params;
 
-interface Props {
-  seriesItem: CollectionEntry<'series'>;
-}
+// Fetch all series and find the one matching the slug
+const seriesCollection = await getCollection('series');
+const seriesItem = seriesCollection.find(s => s.id === slug);
 
-const { seriesItem } = Astro.props;
+// Handle series not found - return 404
+if (!seriesItem) {
+  return Astro.redirect('/404');
+}
 // const { Content } = await seriesItem.render();
 
 // Get all books for this series and add slug property and process images
