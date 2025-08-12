@@ -23,7 +23,7 @@ description: >-
   Their culture is fiercely expansionist, driven by the belief that their destiny is to dominate and harvest the resources of other worlds. Cryzorian Outriders – elite scouts and warriors – are dispatched across the galaxy to identify planets worth conquering. Once a target is selected, the Cryzorian war machine moves with patience and precision, willing to wait years for the perfect moment to strike. To them, other civilizations exist only as assets to be absorbed or obstacles to be eliminated. Strategic, relentless, and unyielding, the Cryzorians are a species that wages war not merely as a necessity but as the core expression of their identity. They are the harbingers of conquest, their very name meant to inspire fear in those who hear it whispered across the stars.
 series:
   - kokos-harbor
-image: /images/toddsampson_an_alien_man_shirtless_holding_an_orange_striped_ca_d37adf7e-e018-4fc2-86d8-4dcee2953a8d.png
+image: /images/toddsampson_an_injured_alien_crawling_out_of_a_crashed_spaceshi_bb433397-55ee-4e9e-b854-a7ebe342578c.png
 physicalTraits: Tall, broad and muscular build, dark gray metallic-sheened skin,
   faint natural glimmer under light, nearly pure white glowing eyes with faint
   pupils, sharp retractable claws, lack of body hair, bipedal humanoid form,

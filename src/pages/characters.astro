@@ -72,20 +72,14 @@ const seriesGroups = {
   "Koko's Harbor for Wayward Fated Mates": charactersWithStats.filter(char => 
     char.primarySeries === "Koko's Harbor for Wayward Fated Mates"
   ).sort((a, b) => {
-    // Sort by total appearances (descending), then by name
-    if (b.totalAppearances !== a.totalAppearances) {
-      return b.totalAppearances - a.totalAppearances;
-    }
+    // Sort alphabetically by display name
     return a.displayName.localeCompare(b.displayName);
   }),
   
   "Saving Ceraste": charactersWithStats.filter(char => 
     char.primarySeries === "Saving Ceraste"
   ).sort((a, b) => {
-    // Sort by total appearances (descending), then by name
-    if (b.totalAppearances !== a.totalAppearances) {
-      return b.totalAppearances - a.totalAppearances;
-    }
+    // Sort alphabetically by display name
     return a.displayName.localeCompare(b.displayName);
   }),
   
@@ -95,10 +89,7 @@ const seriesGroups = {
       char.primarySeries !== "Saving Ceraste"
     )
   ).sort((a, b) => {
-    // Sort by total appearances (descending), then by name
-    if (b.totalAppearances !== a.totalAppearances) {
-      return b.totalAppearances - a.totalAppearances;
-    }
+    // Sort alphabetically by display name
     return a.displayName.localeCompare(b.displayName);
   })
 };

@@ -14,6 +14,7 @@ species:
   - slavic-gods
   - cryzorian
   - kraken
+  - feline
 overallRating: 4.5
 totalRatings: 152
 worldBuilding: Nestled in the scenic coastline, the charming town of Lublin
