@@ -32,7 +32,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     
     switch (variant) {
       case 'header':
-        return 'Free Books';
+        return 'Free Book';
       case 'hero':
         return 'Get Your Free Alien Romance Book';
       case 'sidebar':

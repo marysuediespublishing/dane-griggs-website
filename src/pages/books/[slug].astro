@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import BookCard from '../../components/ui/BookCard.tsx';
+import NewsletterCTA from '../../components/ui/NewsletterCTA.tsx';
 import { SITE_TITLE } from '../../consts';
 import { getCollection, type CollectionEntry, render } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
@@ -537,9 +538,12 @@ const genreNames = book.data.genres
             Join my newsletter for exclusive content, early access to new releases, and behind-the-scenes insights into alien world-building.
           </p>
           
-          <button class="btn btn-secondary btn-lg px-8 py-4 text-lg">
-            Get More Cosmic Romance
-          </button>
+          <NewsletterCTA 
+            variant="hero" 
+            text="Get More Cosmic Romance"
+            className="btn btn-secondary btn-lg px-8 py-4 text-lg"
+            client:load 
+          />
         </div>
       </div>
     </section>
