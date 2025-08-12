@@ -1,0 +1,214 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import StarfieldBackground from '../components/ui/StarfieldBackground.tsx';
+
+// Get all characters, books, and series for statistics
+const allCharacters = await getCollection('characters');
+const allBooks = await getCollection('books');
+const allSeries = await getCollection('series');
+
+// Function to format character name for display
+const formatCharacterName = (name: string): string => {
+  return name; // Characters already have proper formatted names
+};
+
+// Function to format species name for display
+const formatSpeciesName = (species: string): string => {
+  if (!species) return 'Unknown';
+  
+  // Handle special cases
+  if (species.toLowerCase() === 'human') return 'Human';
+  if (species.toLowerCase().includes('slavic')) return 'Slavic Gods';
+  
+  // For other species, capitalize each word
+  return species.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
+};
+
+// Add statistics to each character
+const charactersWithStats = allCharacters.map(character => {
+  // Count main book appearances
+  const bookCount = character.data.books ? character.data.books.length : 0;
+  
+  // Count cameo appearances
+  const cameoCount = character.data.cameos ? character.data.cameos.length : 0;
+  
+  // Total appearances
+  const totalAppearances = bookCount + cameoCount;
+  
+  return {
+    ...character,
+    bookCount,
+    cameoCount,
+    totalAppearances,
+    displayName: formatCharacterName(character.data.name),
+    speciesName: formatSpeciesName(character.data.species || '')
+  };
+}).sort((a, b) => {
+  // Sort by total appearances (descending), then by name
+  if (b.totalAppearances !== a.totalAppearances) {
+    return b.totalAppearances - a.totalAppearances;
+  }
+  return a.displayName.localeCompare(b.displayName);
+});
+---
+
+<Layout title="Character Guide - Dane Griggs">
+  <Header />
+  
+  <!-- Starfield Background -->
+  <StarfieldBackground client:load />
+  
+  <main class="relative z-10">
+    <!-- Hero Section -->
+    <section class="relative py-20 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-5xl mx-auto text-center">
+          <h1 class="text-5xl md:text-7xl font-primary font-bold text-solar-white mb-6">
+            <span class="bg-gradient-aurora bg-clip-text text-transparent">
+              Character Guide
+            </span>
+          </h1>
+          <p class="text-2xl text-stellar-gold font-medium mb-4">
+            Meet the heroes and heroines of the cosmos
+          </p>
+          <p class="text-lg text-solar-white/90 max-w-3xl mx-auto leading-relaxed">
+            From brave humans to powerful aliens, discover the unforgettable characters who bring Dane Griggs' romantic universe to life. Each one has their own story, struggles, and passionate journey to love.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Characters Grid -->
+    <section class="py-20 bg-bg-secondary">
+      <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {charactersWithStats.map((character) => (
+              <a 
+                href={`/characters/${character.id}`}
+                class="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+              >
+                <!-- Character Image -->
+                <div class="relative aspect-[4/3] overflow-hidden">
+                  {character.data.image ? (
+                    <img 
+                      src={character.data.image} 
+                      alt={`${character.displayName} character artwork`}
+                      class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div class="w-full h-full bg-gradient-cosmic flex items-center justify-center">
+                      <div class="text-center text-solar-white">
+                        <div class="text-6xl mb-2">👤</div>
+                        <div class="text-sm font-medium">{character.displayName}</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <!-- Species Badge -->
+                  {character.data.species && (
+                    <div class="absolute top-4 left-4">
+                      <span class="badge badge-primary text-xs">
+                        {character.speciesName}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                
+                <!-- Character Info -->
+                <div class="p-6">
+                  <h3 class="text-xl font-primary font-bold text-deep-space-navy mb-2 group-hover:text-cosmic-rose transition-colors">
+                    {character.displayName}
+                  </h3>
+                  
+                  {character.data.description && (
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                      {character.data.description}
+                    </p>
+                  )}
+                  
+                  <div class="flex items-center justify-between">
+                    <div class="flex flex-wrap gap-2 text-xs">
+                      {character.bookCount > 0 && (
+                        <span class="flex items-center space-x-1">
+                          <svg class="w-4 h-4 text-cosmic-rose" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"></path>
+                          </svg>
+                          <span>{character.bookCount} {character.bookCount === 1 ? 'book' : 'books'}</span>
+                        </span>
+                      )}
+                      
+                      {character.cameoCount > 0 && (
+                        <span class="flex items-center space-x-1">
+                          <svg class="w-4 h-4 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+                          </svg>
+                          <span>{character.cameoCount} cameo{character.cameoCount === 1 ? '' : 's'}</span>
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div class="text-cosmic-rose font-medium group-hover:text-stellar-gold transition-colors">
+                      Learn More →
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+          
+          {charactersWithStats.length === 0 && (
+            <div class="text-center py-16">
+              <div class="text-6xl mb-4">🌌</div>
+              <h3 class="text-2xl font-bold text-deep-space-navy mb-2">No Characters Found</h3>
+              <p class="text-gray-600">Character profiles are being added soon.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Browse More CTA -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto space-y-8">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold">
+            Explore Their Stories
+          </h2>
+          <p class="text-lg text-solar-white/90">
+            Discover the books and series where these beloved characters find love across the stars
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/series" class="btn btn-secondary btn-lg px-8 py-4">
+              Browse Series
+            </a>
+            <a href="/books" class="btn btn-outline-light btn-lg px-8 py-4">
+              View All Books
+            </a>
+            <a href="/species" class="btn btn-outline-light btn-lg px-8 py-4">
+              Species Guide
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

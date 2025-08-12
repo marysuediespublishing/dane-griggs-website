@@ -1,0 +1,270 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import StarfieldBackground from '../../components/ui/StarfieldBackground.tsx';
+
+// Get the slug from URL params
+const { slug } = Astro.params;
+
+// Fetch all characters and find the one matching the slug
+const allCharacters = await getCollection('characters');
+const character = allCharacters.find(c => c.id === slug);
+
+// Handle character not found - return 404
+if (!character) {
+  return Astro.redirect('/404');
+}
+
+// Get all books and series to show where this character appears
+const allBooks = await getCollection('books');
+const allSeries = await getCollection('series');
+const allSpecies = await getCollection('species');
+
+// Find books where this character appears (main books)
+const featuredBooks = allBooks.filter(book => 
+  character.data.books && character.data.books.includes(book.id)
+);
+
+// Find books where this character has cameos
+const cameoBooks = allBooks.filter(book => 
+  character.data.cameos && character.data.cameos.includes(book.id)
+);
+
+// Find the character's species information
+const characterSpecies = character.data.species 
+  ? allSpecies.find(s => s.id === character.data.species)
+  : null;
+
+// Function to format character name for display
+const formatCharacterName = (name: string): string => {
+  return name; // Characters already have proper formatted names
+};
+
+// Function to format species name for display
+const formatSpeciesName = (species: string): string => {
+  if (!species) return 'Unknown';
+  
+  // Handle special cases
+  if (species.toLowerCase() === 'human') return 'Human';
+  if (species.toLowerCase().includes('slavic')) return 'Slavic Gods';
+  
+  // For other species, capitalize each word
+  return species.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
+};
+
+// Function to split long text into paragraphs for better readability
+const formatTextWithParagraphs = (text: string): string[] => {
+  if (!text) return [];
+  
+  // Split on double spaces, periods followed by capital letters, or common sentence endings
+  const sentences = text.split(/(?:\\.  |\\. [A-Z]|\\.  [A-Z]|,  [A-Z])/);
+  
+  // If we have multiple sentences, group them into paragraphs
+  if (sentences.length > 2) {
+    const paragraphs = [];
+    let currentParagraph = sentences[0];
+    
+    for (let i = 1; i < sentences.length; i++) {
+      // Add the sentence back with proper punctuation
+      const sentence = sentences[i].trim();
+      if (sentence) {
+        // If current paragraph is getting long (> 300 chars) or we've added 2-3 sentences, start a new paragraph
+        if (currentParagraph.length > 300 || (i % 2 === 0 && currentParagraph.split('.').length > 2)) {
+          paragraphs.push(currentParagraph.trim() + '.');
+          currentParagraph = sentence;
+        } else {
+          currentParagraph += '. ' + sentence;
+        }
+      }
+    }
+    
+    // Add the last paragraph
+    if (currentParagraph.trim()) {
+      paragraphs.push(currentParagraph.trim());
+    }
+    
+    return paragraphs.length > 1 ? paragraphs : [text];
+  }
+  
+  return [text];
+};
+
+const characterName = formatCharacterName(character.data.name);
+const speciesName = character.data.species ? formatSpeciesName(character.data.species) : null;
+---
+
+<Layout title={`${characterName} - Character Profile - Dane Griggs`}>
+  <Header />
+  
+  <!-- Starfield Background -->
+  <StarfieldBackground client:load />
+  
+  <main class="relative z-10">
+    <!-- Hero Section -->
+    <section class="relative py-16 bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy overflow-hidden">
+      <div class="absolute inset-0 bg-starfield opacity-30 animate-starfield"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-space-navy/50 to-transparent"></div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+          <div class="text-lg text-stellar-gold font-medium mb-2">Character Profile</div>
+          <h1 class="text-5xl md:text-6xl font-primary font-bold text-solar-white mb-6">
+            <span class="bg-gradient-aurora bg-clip-text text-transparent">
+              {characterName}
+            </span>
+          </h1>
+          {speciesName && (
+            <p class="text-xl text-stellar-gold font-medium">
+              {speciesName}
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Section -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <!-- Description -->
+            <div class="space-y-6">
+              {character.data.description && (
+                <div class="text-xl text-gray-700 leading-relaxed space-y-4">
+                  {formatTextWithParagraphs(character.data.description).map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              )}
+              
+              {/* Species Link */}
+              {characterSpecies && (
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 class="text-lg font-bold text-deep-space-navy mb-2">Species</h3>
+                  <a 
+                    href={`/species/${characterSpecies.id}`}
+                    class="text-cosmic-rose hover:text-stellar-gold transition-colors font-medium"
+                  >
+                    {speciesName} →
+                  </a>
+                </div>
+              )}
+            </div>
+            
+            <!-- Image and Stats -->
+            <div class="space-y-8">
+              <!-- Character Image -->
+              {character.data.image ? (
+                <div class="relative max-w-sm mx-auto lg:mx-0">
+                  <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                    <img 
+                      src={character.data.image} 
+                      alt={`${characterName} character artwork`}
+                      class="w-full h-auto object-cover"
+                    />
+                  </div>
+                  <!-- Decorative border -->
+                  <div class="absolute inset-0 rounded-2xl border-2 border-stellar-gold/20 -m-1"></div>
+                </div>
+              ) : (
+                <div class="relative max-w-sm mx-auto lg:mx-0">
+                  <div class="aspect-[3/4] bg-gradient-cosmic rounded-2xl flex items-center justify-center shadow-2xl">
+                    <div class="text-center text-solar-white">
+                      <div class="text-8xl mb-4">👤</div>
+                      <div class="text-lg font-bold">{characterName}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <!-- Featured Content Lists -->
+              <div class="space-y-6">
+                <!-- Main Books List -->
+                {featuredBooks.length > 0 && (
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h3 class="text-lg font-bold text-deep-space-navy mb-3 flex items-center">
+                      <svg class="w-5 h-5 text-stellar-gold mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"></path>
+                      </svg>
+                      Featured In ({featuredBooks.length})
+                    </h3>
+                    <div class="space-y-2 max-h-48 overflow-y-auto">
+                      {featuredBooks.map((book) => (
+                        <a 
+                          href={`/books/${book.id}`}
+                          class="block text-sm text-gray-600 hover:text-stellar-gold transition-colors"
+                        >
+                          {book.data.title}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <!-- Cameo Books List -->
+                {cameoBooks.length > 0 && (
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h3 class="text-lg font-bold text-deep-space-navy mb-3 flex items-center">
+                      <svg class="w-5 h-5 text-cosmic-rose mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+                      </svg>
+                      Cameos ({cameoBooks.length})
+                    </h3>
+                    <div class="space-y-2 max-h-48 overflow-y-auto">
+                      {cameoBooks.map((book) => (
+                        <a 
+                          href={`/books/${book.id}`}
+                          class="block text-sm text-gray-600 hover:text-stellar-gold transition-colors"
+                        >
+                          {book.data.title}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <section class="py-16 bg-gradient-cosmic text-solar-white">
+      <div class="container mx-auto px-4 text-center">
+        <div class="max-w-3xl mx-auto space-y-8">
+          <h2 class="text-3xl md:text-4xl font-primary font-bold">
+            Explore More
+          </h2>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/characters" class="btn btn-secondary btn-lg px-8 py-4">
+              All Characters
+            </a>
+            {characterSpecies && (
+              <a href={`/species/${characterSpecies.id}`} class="btn btn-outline-light btn-lg px-8 py-4">
+                {speciesName} Species
+              </a>
+            )}
+            <a href="/books" class="btn btn-outline-light btn-lg px-8 py-4">
+              View Books
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
