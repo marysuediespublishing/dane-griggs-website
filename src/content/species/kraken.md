@@ -6,7 +6,7 @@ description: >-
   and Queen and supported by a royal court that oversees warriors, hunters,
   artisans, and keepers of sacred traditions. Status is determined by martial
   skill, loyalty to the crown, and devotion to their god, Thassalor, the
-  primordial embodiment of the sea’s will. aaa
+  primordial embodiment of the sea's will.
 
 
   Krakens are shapeshifters with three distinct forms. In their full kraken form, they are immense leviathan-like creatures with muscular mantles and tentacles stretching over a hundred feet, capable of crushing prey and matching even giant squid in ferocity. The scout form is a smaller, more streamlined kraken body used for navigating palace corridors, conducting reconnaissance, and moving through confined spaces. Finally, they possess a human form, which most krakens rarely use, believing humans to be fragile and inferior. Transforming between kraken forms is natural, but shifting into human form is taxing for pure-bloods. Half-human krakens, however, are uniquely adept at changing shape, especially into human form, though they face suspicion, hostility, and often exile for their mixed heritage. In the eyes of most, their existence is a stain on kraken purity, though some leaders recognize their adaptability as a strength.
