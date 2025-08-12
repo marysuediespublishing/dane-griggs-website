@@ -22,7 +22,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ mobile = false, className = '' })
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={mobile ? "Search books, series..." : "Search books, series, alien species..."}
+          placeholder={mobile ? "Search books, series..." : "Search books, series, species, characters..."}
           className={`
             w-full bg-deep-space-navy/50 backdrop-blur-sm border-2 border-cosmic-rose/30 
             rounded-lg px-4 py-2 text-solar-white placeholder-solar-white/60

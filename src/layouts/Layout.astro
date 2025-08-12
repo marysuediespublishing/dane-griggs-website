@@ -106,7 +106,7 @@ const socialImageURL = new URL(image, Astro.url);
       // Performance monitoring
       if ('performance' in window) {
         window.addEventListener('load', () => {
-          const perfData = performance.getEntriesByType('navigation')[0];
+          const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
           if (perfData && perfData.loadEventEnd > 2500) {
             console.warn('Page load time exceeded 2.5s:', perfData.loadEventEnd + 'ms');
           }

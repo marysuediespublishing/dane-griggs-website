@@ -5,15 +5,58 @@ import Footer from '../components/Footer.astro';
 import BookCard from '../components/ui/BookCard.tsx';
 import { SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 
 // Get search query from URL params
 const url = Astro.url;
 const searchQuery = url.searchParams.get('q') || '';
 
 // Get all content for searching
-const books = await getCollection('books');
+const books = await Promise.all(
+  (await getCollection('books')).map(async book => {
+    try {
+      const coverImage = book.data.cover ? await getImage({
+        src: book.data.cover,
+        width: 300,
+        height: 450,
+        format: 'webp'
+      }) : null;
+      
+      return {
+        ...book,
+        slug: book.id,
+        coverUrl: coverImage?.src
+      };
+    } catch (error) {
+      console.warn(`Failed to process cover for book ${book.id}:`, error);
+      return {
+        ...book,
+        slug: book.id,
+        coverUrl: null
+      };
+    }
+  })
+);
+
 const series = await getCollection('series');
 const blog = await getCollection('blog');
+const species = await getCollection('species');
+const characters = await getCollection('characters');
+const pages = await getCollection('pages');
+const locations = await getCollection('locations');
+
+// Helper function to handle hyphen vs space matching
+const normalizeForSearch = (text: string): string => {
+  return text.replace(/\s+/g, '-');
+};
+
+const matchesQuery = (text: string, query: string): boolean => {
+  const lowerText = text.toLowerCase();
+  const lowerQuery = query.toLowerCase();
+  const normalizedQuery = normalizeForSearch(lowerQuery);
+  
+  return lowerText.includes(lowerQuery) || lowerText.includes(normalizedQuery);
+};
 
 // Simple search implementation (in a real app, you'd use Fuse.js or similar)
 const searchBooks = (query: string) => {
@@ -21,15 +64,21 @@ const searchBooks = (query: string) => {
   
   const lowerQuery = query.toLowerCase();
   return books.filter(book => 
-    book.data.title.toLowerCase().includes(lowerQuery) ||
-    book.data.description.toLowerCase().includes(lowerQuery) ||
-    book.data.author.toLowerCase().includes(lowerQuery) ||
-    (book.data.series && book.data.series.toLowerCase().includes(lowerQuery)) ||
+    matchesQuery(book.data.title, query) ||
+    matchesQuery(book.data.description, query) ||
+    matchesQuery(book.data.author, query) ||
+    (book.data.series && matchesQuery(book.data.series, query)) ||
+    (book.data.species && book.data.species.some(species => 
+      matchesQuery(species, query)
+    )) ||
     (book.data.alienSpecies && book.data.alienSpecies.some(species => 
-      species.toLowerCase().includes(lowerQuery)
+      matchesQuery(species, query)
     )) ||
     (book.data.genres && book.data.genres.some(genre => 
-      genre.toLowerCase().includes(lowerQuery)
+      matchesQuery(genre, query)
+    )) ||
+    (book.data.setting && book.data.setting.some(setting => 
+      matchesQuery(setting, query)
     ))
   );
 };
@@ -37,12 +86,15 @@ const searchBooks = (query: string) => {
 const searchSeries = (query: string) => {
   if (!query) return [];
   
-  const lowerQuery = query.toLowerCase();
   return series.filter(s => 
-    s.data.title.toLowerCase().includes(lowerQuery) ||
-    s.data.description.toLowerCase().includes(lowerQuery) ||
+    matchesQuery(s.data.title, query) ||
+    matchesQuery(s.data.description, query) ||
+    (s.data.worldBuilding && matchesQuery(s.data.worldBuilding, query)) ||
+    (s.data.species && s.data.species.some(species => 
+      matchesQuery(species, query)
+    )) ||
     (s.data.alienSpecies && s.data.alienSpecies.some(species => 
-      species.toLowerCase().includes(lowerQuery)
+      matchesQuery(species, query)
     ))
   );
 };
@@ -50,13 +102,62 @@ const searchSeries = (query: string) => {
 const searchBlogPosts = (query: string) => {
   if (!query) return [];
   
-  const lowerQuery = query.toLowerCase();
   return blog.filter(post => 
-    post.data.title.toLowerCase().includes(lowerQuery) ||
-    post.data.description.toLowerCase().includes(lowerQuery) ||
+    matchesQuery(post.data.title, query) ||
+    matchesQuery(post.data.description, query) ||
+    (post.data.category && matchesQuery(post.data.category, query)) ||
     (post.data.tags && post.data.tags.some(tag => 
-      tag.toLowerCase().includes(lowerQuery)
+      matchesQuery(tag, query)
     ))
+  );
+};
+
+const searchSpecies = (query: string) => {
+  if (!query) return [];
+  
+  return species.filter(s => 
+    matchesQuery(s.data.name, query) ||
+    (s.data.description && matchesQuery(s.data.description, query)) ||
+    (s.data.physicalTraits && matchesQuery(s.data.physicalTraits, query)) ||
+    (s.data.cultureNotes && matchesQuery(s.data.cultureNotes, query)) ||
+    (s.data.biologyNotes && matchesQuery(s.data.biologyNotes, query))
+  );
+};
+
+const searchCharacters = (query: string) => {
+  if (!query) return [];
+  
+  return characters.filter(c => 
+    matchesQuery(c.data.name, query) ||
+    (c.data.description && matchesQuery(c.data.description, query)) ||
+    (c.data.species && matchesQuery(c.data.species, query)) ||
+    (c.data.books && c.data.books.some(book => 
+      matchesQuery(book, query)
+    )) ||
+    (c.data.cameos && c.data.cameos.some(cameo => 
+      matchesQuery(cameo, query)
+    ))
+  );
+};
+
+const searchPages = (query: string) => {
+  if (!query) return [];
+  
+  return pages.filter(p => 
+    matchesQuery(p.data.title, query) ||
+    (p.data.hero?.title && matchesQuery(p.data.hero.title, query)) ||
+    (p.data.hero?.tagline && matchesQuery(p.data.hero.tagline, query)) ||
+    (p.data.authorBio?.mainBio && matchesQuery(p.data.authorBio.mainBio, query))
+  );
+};
+
+const searchLocations = (query: string) => {
+  if (!query) return [];
+  
+  return locations.filter(l => 
+    matchesQuery(l.data.name, query) ||
+    (l.data.description && matchesQuery(l.data.description, query)) ||
+    (l.data.environmentType && matchesQuery(l.data.environmentType, query))
   );
 };
 
@@ -64,16 +165,23 @@ const searchBlogPosts = (query: string) => {
 const foundBooks = searchBooks(searchQuery);
 const foundSeries = searchSeries(searchQuery);
 const foundBlogPosts = searchBlogPosts(searchQuery);
+const foundSpecies = searchSpecies(searchQuery);
+const foundCharacters = searchCharacters(searchQuery);
+const foundPages = searchPages(searchQuery);
+const foundLocations = searchLocations(searchQuery);
 
-const totalResults = foundBooks.length + foundSeries.length + foundBlogPosts.length;
+const totalResults = foundBooks.length + foundSeries.length + foundBlogPosts.length + foundSpecies.length + foundCharacters.length + foundPages.length + foundLocations.length;
 
 // Popular searches for empty state
 const popularSearches = [
   'alien romance',
   'cerastean',
+  'kraken',
+  'cryzorian',
   'space station',
   'medical romance',
   'Saving Ceraste',
+  'Ravok',
   'strong heroine'
 ];
 ---
@@ -107,7 +215,7 @@ const popularSearches = [
                 type="text"
                 name="q"
                 value={searchQuery}
-                placeholder="Search books, series, alien species..."
+                placeholder="Search books, series, species, characters..."
                 class="w-full bg-solar-white/10 backdrop-blur-sm border-2 border-cosmic-rose/30 
                        rounded-lg px-6 py-4 text-solar-white placeholder-solar-white/60 text-lg
                        focus:outline-none focus:border-cosmic-rose focus:shadow-cosmic
@@ -137,7 +245,7 @@ const popularSearches = [
               Discover Your Next Favorite Book
             </h2>
             <p class="text-gray-600 mb-8">
-              Search through my entire collection of alien romance novels, series, and blog posts. Find books by title, series, alien species, or themes.
+              Search through my entire collection of alien romance novels, series, species, characters, and blog posts. Find content by title, description, species, or themes.
             </p>
           </div>
 
@@ -157,7 +265,7 @@ const popularSearches = [
           </div>
 
           <!-- Featured Content -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <div class="text-center">
               <div class="text-4xl mb-4">📚</div>
               <h3 class="text-lg font-semibold text-deep-space-navy mb-2">
@@ -177,12 +285,39 @@ const popularSearches = [
               </p>
             </div>
             <div class="text-center">
+              <div class="text-4xl mb-4">👽</div>
+              <h3 class="text-lg font-semibold text-deep-space-navy mb-2">
+                {species.length} Species
+              </h3>
+              <p class="text-gray-600 text-sm">
+                Alien races and cultures
+              </p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl mb-4">👤</div>
+              <h3 class="text-lg font-semibold text-deep-space-navy mb-2">
+                {characters.length} Characters
+              </h3>
+              <p class="text-gray-600 text-sm">
+                Heroes and heroines
+              </p>
+            </div>
+            <div class="text-center">
               <div class="text-4xl mb-4">✍️</div>
               <h3 class="text-lg font-semibold text-deep-space-navy mb-2">
                 {blog.length} Blog Posts
               </h3>
               <p class="text-gray-600 text-sm">
                 Writing insights and world-building
+              </p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl mb-4">🏛️</div>
+              <h3 class="text-lg font-semibold text-deep-space-navy mb-2">
+                {locations.length} Locations
+              </h3>
+              <p class="text-gray-600 text-sm">
+                Settings and environments
               </p>
             </div>
           </div>
@@ -234,15 +369,10 @@ const popularSearches = [
                 <h2 class="text-2xl font-bold text-deep-space-navy">
                   Books ({foundBooks.length})
                 </h2>
-                {foundBooks.length > 8 && (
-                  <button class="text-cosmic-rose hover:text-cosmic-rose/80 font-medium">
-                    View All →
-                  </button>
-                )}
               </div>
               
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {foundBooks.slice(0, 8).map((book) => (
+                {foundBooks.map((book) => (
                   <BookCard 
                     book={book}
                     variant="standard"
@@ -280,7 +410,7 @@ const popularSearches = [
                       </div>
                       
                       <a 
-                        href={`/series/${seriesItem.slug}`}
+                        href={`/series/${seriesItem.id}`}
                         class="btn btn-secondary btn-sm w-full"
                       >
                         Explore Series
@@ -306,7 +436,7 @@ const popularSearches = [
                   <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                     <div class="p-6">
                       <h3 class="text-lg font-bold text-deep-space-navy mb-2 hover:text-cosmic-rose transition-colors">
-                        <a href={`/blog/${post.slug}`}>
+                        <a href={`/blog/${post.id}`}>
                           {post.data.title}
                         </a>
                       </h3>
@@ -329,6 +459,185 @@ const popularSearches = [
                       </div>
                     </div>
                   </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Species Results -->
+          {foundSpecies.length > 0 && (
+            <section>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-deep-space-navy">
+                  Species ({foundSpecies.length})
+                </h2>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {foundSpecies.map((speciesItem) => (
+                  <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-center">
+                      {speciesItem.data.image && (
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
+                          <img 
+                            src={speciesItem.data.image} 
+                            alt={`${speciesItem.data.name} species`}
+                            class="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      
+                      <h3 class="text-xl font-bold text-deep-space-navy mb-2">
+                        {speciesItem.data.name}
+                      </h3>
+                      
+                      {speciesItem.data.description && (
+                        <p class="text-gray-600 mb-4 text-sm line-clamp-3">
+                          {typeof speciesItem.data.description === 'string' 
+                            ? speciesItem.data.description.substring(0, 150) + (speciesItem.data.description.length > 150 ? '...' : '')
+                            : speciesItem.data.description}
+                        </p>
+                      )}
+                      
+                      <a 
+                        href={`/species/${speciesItem.id}`}
+                        class="btn btn-secondary btn-sm w-full"
+                      >
+                        Learn More
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Characters Results -->
+          {foundCharacters.length > 0 && (
+            <section>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-deep-space-navy">
+                  Characters ({foundCharacters.length})
+                </h2>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {foundCharacters.map((character) => (
+                  <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-center">
+                      {character.data.image && (
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
+                          <img 
+                            src={character.data.image} 
+                            alt={`${character.data.name} character`}
+                            class="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      
+                      <h3 class="text-xl font-bold text-deep-space-navy mb-2">
+                        {character.data.name}
+                      </h3>
+                      
+                      {character.data.species && (
+                        <p class="text-cosmic-rose text-sm font-medium mb-2">
+                          {character.data.species.charAt(0).toUpperCase() + character.data.species.slice(1)}
+                        </p>
+                      )}
+                      
+                      {character.data.description && (
+                        <p class="text-gray-600 mb-4 text-sm line-clamp-3">
+                          {character.data.description.substring(0, 150) + (character.data.description.length > 150 ? '...' : '')}
+                        </p>
+                      )}
+                      
+                      <a 
+                        href={`/characters/${character.id}`}
+                        class="btn btn-secondary btn-sm w-full"
+                      >
+                        View Profile
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Pages Results -->
+          {foundPages.length > 0 && (
+            <section>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-deep-space-navy">
+                  Pages ({foundPages.length})
+                </h2>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {foundPages.map((page) => (
+                  <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-center">
+                      <h3 class="text-xl font-bold text-deep-space-navy mb-2 hover:text-cosmic-rose transition-colors">
+                        <a href={`/${page.id}`}>
+                          {page.data.title}
+                        </a>
+                      </h3>
+                      
+                      {page.data.hero?.tagline && (
+                        <p class="text-stellar-gold text-sm font-medium mb-2">
+                          {page.data.hero.tagline}
+                        </p>
+                      )}
+                      
+                      {page.data.authorBio?.mainBio && (
+                        <p class="text-gray-600 mb-4 text-sm line-clamp-3">
+                          {page.data.authorBio.mainBio.substring(0, 150) + (page.data.authorBio.mainBio.length > 150 ? '...' : '')}
+                        </p>
+                      )}
+                      
+                      <a 
+                        href={`/${page.id}`}
+                        class="btn btn-secondary btn-sm w-full"
+                      >
+                        Visit Page
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Locations Results -->
+          {foundLocations.length > 0 && (
+            <section>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-deep-space-navy">
+                  Locations ({foundLocations.length})
+                </h2>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {foundLocations.map((location) => (
+                  <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-center">
+                      <h3 class="text-xl font-bold text-deep-space-navy mb-2">
+                        {location.data.name}
+                      </h3>
+                      
+                      {location.data.environmentType && (
+                        <p class="text-stellar-gold text-sm font-medium mb-2 capitalize">
+                          {location.data.environmentType.replace(/-/g, ' ')}
+                        </p>
+                      )}
+                      
+                      {location.data.description && (
+                        <p class="text-gray-600 mb-4 text-sm">
+                          {location.data.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
             </section>

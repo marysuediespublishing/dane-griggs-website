@@ -153,8 +153,16 @@ const BookCard: React.FC<BookCardProps> = ({
             whileHover={{ opacity: 1 }}
           >
             <div className="text-center space-y-2">
-              <button className="btn btn-secondary text-sm px-4 py-2">
-                Quick View
+              <button 
+                className="btn btn-secondary text-sm px-4 py-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (typeof window !== 'undefined') {
+                    window.location.href = `/books/${book.slug}`;
+                  }
+                }}
+              >
+                View Book
               </button>
               {book.data.amazonUrl && (
                 <button 
