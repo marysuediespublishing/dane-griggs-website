@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: main
 
-# Enable local development mode
-local_backend: true
+# Enable local development mode (disable for production)
+# local_backend: true
 
 # Media storage configuration
 media_folder: "public/images"
@@ -392,5 +392,5 @@ logo_url: https://danegriggs.com/images/logo.png
 editor:
   preview: true
 
-# Publishing configuration
-publish_mode: editorial_workflow
+# Publishing configuration - use simple mode for direct publishing
+# publish_mode: editorial_workflow
