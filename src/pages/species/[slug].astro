@@ -32,12 +32,12 @@ const featuredSeries = allSeries.filter(series =>
 const featuredBooks = allBooks.filter(book => 
   (book.data.species && book.data.species.includes(species.id)) ||
   (book.data.alienSpecies && book.data.alienSpecies.includes(species.id))
-);
+).sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 // Find characters of this species
 const featuredCharacters = allCharacters.filter(character => 
   character.data.species === species.id
-);
+).sort((a, b) => a.data.name.localeCompare(b.data.name));
 
 // Function to format species name for display
 const formatSpeciesName = (name: string): string => {
