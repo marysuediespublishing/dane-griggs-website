@@ -29,7 +29,20 @@ const formatSpeciesName = (species: string): string => {
   ).join(' ');
 };
 
-// Add statistics to each character
+// Function to determine character's primary series
+const getCharacterSeries = (character) => {
+  if (!character.data.books || character.data.books.length === 0) {
+    return null; // No series if no main book appearances
+  }
+  
+  // Get the first main book to determine series
+  const firstBookId = character.data.books[0];
+  const firstBook = allBooks.find(book => book.id === firstBookId);
+  
+  return firstBook?.data.series || null;
+};
+
+// Add statistics and series info to each character
 const charactersWithStats = allCharacters.map(character => {
   // Count main book appearances
   const bookCount = character.data.books ? character.data.books.length : 0;
@@ -40,21 +53,74 @@ const charactersWithStats = allCharacters.map(character => {
   // Total appearances
   const totalAppearances = bookCount + cameoCount;
   
+  // Get primary series
+  const primarySeries = getCharacterSeries(character);
+  
   return {
     ...character,
     bookCount,
     cameoCount,
     totalAppearances,
+    primarySeries,
     displayName: formatCharacterName(character.data.name),
     speciesName: formatSpeciesName(character.data.species || '')
   };
-}).sort((a, b) => {
-  // Sort by total appearances (descending), then by name
-  if (b.totalAppearances !== a.totalAppearances) {
-    return b.totalAppearances - a.totalAppearances;
-  }
-  return a.displayName.localeCompare(b.displayName);
 });
+
+// Group characters by series
+const seriesGroups = {
+  "Koko's Harbor for Wayward Fated Mates": charactersWithStats.filter(char => 
+    char.primarySeries === "Koko's Harbor for Wayward Fated Mates"
+  ).sort((a, b) => {
+    // Sort by total appearances (descending), then by name
+    if (b.totalAppearances !== a.totalAppearances) {
+      return b.totalAppearances - a.totalAppearances;
+    }
+    return a.displayName.localeCompare(b.displayName);
+  }),
+  
+  "Saving Ceraste": charactersWithStats.filter(char => 
+    char.primarySeries === "Saving Ceraste"
+  ).sort((a, b) => {
+    // Sort by total appearances (descending), then by name
+    if (b.totalAppearances !== a.totalAppearances) {
+      return b.totalAppearances - a.totalAppearances;
+    }
+    return a.displayName.localeCompare(b.displayName);
+  }),
+  
+  "Other Characters": charactersWithStats.filter(char => 
+    !char.primarySeries || (
+      char.primarySeries !== "Koko's Harbor for Wayward Fated Mates" && 
+      char.primarySeries !== "Saving Ceraste"
+    )
+  ).sort((a, b) => {
+    // Sort by total appearances (descending), then by name
+    if (b.totalAppearances !== a.totalAppearances) {
+      return b.totalAppearances - a.totalAppearances;
+    }
+    return a.displayName.localeCompare(b.displayName);
+  })
+};
+
+// Define series order and information
+const seriesOrder = [
+  {
+    key: "Koko's Harbor for Wayward Fated Mates",
+    title: "Koko's Harbor for Wayward Fated Mates",
+    description: "A magical small town where supernatural beings and their human mates find love and sanctuary."
+  },
+  {
+    key: "Saving Ceraste", 
+    title: "Saving Ceraste",
+    description: "Epic space romance featuring the Cerastean alien species and their human brides."
+  },
+  {
+    key: "Other Characters",
+    title: "Other Characters", 
+    description: "Supporting characters and those from standalone works."
+  }
+];
 ---
 
 <Layout title="Character Guide - Dane Griggs">
@@ -85,86 +151,108 @@ const charactersWithStats = allCharacters.map(character => {
       </div>
     </section>
 
-    <!-- Characters Grid -->
+    <!-- Characters by Series -->
     <section class="py-20 bg-bg-secondary">
       <div class="container mx-auto px-4">
-        <div class="max-w-7xl mx-auto">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {charactersWithStats.map((character) => (
-              <a 
-                href={`/characters/${character.id}`}
-                class="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-              >
-                <!-- Character Image -->
-                <div class="relative aspect-[4/3] overflow-hidden">
-                  {character.data.image ? (
-                    <img 
-                      src={character.data.image} 
-                      alt={`${character.displayName} character artwork`}
-                      class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div class="w-full h-full bg-gradient-cosmic flex items-center justify-center">
-                      <div class="text-center text-solar-white">
-                        <div class="text-6xl mb-2">👤</div>
-                        <div class="text-sm font-medium">{character.displayName}</div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <!-- Species Badge -->
-                  {character.data.species && (
-                    <div class="absolute top-4 left-4">
-                      <span class="badge badge-primary text-xs">
-                        {character.speciesName}
-                      </span>
-                    </div>
-                  )}
+        <div class="max-w-7xl mx-auto space-y-16">
+          {seriesOrder.map((seriesInfo) => {
+            const characters = seriesGroups[seriesInfo.key];
+            
+            // Only show section if there are characters
+            if (!characters || characters.length === 0) return null;
+            
+            return (
+              <div class="space-y-8">
+                <!-- Series Header -->
+                <div class="text-center">
+                  <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
+                    {seriesInfo.title}
+                  </h2>
+                  <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    {seriesInfo.description}
+                  </p>
                 </div>
                 
-                <!-- Character Info -->
-                <div class="p-6">
-                  <h3 class="text-xl font-primary font-bold text-deep-space-navy mb-2 group-hover:text-cosmic-rose transition-colors">
-                    {character.displayName}
-                  </h3>
-                  
-                  {character.data.description && (
-                    <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                      {character.data.description}
-                    </p>
-                  )}
-                  
-                  <div class="flex items-center justify-between">
-                    <div class="flex flex-wrap gap-2 text-xs">
-                      {character.bookCount > 0 && (
-                        <span class="flex items-center space-x-1">
-                          <svg class="w-4 h-4 text-cosmic-rose" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"></path>
-                          </svg>
-                          <span>{character.bookCount} {character.bookCount === 1 ? 'book' : 'books'}</span>
-                        </span>
-                      )}
+                <!-- Characters Grid for this Series -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {characters.map((character) => (
+                    <a 
+                      href={`/characters/${character.id}`}
+                      class="group block bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                    >
+                      <!-- Character Image -->
+                      <div class="relative aspect-[4/3] overflow-hidden">
+                        {character.data.image ? (
+                          <img 
+                            src={character.data.image} 
+                            alt={`${character.displayName} character artwork`}
+                            class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div class="w-full h-full bg-gradient-cosmic flex items-center justify-center">
+                            <div class="text-center text-solar-white">
+                              <div class="text-6xl mb-2">👤</div>
+                              <div class="text-sm font-medium">{character.displayName}</div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        <!-- Species Badge -->
+                        {character.data.species && (
+                          <div class="absolute top-4 left-4">
+                            <span class="badge badge-primary text-xs">
+                              {character.speciesName}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                       
-                      {character.cameoCount > 0 && (
-                        <span class="flex items-center space-x-1">
-                          <svg class="w-4 h-4 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
-                          </svg>
-                          <span>{character.cameoCount} cameo{character.cameoCount === 1 ? '' : 's'}</span>
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div class="text-cosmic-rose font-medium group-hover:text-stellar-gold transition-colors">
-                      Learn More →
-                    </div>
-                  </div>
+                      <!-- Character Info -->
+                      <div class="p-6">
+                        <h3 class="text-xl font-primary font-bold text-deep-space-navy mb-2 group-hover:text-cosmic-rose transition-colors">
+                          {character.displayName}
+                        </h3>
+                        
+                        {character.data.description && (
+                          <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                            {character.data.description}
+                          </p>
+                        )}
+                        
+                        <div class="flex items-center justify-between">
+                          <div class="flex flex-wrap gap-2 text-xs">
+                            {character.bookCount > 0 && (
+                              <span class="flex items-center space-x-1">
+                                <svg class="w-4 h-4 text-cosmic-rose" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 715.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V4.804z"></path>
+                                </svg>
+                                <span>{character.bookCount} {character.bookCount === 1 ? 'book' : 'books'}</span>
+                              </span>
+                            )}
+                            
+                            {character.cameoCount > 0 && (
+                              <span class="flex items-center space-x-1">
+                                <svg class="w-4 h-4 text-stellar-gold" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+                                </svg>
+                                <span>{character.cameoCount} cameo{character.cameoCount === 1 ? '' : 's'}</span>
+                              </span>
+                            )}
+                          </div>
+                          
+                          <div class="text-cosmic-rose font-medium group-hover:text-stellar-gold transition-colors">
+                            Learn More →
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
-              </a>
-            ))}
-          </div>
+              </div>
+            );
+          })}
           
-          {charactersWithStats.length === 0 && (
+          {Object.values(seriesGroups).every(group => group.length === 0) && (
             <div class="text-center py-16">
               <div class="text-6xl mb-4">🌌</div>
               <h3 class="text-2xl font-bold text-deep-space-navy mb-2">No Characters Found</h3>
