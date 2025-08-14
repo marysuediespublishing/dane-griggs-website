@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import type { CollectionEntry } from 'astro:content';
+import { trackBookView, trackBookPurchase, trackKindleUnlimited, analytics } from '../../lib/analytics';
 
 interface BookCardProps {
   book: CollectionEntry<'books'> & { slug: string; coverUrl?: string };
@@ -81,17 +82,90 @@ const BookCard: React.FC<BookCardProps> = ({
     featured: 'h-96'
   };
 
+  // Create book data for analytics
+  const getBookAnalyticsData = () => ({
+    book_title: book.data.title,
+    book_asin: book.data.amazonUrl ? extractASIN(book.data.amazonUrl) : undefined,
+    series: book.data.series,
+    series_order: book.data.seriesOrder,
+    author: book.data.author,
+    species: book.data.species || book.data.alienSpecies || [],
+    heat_level: book.data.heatLevel,
+    source_page: typeof window !== 'undefined' ? window.location.pathname : undefined,
+  });
+
+  // Extract ASIN from Amazon URL
+  const extractASIN = (url: string): string | undefined => {
+    const asinMatch = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/);
+    return asinMatch ? asinMatch[1] : undefined;
+  };
+
   const handleCardClick = () => {
+    if (typeof window !== 'undefined') {
+      // Track book view
+      trackBookView(getBookAnalyticsData());
+      window.location.href = `/books/${book.slug}`;
+    }
+  };
+
+  const handleViewBook = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    trackBookView({
+      ...getBookAnalyticsData(),
+      button_type: 'view_book'
+    });
     if (typeof window !== 'undefined') {
       window.location.href = `/books/${book.slug}`;
     }
   };
 
-  const handleExternalLink = (e: React.MouseEvent, url: string) => {
+  const handlePurchaseClick = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
+    
+    if (book.data.isKU) {
+      trackKindleUnlimited({
+        ...getBookAnalyticsData(),
+        button_type: 'kindle_unlimited',
+        value: 0, // KU reads don't have direct monetary value
+      });
+    } else {
+      trackBookPurchase({
+        ...getBookAnalyticsData(),
+        button_type: 'buy',
+        value: parseFloat(book.data.price?.replace('$', '') || '4.99'),
+      });
+    }
+
+    // Track outbound click
+    analytics.trackOutboundClick(url, book.data.isKU ? 'Kindle Unlimited' : 'Buy Book');
+    
     if (typeof window !== 'undefined') {
       window.open(url, '_blank');
     }
+  };
+
+  const handleGoodreadsClick = (e: React.MouseEvent, url: string) => {
+    e.stopPropagation();
+    
+    analytics.trackBookInteraction('goodreads_click', {
+      ...getBookAnalyticsData(),
+      button_type: 'goodreads',
+    });
+
+    analytics.trackOutboundClick(url, 'Goodreads');
+    
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank');
+    }
+  };
+
+  const handleSpeciesClick = (e: React.MouseEvent, species: string) => {
+    e.stopPropagation();
+    
+    analytics.trackEngagement({
+      engagement_type: 'navigation',
+      page_title: `Species: ${species}`,
+    });
   };
 
   return (
@@ -106,6 +180,7 @@ const BookCard: React.FC<BookCardProps> = ({
         transition: { duration: 0.3 }
       }}
       onClick={handleCardClick}
+      data-testid={`book-card-${book.slug}`}
     >
       {/* Book Cover Container */}
       <div className="relative mb-4 perspective-1000">
@@ -155,19 +230,16 @@ const BookCard: React.FC<BookCardProps> = ({
             <div className="text-center space-y-2">
               <button 
                 className="btn btn-secondary text-sm px-4 py-2"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (typeof window !== 'undefined') {
-                    window.location.href = `/books/${book.slug}`;
-                  }
-                }}
+                onClick={handleViewBook}
+                data-testid={`view-book-${book.slug}`}
               >
                 View Book
               </button>
               {book.data.amazonUrl && (
                 <button 
                   className="btn btn-outline text-sm px-4 py-2"
-                  onClick={(e) => handleExternalLink(e, book.data.amazonUrl!)}
+                  onClick={(e) => handlePurchaseClick(e, book.data.amazonUrl!)}
+                  data-testid={`purchase-book-${book.slug}`}
                 >
                   {book.data.isKU ? 'Read Free on KU' : `Buy ${book.data.price || '$4.99'}`}
                 </button>
@@ -247,7 +319,8 @@ const BookCard: React.FC<BookCardProps> = ({
                   key={species}
                   href={`/species/${species}`}
                   className={`text-xs px-2 py-1 rounded capitalize hover:opacity-80 transition-opacity duration-200 ${getSpeciesBadgeColor(species)}`}
-                  onClick={(e) => e.stopPropagation()} // Prevent card click when clicking species badge
+                  onClick={(e) => handleSpeciesClick(e, species)}
+                  data-testid={`species-${species}`}
                 >
                   {species}
                 </a>
@@ -274,7 +347,8 @@ const BookCard: React.FC<BookCardProps> = ({
             {book.data.amazonUrl && (
               <button 
                 className="btn btn-primary flex-1"
-                onClick={(e) => handleExternalLink(e, book.data.amazonUrl!)}
+                onClick={(e) => handlePurchaseClick(e, book.data.amazonUrl!)}
+                data-testid={`featured-purchase-${book.slug}`}
               >
                 {book.data.isKU ? 'Read Free on KU' : `Buy ${book.data.price || '$4.99'}`}
               </button>
@@ -282,8 +356,9 @@ const BookCard: React.FC<BookCardProps> = ({
             {book.data.goodreadsUrl && (
               <button 
                 className="btn btn-outline px-3"
-                onClick={(e) => handleExternalLink(e, book.data.goodreadsUrl!)}
+                onClick={(e) => handleGoodreadsClick(e, book.data.goodreadsUrl!)}
                 title="Add to Goodreads"
+                data-testid={`goodreads-${book.slug}`}
               >
                 📚
               </button>

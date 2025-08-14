@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { analytics } from '../../lib/analytics';
 
 interface SearchBoxProps {
   mobile?: boolean;
@@ -11,6 +12,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({ mobile = false, className = '' })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim() && typeof window !== 'undefined') {
+      // Track search event
+      analytics.trackSearch(query.trim());
+      
+      // Track engagement
+      analytics.trackEngagement({
+        engagement_type: 'search',
+        page_title: `Search: ${query.trim()}`,
+      });
+      
       window.location.href = `/search?q=${encodeURIComponent(query.trim())}`;
     }
   };
@@ -32,6 +42,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ mobile = false, className = '' })
             ${mobile ? 'px-3 py-2' : 'px-4 py-2'}
           `}
           aria-label="Search"
+          data-testid={mobile ? 'mobile-search-input' : 'desktop-search-input'}
         />
         
         {/* Search Icon */}

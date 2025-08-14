@@ -75,14 +75,50 @@ const siteConfig = settingsCollection[0]?.data || {};
 			</div>
 			
 			<!-- Footer Bottom -->
-			<div class="border-t border-solar-white/20 pt-8 flex flex-col md:flex-row justify-between items-center">
-				<div class="text-solar-white/60 text-sm mb-4 md:mb-0">
-					&copy; {today.getFullYear()} {siteConfig.authorName || "Dane Griggs"}. All rights reserved.
-				</div>
-				<div class="text-solar-white/40 text-xs">
-					Sexy escapes with heart, humor, and no Mary Sues.
+			<div class="border-t border-solar-white/20 pt-8">
+				<div class="flex flex-col md:flex-row justify-between items-center">
+					<div class="text-solar-white/60 text-sm mb-4 md:mb-0">
+						&copy; {today.getFullYear()} {siteConfig.authorName || "Dane Griggs"}. All rights reserved.
+					</div>
+					
+					<!-- Privacy Links -->
+					<div class="flex flex-wrap gap-4 text-solar-white/60 text-sm">
+						<a href="/privacy-policy" 
+						   target="_blank" 
+						   rel="noopener noreferrer"
+						   class="hover:text-stellar-gold transition-colors">
+							Privacy Policy
+						</a>
+						<span class="text-solar-white/20">•</span>
+						<a href="/cookie-policy" 
+						   target="_blank" 
+						   rel="noopener noreferrer"
+						   class="hover:text-stellar-gold transition-colors">
+							Cookie Policy
+						</a>
+						<span class="text-solar-white/20">•</span>
+						<button 
+							id="cookie-settings-btn"
+							class="hover:text-stellar-gold transition-colors cursor-pointer"
+							aria-label="Open cookie settings">
+							Cookie Settings
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </footer>
+
+<script>
+	// Handle Cookie Settings button click
+	document.addEventListener('DOMContentLoaded', () => {
+		const cookieSettingsBtn = document.getElementById('cookie-settings-btn');
+		if (cookieSettingsBtn) {
+			cookieSettingsBtn.addEventListener('click', () => {
+				// Dispatch custom event to reopen cookie settings
+				window.dispatchEvent(new CustomEvent('reopenCookieSettings'));
+			});
+		}
+	});
+</script>

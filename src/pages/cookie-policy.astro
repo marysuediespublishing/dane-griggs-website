@@ -1,0 +1,405 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "Cookie Policy - Dane Griggs";
+const description = "Cookie Policy for Dane Griggs author website. Detailed information about how we use cookies and tracking technologies on our website.";
+---
+
+<Layout title={title} description={description}>
+  <div class="min-h-screen bg-gradient-to-br from-cosmic-rose/5 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+    <div class="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 md:p-12">
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Cookie Policy</h1>
+          <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <p><strong>Last updated:</strong> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p><strong>Effective date:</strong> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          </div>
+        </div>
+
+        <div class="prose prose-gray dark:prose-invert max-w-none">
+          <!-- Introduction -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">What Are Cookies?</h2>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              Cookies are small text files that are stored on your device (computer, tablet, or mobile) when you visit a website. 
+              They allow the website to recognize your device and store information about your preferences or past actions.
+            </p>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              This Cookie Policy explains how Dane Griggs ("we," "us," or "our") uses cookies and similar tracking technologies 
+              on our website <a href="https://danegriggs.com" class="text-cosmic-rose hover:underline">danegriggs.com</a> 
+              (the "Website").
+            </p>
+          </section>
+
+          <!-- Types of Cookies -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Types of Cookies We Use</h2>
+
+            <!-- Essential Cookies -->
+            <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-6">
+              <h3 class="text-xl font-medium text-green-800 dark:text-green-400 mb-3 flex items-center">
+                <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                Essential Cookies (Always Active)
+              </h3>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                These cookies are strictly necessary for the website to function properly. They cannot be disabled as they 
+                are essential for providing services you request.
+              </p>
+              
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-green-200 dark:border-green-800">
+                      <th class="text-left py-2 font-medium text-green-800 dark:text-green-400">Cookie Name</th>
+                      <th class="text-left py-2 font-medium text-green-800 dark:text-green-400">Purpose</th>
+                      <th class="text-left py-2 font-medium text-green-800 dark:text-green-400">Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-gray-700 dark:text-gray-300">
+                    <tr class="border-b border-green-100 dark:border-green-900">
+                      <td class="py-2 font-mono text-xs">gdpr-consent</td>
+                      <td class="py-2">Stores your cookie consent preferences</td>
+                      <td class="py-2">365 days</td>
+                    </tr>
+                    <tr class="border-b border-green-100 dark:border-green-900">
+                      <td class="py-2 font-mono text-xs">session_id</td>
+                      <td class="py-2">Maintains your session across pages</td>
+                      <td class="py-2">Session (expires when browser closes)</td>
+                    </tr>
+                    <tr class="border-b border-green-100 dark:border-green-900">
+                      <td class="py-2 font-mono text-xs">csrf_token</td>
+                      <td class="py-2">Security protection against cross-site request forgery</td>
+                      <td class="py-2">Session</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-mono text-xs">theme_preference</td>
+                      <td class="py-2">Remembers your dark/light mode preference</td>
+                      <td class="py-2">365 days</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Analytics Cookies -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
+              <h3 class="text-xl font-medium text-blue-800 dark:text-blue-400 mb-3 flex items-center">
+                <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                Analytics Cookies (Requires Consent)
+              </h3>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                These cookies help us understand how visitors interact with our website by collecting and reporting 
+                information anonymously. We use Google Analytics 4 with privacy-enhanced configuration.
+              </p>
+              
+              <div class="bg-blue-100 dark:bg-blue-800/30 rounded-lg p-4 mb-4">
+                <h4 class="font-medium text-blue-800 dark:text-blue-400 mb-2">Google Analytics 4 Configuration</h4>
+                <ul class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                  <li>• IP anonymization enabled</li>
+                  <li>• GDPR Consent Mode v2 compliant</li>
+                  <li>• Enhanced eCommerce disabled (no purchase tracking)</li>
+                  <li>• Data retention set to 26 months (Google standard)</li>
+                  <li>• Advertising features disabled until consent</li>
+                </ul>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-blue-200 dark:border-blue-800">
+                      <th class="text-left py-2 font-medium text-blue-800 dark:text-blue-400">Cookie Name</th>
+                      <th class="text-left py-2 font-medium text-blue-800 dark:text-blue-400">Purpose</th>
+                      <th class="text-left py-2 font-medium text-blue-800 dark:text-blue-400">Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-gray-700 dark:text-gray-300">
+                    <tr class="border-b border-blue-100 dark:border-blue-900">
+                      <td class="py-2 font-mono text-xs">_ga</td>
+                      <td class="py-2">Distinguishes unique users</td>
+                      <td class="py-2">2 years</td>
+                    </tr>
+                    <tr class="border-b border-blue-100 dark:border-blue-900">
+                      <td class="py-2 font-mono text-xs">_ga_[ID]</td>
+                      <td class="py-2">Stores session state for GA4</td>
+                      <td class="py-2">2 years</td>
+                    </tr>
+                    <tr class="border-b border-blue-100 dark:border-blue-900">
+                      <td class="py-2 font-mono text-xs">_gid</td>
+                      <td class="py-2">Distinguishes users for 24 hours</td>
+                      <td class="py-2">24 hours</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-mono text-xs">_gat</td>
+                      <td class="py-2">Throttles request rate</td>
+                      <td class="py-2">1 minute</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Marketing Cookies -->
+            <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-6 mb-6">
+              <h3 class="text-xl font-medium text-purple-800 dark:text-purple-400 mb-3 flex items-center">
+                <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+                Marketing Cookies (Requires Consent)
+              </h3>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                These cookies enable personalized book marketing and help us reach readers interested in romance 
+                and fantasy genres. They track book interactions and optimize advertising campaigns.
+              </p>
+              
+              <div class="bg-purple-100 dark:bg-purple-800/30 rounded-lg p-4 mb-4">
+                <h4 class="font-medium text-purple-800 dark:text-purple-400 mb-2">Meta Pixel (Facebook) Configuration</h4>
+                <ul class="text-sm text-purple-700 dark:text-purple-300 space-y-1">
+                  <li>• iOS 14.5+ App Tracking Transparency compliant</li>
+                  <li>• Event tracking disabled until consent</li>
+                  <li>• Limited Data Use mode when consent denied</li>
+                  <li>• Data retention: 180 days (Meta standard)</li>
+                  <li>• Conversion optimization for book marketing</li>
+                </ul>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-purple-200 dark:border-purple-800">
+                      <th class="text-left py-2 font-medium text-purple-800 dark:text-purple-400">Cookie Name</th>
+                      <th class="text-left py-2 font-medium text-purple-800 dark:text-purple-400">Purpose</th>
+                      <th class="text-left py-2 font-medium text-purple-800 dark:text-purple-400">Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-gray-700 dark:text-gray-300">
+                    <tr class="border-b border-purple-100 dark:border-purple-900">
+                      <td class="py-2 font-mono text-xs">_fbp</td>
+                      <td class="py-2">Facebook Pixel browser identifier</td>
+                      <td class="py-2">90 days</td>
+                    </tr>
+                    <tr class="border-b border-purple-100 dark:border-purple-900">
+                      <td class="py-2 font-mono text-xs">_fbc</td>
+                      <td class="py-2">Facebook Click ID for conversion tracking</td>
+                      <td class="py-2">90 days</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-mono text-xs">fb_pixel_events</td>
+                      <td class="py-2">Stores pending events when offline</td>
+                      <td class="py-2">Session</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- What We Track -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">What Information We Collect</h2>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Analytics Data (With Consent)</h3>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+              <li><strong>Page Views:</strong> Which pages you visit and how long you stay</li>
+              <li><strong>Book Interactions:</strong> Which books you view, click on, or show interest in</li>
+              <li><strong>User Journey:</strong> How you navigate through our website</li>
+              <li><strong>Search Queries:</strong> What you search for on our site (anonymized)</li>
+              <li><strong>Device Information:</strong> Browser type, screen size, operating system</li>
+              <li><strong>Traffic Source:</strong> How you found our website (search, social media, direct)</li>
+            </ul>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Marketing Data (With Consent)</h3>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+              <li><strong>Book Preferences:</strong> Genres and authors you're interested in</li>
+              <li><strong>Conversion Events:</strong> Newsletter signups, book link clicks</li>
+              <li><strong>Audience Building:</strong> Creating similar audiences for book marketing</li>
+              <li><strong>Ad Performance:</strong> How well our book advertisements perform</li>
+              <li><strong>Purchase Intent:</strong> Actions indicating interest in purchasing books</li>
+            </ul>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+              <p class="text-yellow-800 dark:text-yellow-200 text-sm">
+                <strong>Privacy Note:</strong> All analytics data is processed in aggregate and anonymized. 
+                We cannot identify individual users from this data, and it's used solely to improve our 
+                content and reach readers interested in our books.
+              </p>
+            </div>
+          </section>
+
+          <!-- How to Control Cookies -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">How to Control Cookies</h2>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Cookie Consent Banner</h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              When you first visit our website, you'll see a cookie consent banner with the following options:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+              <li><strong>Accept All:</strong> Enables all cookies including analytics and marketing</li>
+              <li><strong>Reject All:</strong> Only essential cookies will be used</li>
+              <li><strong>Customize:</strong> Choose specific cookie categories to enable</li>
+            </ul>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Changing Your Preferences</h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              You can change your cookie preferences at any time by:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+              <li>Looking for a "Cookie Preferences" link in our website footer</li>
+              <li>Clearing your browser cookies and revisiting our site</li>
+              <li>Contacting us at privacy@danegriggs.com</li>
+            </ul>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Browser Settings</h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              You can also control cookies through your browser settings:
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Chrome</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Settings → Privacy and security → Cookies and other site data</p>
+              </div>
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Firefox</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Settings → Privacy & Security → Cookies and Site Data</p>
+              </div>
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Safari</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Safari → Preferences → Privacy → Manage Website Data</p>
+              </div>
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Edge</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Settings → Cookies and site permissions → Cookies and site data</p>
+              </div>
+            </div>
+
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <p class="text-red-800 dark:text-red-200 text-sm">
+                <strong>Note:</strong> Disabling all cookies may affect website functionality. Essential cookies 
+                are required for basic features like remembering your preferences and maintaining security.
+              </p>
+            </div>
+          </section>
+
+          <!-- Third-Party Services -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Third-Party Services</h2>
+            
+            <div class="space-y-6">
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Google Analytics 4</h3>
+                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-3">
+                  We use Google Analytics to understand how visitors use our website. Google provides comprehensive 
+                  privacy controls and data processing agreements.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" 
+                     class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded">
+                    Google Privacy Policy
+                  </a>
+                  <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" 
+                     class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded">
+                    GA Opt-out Browser Add-on
+                  </a>
+                </div>
+              </div>
+
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Meta Pixel (Facebook)</h3>
+                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-3">
+                  We use Meta Pixel to optimize our book marketing campaigns and reach readers interested in our genres. 
+                  Meta provides privacy controls and respects user consent choices.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" 
+                     class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded">
+                    Meta Privacy Policy
+                  </a>
+                  <a href="https://www.facebook.com/settings?tab=ads" target="_blank" rel="noopener noreferrer" 
+                     class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded">
+                    Facebook Ad Preferences
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Data Security -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Data Security and Retention</h2>
+            
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Security Measures</h3>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+              <li><strong>Encryption:</strong> All cookie data is transmitted over HTTPS</li>
+              <li><strong>Access Control:</strong> Limited access to tracking data on need-to-know basis</li>
+              <li><strong>Regular Audits:</strong> Periodic review of cookie usage and data collection</li>
+              <li><strong>Data Minimization:</strong> We collect only what's necessary for stated purposes</li>
+            </ul>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Retention Periods</h3>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                <li><strong>Essential Cookies:</strong> Until you clear them or they expire naturally</li>
+                <li><strong>Consent Preferences:</strong> 365 days (1 year)</li>
+                <li><strong>Analytics Data:</strong> 26 months (Google Analytics standard)</li>
+                <li><strong>Marketing Data:</strong> 180 days (Meta Pixel standard)</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Contact and Updates -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Updates and Contact</h2>
+            
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Policy Updates</h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+              We may update this Cookie Policy from time to time to reflect changes in our practices or for legal reasons. 
+              When we make significant changes, we will notify users through the website and update the "Last updated" date.
+            </p>
+
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-3">Contact Us</h3>
+            <div class="bg-gradient-to-r from-cosmic-rose/10 to-purple-100 dark:from-cosmic-rose/5 dark:to-purple-900/20 rounded-lg p-6">
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                If you have questions about our cookie practices or need help managing your preferences:
+              </p>
+              <div class="space-y-2">
+                <p class="text-gray-700 dark:text-gray-300"><strong>Email:</strong> privacy@danegriggs.com</p>
+                <p class="text-gray-700 dark:text-gray-300"><strong>Subject Line:</strong> "Cookie Policy Question"</p>
+                <p class="text-gray-700 dark:text-gray-300"><strong>Response Time:</strong> Within 48 hours</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .prose a {
+    @apply text-cosmic-rose hover:underline;
+  }
+  
+  .prose strong {
+    @apply text-gray-900 dark:text-white;
+  }
+  
+  .prose h2 {
+    @apply border-b border-gray-200 dark:border-gray-700 pb-2;
+  }
+  
+  .prose h3 {
+    @apply text-gray-800 dark:text-gray-200;
+  }
+
+  .prose table {
+    @apply text-sm;
+  }
+
+  .prose th {
+    @apply font-medium;
+  }
+
+  .prose td {
+    @apply align-top;
+  }
+</style>

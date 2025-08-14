@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import CookieConsentBanner from '../components/CookieConsentBanner.tsx';
 
 export interface Props {
   title: string;
@@ -17,6 +18,7 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.url);
+const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 ---
 
 <!DOCTYPE html>
@@ -62,6 +64,14 @@ const socialImageURL = new URL(image, Astro.url);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
+    <!-- Google Analytics 4 Preconnect (for performance) -->
+    {measurementId && measurementId !== 'G-XXXXXXXXXX' && (
+      <>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+      </>
+    )}
+    
     <title>{title}</title>
   </head>
   <body class="bg-bg-primary text-text-primary min-h-screen antialiased">
@@ -72,8 +82,11 @@ const socialImageURL = new URL(image, Astro.url);
     
     <slot />
     
+    <!-- GDPR Cookie Consent -->
+    <CookieConsentBanner client:load />
+    
     <!-- Global scripts -->
-    <script>
+    <script is:inline>
       // Dark mode detection and handling
       const getThemePreference = () => {
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -106,12 +119,18 @@ const socialImageURL = new URL(image, Astro.url);
       // Performance monitoring
       if ('performance' in window) {
         window.addEventListener('load', () => {
-          const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+          const perfData = performance.getEntriesByType('navigation')[0];
           if (perfData && perfData.loadEventEnd > 2500) {
             console.warn('Page load time exceeded 2.5s:', perfData.loadEventEnd + 'ms');
           }
         });
       }
+    </script>
+
+    <!-- Initialize Analytics -->
+    <script type="module">
+      import { initializeAnalytics } from '/src/lib/analytics.ts';
+      initializeAnalytics();
     </script>
   </body>
 </html>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackNewsletterSignup, analytics } from '../../lib/analytics';
 
 interface NewsletterCTAProps {
   variant?: 'header' | 'hero' | 'sidebar' | 'footer' | 'exit-intent' | 'mobile';
@@ -84,6 +85,15 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     return emailRegex.test(email);
   };
 
+  const handleCTAClick = () => {
+    // Track CTA click
+    analytics.trackEngagement({
+      engagement_type: 'navigation',
+      page_title: `Newsletter CTA - ${variant}`,
+    });
+    setShowModal(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -119,6 +129,14 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
       if (data.success) {
         setIsSuccess(true);
         
+        // Track successful newsletter signup
+        trackNewsletterSignup({
+          form_location: variant,
+        });
+        
+        // Track as conversion
+        analytics.trackConversion('newsletter_signup');
+        
         // Trigger celebration animation (only in browser)
         if (typeof window !== 'undefined') {
           const celebrationEvent = new CustomEvent('newsletter-success', {
@@ -137,11 +155,23 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
       } else {
         // Handle API error response
         setError(data.error || 'Something went wrong. Please try again.');
+        
+        // Track signup failure for optimization
+        analytics.trackEngagement({
+          engagement_type: 'newsletter_error',
+          page_title: `Newsletter Error - ${variant}`,
+        });
       }
       
     } catch (error) {
       console.error('Newsletter signup failed:', error);
       setError('Network error. Please check your connection and try again.');
+      
+      // Track network error
+      analytics.trackEngagement({
+        engagement_type: 'newsletter_error',
+        page_title: `Newsletter Network Error - ${variant}`,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -153,12 +183,13 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     <>
       {/* CTA Button */}
       <button
-        onClick={() => setShowModal(true)}
+        onClick={handleCTAClick}
         className={className || `
           btn btn-primary transition-all duration-200 hover:-translate-y-0.5 
           focus:outline-none focus:ring-2 focus:ring-stellar-gold focus:ring-offset-2
         `}
         aria-label={`Open newsletter signup - ${getButtonText()}`}
+        data-testid={`newsletter-cta-${variant}`}
       >
         {getButtonText()}
       </button>
@@ -186,6 +217,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                 onClick={() => setShowModal(false)}
                 className="absolute top-4 right-4 text-solar-white/60 hover:text-solar-white transition-colors"
                 aria-label="Close newsletter signup"
+                data-testid="newsletter-modal-close"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -245,6 +277,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                         placeholder="Enter your name"
                         required
                         disabled={isSubmitting}
+                        data-testid="newsletter-name-input"
                       />
                     </div>
 
@@ -262,6 +295,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                         placeholder="Enter your email address"
                         required
                         disabled={isSubmitting}
+                        data-testid="newsletter-email-input"
                       />
                     </div>
 
@@ -271,6 +305,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-red-400 text-sm bg-red-400/10 border border-red-400/30 rounded-lg p-3"
+                        data-testid="newsletter-error"
                       >
                         {error}
                       </motion.div>
@@ -283,6 +318,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="w-full btn btn-secondary py-3 text-base font-semibold relative overflow-hidden"
+                      data-testid="newsletter-submit"
                     >
                       {isSubmitting ? (
                         <div className="flex items-center justify-center space-x-2">
@@ -308,6 +344,7 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   className="text-center py-8"
+                  data-testid="newsletter-success"
                 >
                   <div className="text-6xl mb-4">🌟</div>
                   <h3 className="text-2xl font-bold text-solar-white mb-4">

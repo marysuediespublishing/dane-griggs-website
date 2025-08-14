@@ -1,0 +1,26 @@
+{
+  "name": "Dane Griggs - Author",
+  "short_name": "Dane Griggs",
+  "description": "Sci-fi romance novels featuring strong heroines and swoon-worthy heroes",
+  "theme_color": "#1a1a2e",
+  "background_color": "#0a0b1e",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

@@ -48,3 +48,5 @@ public/admin/dist/
 
 # Playwright
 playwright-report/
+chrome/
+.vercel/

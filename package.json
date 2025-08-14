@@ -17,11 +17,11 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^4.3.1",
+    "@astrojs/node": "^9.4.0",
     "@astrojs/react": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.2",
     "@astrojs/tailwind": "^6.0.2",
-    "@astrojs/vercel": "^8.2.5",
     "@react-spring/web": "^9.7.0",
     "@use-gesture/react": "^10.3.0",
     "astro": "^5.12.5",
@@ -43,6 +43,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/three": "^0.164.0",
     "jest": "^29.7.0",
+    "puppeteer": "^24.16.1",
     "typescript": "^5.9.2"
   }
 }
