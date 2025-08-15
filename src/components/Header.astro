@@ -2,7 +2,6 @@
 import { SITE_TITLE } from '../consts';
 import Navigation from './Navigation.astro';
 import MobileMenu from './MobileMenu.astro';
-import SearchBox from './ui/SearchBox.tsx';
 import NewsletterCTA from './ui/NewsletterCTA.tsx';
 ---
 
@@ -25,10 +24,16 @@ import NewsletterCTA from './ui/NewsletterCTA.tsx';
 			<div class="hidden md:flex items-center space-x-6">
 				<Navigation />
 				
-				<!-- Search -->
-				<div class="hidden lg:block">
-					<SearchBox client:load />
-				</div>
+				<!-- Search Icon -->
+				<a 
+					href="/search"
+					class="p-2 text-solar-white hover:text-stellar-gold transition-colors"
+					aria-label="Search"
+				>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+					</svg>
+				</a>
 				
 				<!-- Newsletter CTA -->
 				<NewsletterCTA 
@@ -41,16 +46,16 @@ import NewsletterCTA from './ui/NewsletterCTA.tsx';
 
 			<!-- Mobile Actions -->
 			<div class="flex md:hidden items-center space-x-3">
-				<!-- Mobile Search Toggle -->
-				<button 
-					id="mobile-search-toggle"
+				<!-- Mobile Search Link -->
+				<a 
+					href="/search"
 					class="p-2 text-solar-white hover:text-stellar-gold transition-colors"
-					aria-label="Toggle search"
+					aria-label="Search"
 				>
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
 					</svg>
-				</button>
+				</a>
 				
 				<!-- Newsletter CTA Mobile -->
 				<NewsletterCTA 
@@ -64,35 +69,8 @@ import NewsletterCTA from './ui/NewsletterCTA.tsx';
 				<MobileMenu />
 			</div>
 		</nav>
-		
-		<!-- Mobile Search Bar (Hidden by default) -->
-		<div id="mobile-search-bar" class="hidden md:hidden mt-4 pb-2">
-			<SearchBox client:load mobile={true} />
-		</div>
 	</div>
 	
 	<!-- Cosmic header glow effect -->
 	<div class="absolute inset-0 bg-gradient-to-r from-cosmic-rose/5 to-stellar-gold/5 pointer-events-none"></div>
 </header>
-
-<script>
-	// Mobile search toggle functionality
-	document.addEventListener('DOMContentLoaded', () => {
-		const searchToggle = document.getElementById('mobile-search-toggle');
-		const searchBar = document.getElementById('mobile-search-bar');
-		
-		if (searchToggle && searchBar) {
-			searchToggle.addEventListener('click', () => {
-				searchBar.classList.toggle('hidden');
-				
-				// Focus the search input when opened
-				if (!searchBar.classList.contains('hidden')) {
-					const searchInput = searchBar.querySelector('input');
-					if (searchInput) {
-						searchInput.focus();
-					}
-				}
-			});
-		}
-	});
-</script>

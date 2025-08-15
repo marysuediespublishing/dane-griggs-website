@@ -5,17 +5,16 @@ import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import StarfieldBackground from '../../components/ui/StarfieldBackground.tsx';
 
-// Get the slug from URL params
-const { slug } = Astro.params;
-
-// Fetch all characters and find the one matching the slug
-const allCharacters = await getCollection('characters');
-const character = allCharacters.find(c => c.id === slug);
-
-// Handle character not found - return 404
-if (!character) {
-  return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const characters = await getCollection('characters');
+  return characters.map((item) => ({
+    params: { slug: item.id },
+    props: { character: item },
+  }));
 }
+
+// Get character from props
+const { character } = Astro.props;
 
 // Get all books and series to show where this character appears
 const allBooks = await getCollection('books');

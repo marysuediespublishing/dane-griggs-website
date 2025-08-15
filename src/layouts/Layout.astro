@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import CookieConsentBanner from '../components/CookieConsentBanner.tsx';
+import MailchimpPopup from '../components/MailchimpPopup.astro';
 
 export interface Props {
   title: string;
@@ -132,5 +133,8 @@ const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
       import { initializeAnalytics } from '/src/lib/analytics.ts';
       initializeAnalytics();
     </script>
+    
+    <!-- Mailchimp Popup Form -->
+    <MailchimpPopup />
   </body>
 </html>

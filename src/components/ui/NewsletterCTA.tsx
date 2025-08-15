@@ -112,6 +112,11 @@ const NewsletterCTA: React.FC<NewsletterCTAProps> = ({
     
     try {
       // Submit to Mailchimp API
+      // NOTE: This endpoint requires server-side functionality.
+      // For static hosting (GitHub Pages), consider:
+      // 1. Using a third-party form service (FormSpree, Getform, etc.)
+      // 2. Using Netlify Functions or Vercel Serverless Functions
+      // 3. Using Mailchimp's embedded signup forms
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {

@@ -5,17 +5,16 @@ import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import StarfieldBackground from '../../components/ui/StarfieldBackground.tsx';
 
-// Get the slug from URL params
-const { slug } = Astro.params;
-
-// Fetch all species and find the one matching the slug
-const allSpecies = await getCollection('species');
-const species = allSpecies.find(s => s.id === slug);
-
-// Handle species not found - return 404
-if (!species) {
-  return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const species = await getCollection('species');
+  return species.map((item) => ({
+    params: { slug: item.id },
+    props: { species: item },
+  }));
 }
+
+// Get species from props
+const { species } = Astro.props;
 
 // Get all series, books, and characters to show where this species appears
 const allSeries = await getCollection('series');

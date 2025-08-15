@@ -8,6 +8,14 @@ import { SITE_TITLE } from '../../consts';
 import { getCollection, type CollectionEntry, render } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map((book) => ({
+    params: { slug: book.id },
+    props: { book },
+  }));
+}
+
 // Helper function to map series names to slugs
 function getSeriesSlug(seriesName: string): string | null {
   const seriesMap: Record<string, string> = {
@@ -51,17 +59,11 @@ function formatGenreName(genre: string): string {
   ).join(' ');
 }
 
-// Get the slug from URL params
-const { slug } = Astro.params;
+// Get book from props
+const { book } = Astro.props;
 
-// Fetch all books and find the one matching the slug
+// Fetch all books for related books
 const allBooks = await getCollection('books');
-const book = allBooks.find(b => b.id === slug);
-
-// Handle book not found - return 404
-if (!book) {
-  return Astro.redirect('/404');
-}
 const { Content } = await render(book);
 // Add slug property for consistency
 const bookWithSlug = { ...book, slug: book.id };
