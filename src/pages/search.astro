@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import SearchClientSimple from '../components/SearchClientSimple.tsx';
+import SearchClientEnhanced from '../components/SearchClientEnhanced.tsx';
 import { SITE_TITLE } from '../consts';
 
 // For static generation, we can't access URL params at build time
@@ -14,7 +14,7 @@ import { SITE_TITLE } from '../consts';
   
   <main>
     <!-- All search functionality is handled client-side -->
-    <SearchClientSimple client:load />
+    <SearchClientEnhanced client:load />
   </main>
 
   <Footer />

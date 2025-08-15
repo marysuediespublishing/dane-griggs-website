@@ -1,0 +1,134 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+
+export async function getStaticPaths() {
+  const locations = await getCollection('locations');
+  return locations.map((location) => ({
+    params: { slug: location.id },
+    props: location,
+  }));
+}
+
+const location = Astro.props;
+// Locations might not have markdown content
+let Content = null;
+if (location.rendered) {
+  Content = location.rendered.Content;
+} else if (typeof location.render === 'function') {
+  const rendered = await location.render();
+  Content = rendered.Content;
+}
+
+const getEnvironmentIcon = (type?: string) => {
+  if (!type) return '🏛️';
+  
+  const iconMap: Record<string, string> = {
+    'planetary-surface': '🌍',
+    'alien-homeworld': '🪐',
+    'artificial-orbital': '🛸',
+    'vessel-command': '🚀',
+    'vessel-transport': '🛰️',
+    'medical-complex': '🏥',
+    'governmental': '🏛️',
+    'ceremonial': '⛩️',
+    'celebratory': '🎉',
+    'multi-planetary': '🌌',
+    'journey': '🧭'
+  };
+  
+  return iconMap[type] || '🏛️';
+};
+
+const formatEnvironmentType = (type?: string) => {
+  if (!type) return 'Location';
+  return type.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+};
+---
+
+<Layout title={`${location.data.name} - ${SITE_TITLE}`}>
+  <Header />
+  
+  <main class="py-8 min-h-screen bg-bg-primary">
+    <article class="container mx-auto px-4 max-w-4xl">
+      <!-- Hero Section -->
+      <div class="bg-gradient-to-br from-deep-space-navy via-nebula-purple to-deep-space-navy rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 1px); background-size: 50px 50px;"></div>
+        </div>
+        
+        <div class="relative z-10 text-center">
+          <div class="text-6xl mb-4">{getEnvironmentIcon(location.data.environmentType)}</div>
+          <h1 class="text-4xl font-primary font-bold mb-2">{location.data.name}</h1>
+          {location.data.environmentType && (
+            <span class="inline-block px-4 py-2 bg-stellar-gold/20 text-stellar-gold rounded-full text-sm font-semibold">
+              {formatEnvironmentType(location.data.environmentType)}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <!-- Location Details -->
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+        {location.data.planet && (
+          <div class="mb-6 pb-6 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-deep-space-navy mb-2">Planet</h2>
+            <p class="text-gray-700">{location.data.planet}</p>
+          </div>
+        )}
+        
+        {location.data.significance && (
+          <div class="mb-6 pb-6 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-deep-space-navy mb-2">Significance</h2>
+            <p class="text-gray-700">{location.data.significance}</p>
+          </div>
+        )}
+        
+        {location.data.notableFeatures && location.data.notableFeatures.length > 0 && (
+          <div class="mb-6">
+            <h2 class="text-lg font-semibold text-deep-space-navy mb-3">Notable Features</h2>
+            <ul class="space-y-2">
+              {location.data.notableFeatures.map((feature: string) => (
+                <li class="flex items-start">
+                  <span class="text-stellar-gold mr-2">•</span>
+                  <span class="text-gray-700">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <!-- Content -->
+      {Content && (
+        <div class="prose prose-lg max-w-none bg-white rounded-xl shadow-lg p-8">
+          <Content />
+        </div>
+      )}
+
+      <!-- Related Books -->
+      {location.data.books && location.data.books.length > 0 && (
+        <div class="mt-8 bg-gradient-to-r from-cosmic-rose/10 to-nebula-purple/10 rounded-xl p-8">
+          <h2 class="text-2xl font-bold text-deep-space-navy mb-4">Featured In</h2>
+          <div class="flex flex-wrap gap-3">
+            {location.data.books.map((book: string) => (
+              <a 
+                href={`/books/${book}`}
+                class="inline-block px-4 py-2 bg-white rounded-lg text-cosmic-rose font-semibold hover:shadow-lg transition-all duration-200 hover:scale-105"
+              >
+                {book.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
