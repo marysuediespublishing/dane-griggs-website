@@ -220,14 +220,14 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleAcceptAll}
-                  className="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-cosmic-rose to-stellar-gold rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cosmic-rose focus:ring-offset-2 animate-pulse"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-cosmic-rose to-stellar-gold rounded-md hover:shadow-md hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cosmic-rose focus:ring-offset-2"
                   data-testid="accept-all-cookies-btn"
                 >
                   ✓ Accept All
                 </button>
                 <button
                   onClick={handleRejectAll}
-                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-deep-space-navy to-nebula-purple rounded-md hover:shadow-md hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-nebula-purple focus:ring-offset-2"
                   data-testid="reject-all-cookies-btn"
                 >
                   Essential Only
