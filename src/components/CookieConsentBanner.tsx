@@ -231,7 +231,11 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
               </div>
             </div>
           ) : (
-            <CookiePreferences onSave={handleSavePreferences} onBack={() => setShowDetails(false)} />
+            <CookiePreferences 
+              onSave={handleSavePreferences} 
+              onBack={() => setShowDetails(false)}
+              currentConsent={getStoredConsent()}
+            />
           )}
         </div>
       </motion.div>
@@ -242,11 +246,17 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
 interface CookiePreferencesProps {
   onSave: (categories: { analytics: boolean; marketing: boolean }) => void;
   onBack: () => void;
+  currentConsent: ConsentData | null;
 }
 
-const CookiePreferences: React.FC<CookiePreferencesProps> = ({ onSave, onBack }) => {
-  const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
-  const [marketingEnabled, setMarketingEnabled] = useState(false);
+const CookiePreferences: React.FC<CookiePreferencesProps> = ({ onSave, onBack, currentConsent }) => {
+  // Initialize with current consent state if available, otherwise default to false
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(
+    currentConsent?.categories?.analytics ?? false
+  );
+  const [marketingEnabled, setMarketingEnabled] = useState(
+    currentConsent?.categories?.marketing ?? false
+  );
 
   return (
     <motion.div
