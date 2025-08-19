@@ -69,8 +69,7 @@ const NewsletterCTAMailchimp: React.FC<NewsletterCTAMailchimpProps> = ({
     });
     
     trackNewsletterSignup({
-      form_location: variant,
-      action: 'button_click'
+      form_location: variant
     });
     
     setShowModal(true);

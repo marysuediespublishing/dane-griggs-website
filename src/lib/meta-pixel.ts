@@ -98,33 +98,74 @@ class MetaPixel {
     window.fbq.version = '2.0';
     window.fbq.queue = [];
 
-    // Load Meta Pixel script
+    // Load Meta Pixel script with error handling
     const script = document.createElement('script');
     script.async = true;
     script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-    document.head.appendChild(script);
+    
+    // Add timeout to detect blocked scripts
+    const loadTimeout = setTimeout(() => {
+      if (!this.isInitialized) {
+        console.warn('Meta Pixel: Script load timeout - likely blocked by ad blocker');
+        // Continue functioning without Meta Pixel
+        this.handleBlockedPixel();
+      }
+    }, 5000);
 
     script.onload = () => {
-      // Initialize pixel but revoke consent initially (iOS 14.5+ compliance)
-      window.fbq('init', this.pixelId, {}, {
-        agent: 'astro-meta-pixel'
-      });
+      clearTimeout(loadTimeout);
       
-      // Configure for iOS 14.5+ compliance - no automatic tracking
-      window.fbq('set', 'autoConfig', false, this.pixelId);
-      
-      // Add test event code if in development
-      if (this.debug && this.testEventCode) {
-        window.fbq('set', 'testEventCode', this.testEventCode, this.pixelId);
-      }
+      try {
+        // Initialize pixel but revoke consent initially (iOS 14.5+ compliance)
+        window.fbq('init', this.pixelId, {}, {
+          agent: 'astro-meta-pixel'
+        });
+        
+        // Configure for iOS 14.5+ compliance - no automatic tracking
+        window.fbq('set', 'autoConfig', false, this.pixelId);
+        
+        // Add test event code if in development
+        if (this.debug && this.testEventCode) {
+          window.fbq('set', 'testEventCode', this.testEventCode, this.pixelId);
+        }
 
-      this.isInitialized = true;
-      this.log('Meta Pixel initialized with consent revoked (iOS 14.5+ compliance)');
+        this.isInitialized = true;
+        this.log('Meta Pixel initialized with consent revoked (iOS 14.5+ compliance)');
+      } catch (error) {
+        console.warn('Meta Pixel: Initialization error', error);
+        this.handleBlockedPixel();
+      }
     };
 
     script.onerror = () => {
-      console.error('Meta Pixel: Failed to load fbevents.js');
+      clearTimeout(loadTimeout);
+      console.warn('Meta Pixel: Failed to load fbevents.js - likely blocked by ad blocker');
+      this.handleBlockedPixel();
     };
+    
+    document.head.appendChild(script);
+  }
+
+  /**
+   * Handle blocked pixel (by ad blockers)
+   */
+  private handleBlockedPixel(): void {
+    // Set a flag but don't prevent the rest of the app from working
+    this.isInitialized = false;
+    this.log('Meta Pixel blocked - continuing without Meta tracking');
+  }
+
+  /**
+   * Safely call fbq function (handles blocked/missing script)
+   */
+  private safeFbq(action: string, event: string, data?: any): void {
+    try {
+      if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+        window.fbq(action as any, event, data);
+      }
+    } catch (error) {
+      this.log(`Failed to call fbq.${action}(${event})`, error);
+    }
   }
 
   /**
@@ -137,7 +178,7 @@ class MetaPixel {
 
     if (granted) {
       // Grant consent for tracking
-      window.fbq('consent', 'grant');
+      this.safeFbq('consent', 'grant', undefined);
       
       // Send initial PageView after consent is granted
       this.trackPageView();
@@ -148,7 +189,7 @@ class MetaPixel {
       this.log('Consent granted - Meta Pixel tracking enabled');
     } else {
       // Revoke consent
-      window.fbq('consent', 'revoke');
+      this.safeFbq('consent', 'revoke', undefined);
       this.log('Consent revoked - Meta Pixel tracking disabled');
     }
   }
@@ -168,7 +209,7 @@ class MetaPixel {
       ...customData,
     };
 
-    window.fbq('track', 'PageView', eventData);
+    this.safeFbq('track', 'PageView', eventData);
     this.log('PageView tracked', eventData);
 
     // Send to Conversions API if configured
@@ -200,7 +241,7 @@ class MetaPixel {
       return;
     }
 
-    window.fbq('track', 'ViewContent', eventData);
+    this.safeFbq('track', 'ViewContent', eventData);
     this.log('ViewContent tracked', eventData);
 
     this.sendToConversionsAPI('ViewContent', eventData);
@@ -230,7 +271,7 @@ class MetaPixel {
       return;
     }
 
-    window.fbq('track', 'InitiateCheckout', eventData);
+    this.safeFbq('track', 'InitiateCheckout', eventData);
     this.log('InitiateCheckout tracked', eventData);
 
     this.sendToConversionsAPI('InitiateCheckout', eventData);
@@ -261,7 +302,7 @@ class MetaPixel {
       return;
     }
 
-    window.fbq('track', 'Purchase', eventData);
+    this.safeFbq('track', 'Purchase', eventData);
     this.log('Purchase tracked', eventData);
 
     this.sendToConversionsAPI('Purchase', eventData);
@@ -286,7 +327,7 @@ class MetaPixel {
       return;
     }
 
-    window.fbq('track', 'Lead', eventData);
+    this.safeFbq('track', 'Lead', eventData);
     this.log('Lead tracked', eventData);
 
     this.sendToConversionsAPI('Lead', eventData);
@@ -311,7 +352,7 @@ class MetaPixel {
       return;
     }
 
-    window.fbq('track', 'Search', eventData);
+    this.safeFbq('track', 'Search', eventData);
     this.log('Search tracked', eventData);
 
     this.sendToConversionsAPI('Search', eventData);
@@ -339,7 +380,7 @@ class MetaPixel {
       return;
     }
 
-    window.fbq('trackCustom', eventName, eventData);
+    this.safeFbq('trackCustom', eventName, eventData);
     this.log(`Custom event tracked: ${eventName}`, eventData);
 
     this.sendToConversionsAPI(eventName, eventData);
@@ -367,11 +408,11 @@ class MetaPixel {
 
     this.pendingEvents.forEach(({ eventName, parameters }) => {
       if (eventName === 'PageView') {
-        window.fbq('track', 'PageView', parameters);
+        this.safeFbq('track', 'PageView', parameters);
       } else if (['ViewContent', 'InitiateCheckout', 'Purchase', 'Lead', 'Search'].includes(eventName)) {
-        window.fbq('track', eventName, parameters);
+        this.safeFbq('track', eventName, parameters);
       } else {
-        window.fbq('trackCustom', eventName, parameters);
+        this.safeFbq('trackCustom', eventName, parameters);
       }
     });
 

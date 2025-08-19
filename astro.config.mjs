@@ -26,6 +26,9 @@ export default defineConfig({
   vite: {
     define: {
       __DATE__: `'${new Date().toISOString()}'`,
+    },
+    build: {
+      sourcemap: false
     }
   }
 });
