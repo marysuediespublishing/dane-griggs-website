@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: main
 
-# Enable local development mode (disable for production)
-# local_backend: true
+# Enable local development mode for CMS editing
+local_backend: true
 
 # Media storage configuration
 media_folder: "public/images"
