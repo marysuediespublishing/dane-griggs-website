@@ -87,59 +87,59 @@ class MetaPixel {
   private initializeMetaPixel(): void {
     if (typeof window === 'undefined') return;
 
-    // Initialize fbq function and queue
-    window.fbq = window.fbq || function() {
-      (window.fbq.queue = window.fbq.queue || []).push(arguments);
-    };
-    window._fbq = window._fbq || window.fbq;
-    window.fbq.push = window.fbq;
-    window.fbq.loaded = true;
-    window.fbq.version = '2.0';
-    window.fbq.queue = [];
+    // Check if fbq is already loaded by inline script
+    if (typeof window.fbq === 'function') {
+      // Pixel is already initialized by inline script
+      this.isInitialized = true;
+      this.log('Meta Pixel already initialized by inline script');
+      return;
+    }
 
-    // Load Meta Pixel script with error handling
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-    
-    // Add timeout to detect blocked scripts
-    const loadTimeout = setTimeout(() => {
+    // Fallback: Initialize if not already done by inline script
+    (function(f: any, b: any, e: any, v: any, n: any, t: any, s: any) {
+      if (f.fbq) return;
+      n = f.fbq = function() {
+        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js', window.fbq || {}, null, null);
+
+    // Wait for fbq to be ready
+    const checkInterval = setInterval(() => {
+      if (typeof window.fbq === 'function') {
+        clearInterval(checkInterval);
+        
+        try {
+          // Initialize pixel if not already done
+          window.fbq('init', this.pixelId);
+          
+          // Immediately revoke consent for iOS 14.5+ compliance
+          window.fbq('consent', 'revoke');
+          
+          this.isInitialized = true;
+          this.log('Meta Pixel initialized via fallback');
+        } catch (error) {
+          this.handleBlockedPixel();
+        }
+      }
+    }, 100);
+
+    // Clean up interval after timeout
+    setTimeout(() => {
+      clearInterval(checkInterval);
       if (!this.isInitialized) {
-        // Continue functioning without Meta Pixel
         this.handleBlockedPixel();
       }
     }, 5000);
-
-    script.onload = () => {
-      clearTimeout(loadTimeout);
-      
-      try {
-        // Initialize pixel but revoke consent initially (iOS 14.5+ compliance)
-        window.fbq('init', this.pixelId, {}, {
-          agent: 'astro-meta-pixel'
-        });
-        
-        // Configure for iOS 14.5+ compliance - no automatic tracking
-        window.fbq('set', 'autoConfig', false, this.pixelId);
-        
-        // Add test event code if in development
-        if (this.debug && this.testEventCode) {
-          window.fbq('set', 'testEventCode', this.testEventCode, this.pixelId);
-        }
-
-        this.isInitialized = true;
-        this.log('Meta Pixel initialized with consent revoked (iOS 14.5+ compliance)');
-      } catch (error) {
-        this.handleBlockedPixel();
-      }
-    };
-
-    script.onerror = () => {
-      clearTimeout(loadTimeout);
-      this.handleBlockedPixel();
-    };
-    
-    document.head.appendChild(script);
   }
 
   /**
@@ -168,16 +168,23 @@ class MetaPixel {
    * Update consent state when user accepts/rejects marketing cookies
    */
   public updateConsent(granted: boolean): void {
-    if (typeof window === 'undefined' || !this.isInitialized) return;
+    if (typeof window === 'undefined') return;
 
     this.consentGranted = granted;
 
+    // Call the global function if it exists (from inline script)
+    if (typeof (window as any).updateMetaPixelConsent === 'function') {
+      (window as any).updateMetaPixelConsent(granted);
+    }
+
     if (granted) {
-      // Grant consent for tracking
+      // Grant consent for tracking (redundant but ensures it's set)
       this.safeFbq('consent', 'grant', undefined);
       
-      // Send initial PageView after consent is granted
-      this.trackPageView();
+      // Send PageView if not already sent by inline script
+      if (this.isInitialized) {
+        this.safeFbq('track', 'PageView', undefined);
+      }
       
       // Process any pending events
       this.processPendingEvents();
