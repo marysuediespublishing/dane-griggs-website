@@ -57,6 +57,51 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
 
+<!-- GDPR Consent State Manager -->
+<script is:inline>
+(function() {
+  // Check for saved consent preferences
+  var CONSENT_KEY = 'gdpr-consent';
+  var CONSENT_EXPIRY_DAYS = 365;
+  
+  // Initialize global consent state
+  window.__gdprConsent = {
+    hasConsent: false,
+    analytics: false,
+    marketing: false,
+    initialized: false
+  };
+  
+  try {
+    var storedConsent = localStorage.getItem(CONSENT_KEY);
+    if (storedConsent) {
+      var consent = JSON.parse(storedConsent);
+      
+      // Check if consent hasn't expired
+      var expiryTime = consent.timestamp + (consent.expiryDays * 24 * 60 * 60 * 1000);
+      if (Date.now() <= expiryTime && consent.hasConsented) {
+        // Apply saved consent
+        window.__gdprConsent = {
+          hasConsent: true,
+          analytics: consent.categories.analytics || false,
+          marketing: consent.categories.marketing || false,
+          initialized: true
+        };
+      }
+    }
+  } catch (e) {
+    // If localStorage is blocked or parsing fails, default to no consent
+  }
+  
+  // Dispatch event for services that load later
+  if (window.__gdprConsent.hasConsent) {
+    window.dispatchEvent(new CustomEvent('gdprConsentRestored', {
+      detail: window.__gdprConsent
+    }));
+  }
+})();
+</script>
+
 <!-- Meta Pixel Code -->
 <script is:inline>
 !function(f,b,e,v,n,t,s)
@@ -71,15 +116,27 @@ s.parentNode.insertBefore(t,s)}(window,document,'script',
 // Initialize pixel
 fbq('init', '2527209327539510');
 
-// Start with consent revoked for GDPR compliance
-fbq('consent', 'revoke');
+// Check global consent state and apply
+if (window.__gdprConsent && window.__gdprConsent.marketing) {
+  // User has previously consented to marketing cookies
+  fbq('consent', 'grant');
+  fbq('track', 'PageView');
+  // Mark that we've already tracked PageView to avoid duplicates
+  window.__metaPixelPageViewTracked = true;
+} else {
+  // No consent or consent denied
+  fbq('consent', 'revoke');
+}
 
 // Global function to update Meta Pixel consent
 window.updateMetaPixelConsent = function(granted) {
   if (granted) {
     fbq('consent', 'grant');
-    // Track the current page view when consent is granted
-    fbq('track', 'PageView');
+    // Only track PageView if not already tracked
+    if (!window.__metaPixelPageViewTracked) {
+      fbq('track', 'PageView');
+      window.__metaPixelPageViewTracked = true;
+    }
   } else {
     fbq('consent', 'revoke');
   }

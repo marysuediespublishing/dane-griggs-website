@@ -37,10 +37,9 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
       // Show banner after a short delay for better UX
       const timer = setTimeout(() => setShowBanner(true), 1000);
       return () => clearTimeout(timer);
-    } else {
-      // Apply previous consent choice
-      applyStoredConsent(storedConsent);
     }
+    // Note: We no longer apply stored consent here because it's already
+    // applied by the inline script in BaseHead.astro for immediate effect
 
     // Listen for custom event to reopen settings
     const handleReopenSettings = () => {
@@ -86,10 +85,8 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
     return Date.now() > expiryTime;
   };
 
-  const applyStoredConsent = (consent: ConsentData): void => {
-    const analyticsConsent = consent.categories.analytics && consent.categories.marketing;
-    updateConsent(analyticsConsent);
-  };
+  // Note: applyStoredConsent is no longer needed as consent is applied
+  // immediately by the inline script in BaseHead.astro
 
   const saveConsent = (consentData: Partial<ConsentData>): void => {
     const fullConsent: ConsentData = {

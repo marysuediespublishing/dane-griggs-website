@@ -82,6 +82,26 @@ class MetaPixel {
     }
 
     this.initializeMetaPixel();
+    
+    // Check global consent state and apply if already granted
+    if (typeof window !== 'undefined') {
+      const globalConsent = (window as any).__gdprConsent;
+      if (globalConsent && globalConsent.initialized && globalConsent.marketing) {
+        // Apply previously granted consent
+        this.consentGranted = true;
+        this.isInitialized = true; // Pixel is already initialized by inline script
+      }
+      
+      // Listen for consent restored event
+      window.addEventListener('gdprConsentRestored', (event: any) => {
+        if (event.detail && event.detail.marketing) {
+          this.consentGranted = true;
+          this.isInitialized = true;
+          // Process any pending events
+          this.processPendingEvents();
+        }
+      });
+    }
   }
 
   private initializeMetaPixel(): void {
@@ -170,6 +190,8 @@ class MetaPixel {
   public updateConsent(granted: boolean): void {
     if (typeof window === 'undefined') return;
 
+    // Check if consent state actually changed
+    const previousConsent = this.consentGranted;
     this.consentGranted = granted;
 
     // Call the global function if it exists (from inline script)
@@ -181,9 +203,13 @@ class MetaPixel {
       // Grant consent for tracking (redundant but ensures it's set)
       this.safeFbq('consent', 'grant', undefined);
       
-      // Send PageView if not already sent by inline script
-      if (this.isInitialized) {
-        this.safeFbq('track', 'PageView', undefined);
+      // Only send PageView if consent wasn't previously granted
+      // (to avoid duplicate PageViews)
+      if (!previousConsent && this.isInitialized) {
+        if (!(window as any).__metaPixelPageViewTracked) {
+          this.safeFbq('track', 'PageView', undefined);
+          (window as any).__metaPixelPageViewTracked = true;
+        }
       }
       
       // Process any pending events

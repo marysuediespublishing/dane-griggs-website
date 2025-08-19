@@ -62,6 +62,29 @@ class Analytics {
     }
 
     this.initializeGoogleAnalytics();
+    
+    // Check global consent state and apply if already granted
+    if (typeof window !== 'undefined') {
+      const globalConsent = (window as any).__gdprConsent;
+      if (globalConsent && globalConsent.initialized && globalConsent.analytics && globalConsent.marketing) {
+        // Apply previously granted consent
+        this.consentGranted = true;
+        // Mark as already applied to avoid duplicate updates
+        (window as any).__gaConsentRestored = true;
+        setTimeout(() => {
+          // Update consent which will track PageView
+          this.updateConsent(true);
+        }, 100); // Small delay to ensure GA is fully initialized
+      }
+      
+      // Listen for consent restored event (only if not already handled)
+      window.addEventListener('gdprConsentRestored', (event: any) => {
+        if (!(window as any).__gaConsentRestored && event.detail && event.detail.analytics && event.detail.marketing) {
+          (window as any).__gaConsentRestored = true;
+          this.updateConsent(true);
+        }
+      });
+    }
   }
 
   private initializeGoogleAnalytics(): void {
@@ -131,6 +154,8 @@ class Analytics {
   public updateConsent(granted: boolean): void {
     if (typeof window === 'undefined' || !this.isInitialized) return;
 
+    // Check if consent state actually changed
+    const previousConsent = this.consentGranted;
     this.consentGranted = granted;
 
     // Update GA4 consent
@@ -145,8 +170,14 @@ class Analytics {
     updateMetaConsent(granted);
 
     if (granted) {
-      // Send initial page view after consent is granted
-      this.trackPageView();
+      // Only send initial page view if consent wasn't previously granted
+      // (to avoid duplicate PageViews)
+      if (!previousConsent) {
+        if (!(window as any).__gaPageViewTracked) {
+          this.trackPageView();
+          (window as any).__gaPageViewTracked = true;
+        }
+      }
       this.log('Consent granted - GA4 and Meta Pixel tracking enabled');
     } else {
       this.log('Consent denied - limited tracking only');
