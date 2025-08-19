@@ -26,6 +26,7 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
+    console.log('CookieConsentBanner: Component mounted, checking for stored consent...');
     // Check if user has valid consent
     const storedConsent = getStoredConsent();
     if (!storedConsent || isConsentExpired(storedConsent)) {
@@ -55,9 +56,14 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
   const getStoredConsent = (): ConsentData | null => {
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+      console.log('CookieConsentBanner: Checking stored consent:', { 
+        key: CONSENT_STORAGE_KEY, 
+        value: stored 
+      });
       if (!stored) {
         // Check for legacy consent
         const legacyConsent = localStorage.getItem('cookie-consent');
+        console.log('CookieConsentBanner: Checking legacy consent:', legacyConsent);
         if (legacyConsent) {
           // Migrate legacy consent
           const hasConsent = legacyConsent === 'accepted';
@@ -88,6 +94,11 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
 
   const applyStoredConsent = (consent: ConsentData): void => {
     const analyticsConsent = consent.categories.analytics && consent.categories.marketing;
+    console.log('CookieConsentBanner: Applying stored consent:', { 
+      analytics: consent.categories.analytics, 
+      marketing: consent.categories.marketing,
+      willGrantConsent: analyticsConsent 
+    });
     updateConsent(analyticsConsent);
   };
 
@@ -177,12 +188,12 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  We value your privacy
+                  🍪 Help us improve your experience
                 </h3>
                 <p id="cookie-consent-description" className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                  We use cookies to enhance your browsing experience, provide personalized content, 
-                  and analyze our traffic. You can accept all cookies, reject non-essential cookies, 
-                  or customize your preferences. Your choice will be remembered for {CONSENT_EXPIRY_DAYS} days.
+                  We use cookies to recommend books you'll love and improve our site. 
+                  "Accept All" helps us personalize your experience. 
+                  Your choice is saved for {CONSENT_EXPIRY_DAYS} days.
                 </p>
                 <div className="flex gap-4 mt-2">
                   <a 
@@ -208,25 +219,25 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
               
               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <button
-                  onClick={handleCustomize}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
-                  data-testid="customize-cookies-btn"
+                  onClick={handleAcceptAll}
+                  className="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-cosmic-rose to-stellar-gold rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cosmic-rose focus:ring-offset-2 animate-pulse"
+                  data-testid="accept-all-cookies-btn"
                 >
-                  Customize
+                  ✓ Accept All
                 </button>
                 <button
                   onClick={handleRejectAll}
-                  className="px-4 py-2 text-sm font-medium text-white bg-gray-600 border border-gray-600 rounded-md hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700"
                   data-testid="reject-all-cookies-btn"
                 >
-                  Reject All
+                  Essential Only
                 </button>
                 <button
-                  onClick={handleAcceptAll}
-                  className="px-4 py-2 text-sm font-medium text-white bg-cosmic-rose border border-cosmic-rose rounded-md hover:bg-cosmic-rose/90 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cosmic-rose focus:ring-offset-2"
-                  data-testid="accept-all-cookies-btn"
+                  onClick={handleCustomize}
+                  className="px-3 py-2 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200 dark:text-gray-400 dark:hover:text-gray-300 underline"
+                  data-testid="customize-cookies-btn"
                 >
-                  Accept All
+                  Customize
                 </button>
               </div>
             </div>
