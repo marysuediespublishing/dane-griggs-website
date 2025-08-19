@@ -77,11 +77,7 @@ class MetaPixel {
     this.testEventCode = import.meta.env.META_TEST_EVENT_CODE || '';
     this.debug = import.meta.env.MODE === 'development';
     
-    // Always log Pixel ID in production for debugging
-    console.log('Meta Pixel: Initializing with ID:', this.pixelId || 'NOT_CONFIGURED');
-    
     if (!this.pixelId || this.pixelId === 'your_meta_pixel_id_here') {
-      console.warn('Meta Pixel: Pixel ID not configured');
       return;
     }
 
@@ -109,7 +105,6 @@ class MetaPixel {
     // Add timeout to detect blocked scripts
     const loadTimeout = setTimeout(() => {
       if (!this.isInitialized) {
-        console.warn('Meta Pixel: Script load timeout - likely blocked by ad blocker');
         // Continue functioning without Meta Pixel
         this.handleBlockedPixel();
       }
@@ -133,17 +128,14 @@ class MetaPixel {
         }
 
         this.isInitialized = true;
-        console.log('Meta Pixel: Successfully initialized with ID:', this.pixelId, '(consent revoked by default)');
         this.log('Meta Pixel initialized with consent revoked (iOS 14.5+ compliance)');
       } catch (error) {
-        console.warn('Meta Pixel: Initialization error', error);
         this.handleBlockedPixel();
       }
     };
 
     script.onerror = () => {
       clearTimeout(loadTimeout);
-      console.warn('Meta Pixel: Failed to load fbevents.js - likely blocked by ad blocker');
       this.handleBlockedPixel();
     };
     
@@ -166,15 +158,8 @@ class MetaPixel {
     try {
       if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
         window.fbq(action as any, event, data);
-        // Log successful tracking in production for debugging
-        if (action === 'track' || action === 'trackCustom') {
-          console.log(`Meta Pixel: Event tracked - ${event}`, data ? '(with data)' : '');
-        }
-      } else {
-        console.warn('Meta Pixel: fbq function not available');
       }
     } catch (error) {
-      console.error(`Meta Pixel: Failed to call fbq.${action}(${event})`, error);
       this.log(`Failed to call fbq.${action}(${event})`, error);
     }
   }
@@ -189,7 +174,6 @@ class MetaPixel {
 
     if (granted) {
       // Grant consent for tracking
-      console.log('Meta Pixel: Granting consent for tracking');
       this.safeFbq('consent', 'grant', undefined);
       
       // Send initial PageView after consent is granted
@@ -198,11 +182,9 @@ class MetaPixel {
       // Process any pending events
       this.processPendingEvents();
       
-      console.log('Meta Pixel: Consent granted - tracking enabled');
       this.log('Consent granted - Meta Pixel tracking enabled');
     } else {
       // Revoke consent
-      console.log('Meta Pixel: Revoking consent for tracking');
       this.safeFbq('consent', 'revoke', undefined);
       this.log('Consent revoked - Meta Pixel tracking disabled');
     }
@@ -463,7 +445,7 @@ class MetaPixel {
       this.log('CAPI event prepared (send from server):', capiEvent);
 
     } catch (error) {
-      console.error('Meta Pixel: CAPI error', error);
+      this.log('CAPI error', error);
     }
   }
 
@@ -493,9 +475,7 @@ class MetaPixel {
    * Debug logging
    */
   private log(message: string, data?: any): void {
-    if (this.debug) {
-      console.log(`[Meta Pixel] ${message}`, data || '');
-    }
+    // Debug logging disabled in production
   }
 
   /**
@@ -523,38 +503,7 @@ class MetaPixel {
 // Export singleton instance
 export const metaPixel = new MetaPixel();
 
-// Add global debug function for production debugging
-if (typeof window !== 'undefined') {
-  (window as any).checkMetaPixel = () => {
-    const status = {
-      pixelId: metaPixel['pixelId'],
-      isInitialized: metaPixel['isInitialized'],
-      hasConsent: metaPixel.hasConsent(),
-      isReady: metaPixel.isReady(),
-      pendingEvents: metaPixel.getPendingEventsCount(),
-      fbqAvailable: typeof (window as any).fbq === 'function',
-      fbqLoaded: !!(window as any).fbq?.loaded,
-    };
-    console.log('Meta Pixel Status:', status);
-    return status;
-  };
-  
-  (window as any).testMetaPixel = () => {
-    console.log('Testing Meta Pixel with PageView event...');
-    metaPixel.trackPageView({ test: true });
-  };
-  
-  (window as any).grantMetaConsent = () => {
-    console.log('Manually granting Meta Pixel consent...');
-    metaPixel.updateConsent(true);
-    return 'Consent granted - try window.testMetaPixel() to send a test event';
-  };
-  
-  console.log('Meta Pixel debug functions available:');
-  console.log('  - window.checkMetaPixel() - Check current status');
-  console.log('  - window.testMetaPixel() - Send test PageView event');
-  console.log('  - window.grantMetaConsent() - Manually grant consent');
-}
+// Debug functions disabled in production
 
 // Export convenience functions for book marketing
 export const trackBookView = (book: BookInteractionEvent) => 

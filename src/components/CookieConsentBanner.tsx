@@ -26,7 +26,6 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    console.log('CookieConsentBanner: Component mounted, checking for stored consent...');
     // Check if user has valid consent
     const storedConsent = getStoredConsent();
     if (!storedConsent || isConsentExpired(storedConsent)) {
@@ -56,14 +55,9 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
   const getStoredConsent = (): ConsentData | null => {
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-      console.log('CookieConsentBanner: Checking stored consent:', { 
-        key: CONSENT_STORAGE_KEY, 
-        value: stored 
-      });
       if (!stored) {
         // Check for legacy consent
         const legacyConsent = localStorage.getItem('cookie-consent');
-        console.log('CookieConsentBanner: Checking legacy consent:', legacyConsent);
         if (legacyConsent) {
           // Migrate legacy consent
           const hasConsent = legacyConsent === 'accepted';
@@ -94,11 +88,6 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '
 
   const applyStoredConsent = (consent: ConsentData): void => {
     const analyticsConsent = consent.categories.analytics && consent.categories.marketing;
-    console.log('CookieConsentBanner: Applying stored consent:', { 
-      analytics: consent.categories.analytics, 
-      marketing: consent.categories.marketing,
-      willGrantConsent: analyticsConsent 
-    });
     updateConsent(analyticsConsent);
   };
 

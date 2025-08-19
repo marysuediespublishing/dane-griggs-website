@@ -58,7 +58,6 @@ class Analytics {
     this.debug = import.meta.env.MODE === 'development';
     
     if (!this.measurementId || this.measurementId === 'G-XXXXXXXXXX') {
-      console.warn('GA4: Measurement ID not configured');
       return;
     }
 
@@ -357,9 +356,7 @@ class Analytics {
    * Debug logging
    */
   private log(message: string, data?: any): void {
-    if (this.debug) {
-      console.log(`[Analytics] ${message}`, data || '');
-    }
+    // Debug logging disabled in production
   }
 
   /**
@@ -403,7 +400,6 @@ export const analytics = new Analytics();
 // Export initialization function
 export const initializeAnalytics = () => {
   // Analytics auto-initializes on instantiation
-  console.log('Analytics initialized');
 };
 
 // Export convenience functions that work with both GA4 and Meta Pixel
