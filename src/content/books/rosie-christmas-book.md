@@ -23,7 +23,7 @@ genres:
   - holiday romance
   - alien romance
 isKU: true
-amazonUrl: https://amzn.to/3J6jp1C
+amazonUrl: https://amzn.to/45xKlju
 goodreadsUrl: https://www.goodreads.com/book/show/203055678-a-rosie-christmas
 price: $1.99
 wordCount: 47039

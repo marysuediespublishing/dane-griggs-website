@@ -27,7 +27,7 @@ genres:
   - small-town romance
   - magical realism
 isKU: true
-amazonUrl: https://amzn.to/3H3teNd
+amazonUrl: https://amzn.to/47eWaMV
 goodreadsUrl: https://www.goodreads.com/book/show/220363393-rescued-by-a-kraken
 price: $3.99
 wordCount: 74513

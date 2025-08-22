@@ -26,7 +26,7 @@ genres:
   - alien romance
   - engineering romance
 isKU: true
-amazonUrl: https://amzn.to/45h3uVm
+amazonUrl: https://amzn.to/4lKpkXM
 goodreadsUrl: https://www.goodreads.com/book/show/52665365-insatiable-curiosity
 price: $2.99
 wordCount: 63876

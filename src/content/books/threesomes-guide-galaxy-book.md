@@ -27,7 +27,7 @@ genres:
   - trauma recovery
   - menage
 isKU: true
-amazonUrl: https://amzn.to/3J8oRkq
+amazonUrl: https://amzn.to/3JtL6Bu
 goodreadsUrl: https://www.goodreads.com/book/show/49962721-threesome-s-guide-to-the-galaxy
 price: $2.99
 wordCount: 38688

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import BookCard from './ui/BookCard';
+import BookSearchCard from './search/BookSearchCard';
 
 interface SearchData {
   books: any[];
@@ -346,10 +346,9 @@ const SearchClient: React.FC = () => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {results.books.map((book) => (
-                    <BookCard 
+                    <BookSearchCard 
                       key={book.id}
                       book={book}
-                      variant="standard"
                     />
                   ))}
                 </div>

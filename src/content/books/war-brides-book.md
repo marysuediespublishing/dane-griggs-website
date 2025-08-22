@@ -26,7 +26,7 @@ genres:
   - opposites attract
   - wartime romance
 isKU: true
-amazonUrl: https://amzn.to/457xgNE
+amazonUrl: https://amzn.to/41UK2wK
 goodreadsUrl: https://www.goodreads.com/book/show/55523227-war-brides
 price: $2.99
 wordCount: 49673

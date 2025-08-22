@@ -25,7 +25,7 @@ genres:
   - alien romance
   - vacation-adventure
 isKU: true
-amazonUrl: https://amzn.to/3HiiJWo
+amazonUrl: https://amzn.to/4oOo9cl
 goodreadsUrl: https://www.goodreads.com/book/show/50045815-the-bride-program-honeymoon
 price: $2.99
 wordCount: 45983

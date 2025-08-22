@@ -23,7 +23,7 @@ genres:
   - alien romance
   - medical romance
 isKU: true
-amazonUrl: https://amzn.to/4myjNUO
+amazonUrl: https://amzn.to/3VdrBjf
 goodreadsUrl: https://www.goodreads.com/book/show/49973729-the-bride-program
 price: $0.99
 wordCount: 30229

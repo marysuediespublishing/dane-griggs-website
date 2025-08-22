@@ -26,7 +26,7 @@ genres:
   - medical romance
   - workplace-romance
 isKU: true
-amazonUrl: https://amzn.to/41td3iY
+amazonUrl: https://amzn.to/45yemQo
 goodreadsUrl: https://www.goodreads.com/book/show/49604676-bedside-manners-for-aliens
 price: $2.99
 wordCount: 29619

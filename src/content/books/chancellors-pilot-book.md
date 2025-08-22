@@ -25,7 +25,7 @@ genres:
   - political intrigue
   - series finale
 isKU: true
-amazonUrl: https://amzn.to/40ZHRrz
+amazonUrl: https://amzn.to/45QXCmg
 goodreadsUrl: https://www.goodreads.com/book/show/60641815-the-chancellor-s-pilot
 price: $2.99
 wordCount: 58919

@@ -25,7 +25,7 @@ genres:
   - medical romance
   - workplace romance
 isKU: true
-amazonUrl: https://amzn.to/4mwFX9U
+amazonUrl: https://amzn.to/3JrSVry
 goodreadsUrl: https://www.goodreads.com/book/show/50518075-the-alien-s-gossip-queen
 price: $2.99
 wordCount: 46431

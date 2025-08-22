@@ -25,7 +25,7 @@ genres:
   - small-town romance
   - magical realism
 isKU: true
-amazonUrl: https://amzn.to/45rtNZ6
+amazonUrl: https://amzn.to/3HoTT7l
 goodreadsUrl: https://www.goodreads.com/book/show/212197419-lily-saves-an-alien
 price: $3.99
 wordCount: 130542

@@ -25,7 +25,7 @@ genres:
   - protective hero
   - domestic violence recovery
 isKU: true
-amazonUrl: https://amzn.to/4fwyTYX
+amazonUrl: https://amzn.to/4oNvHMH
 goodreadsUrl: https://www.goodreads.com/book/show/52321075-marshmallow
 price: $2.99
 wordCount: 55737
