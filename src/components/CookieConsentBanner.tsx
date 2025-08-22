@@ -21,7 +21,7 @@ interface ConsentData {
 const CONSENT_EXPIRY_DAYS = 365; // 1 year as per GDPR recommendations
 const CONSENT_STORAGE_KEY = 'gdpr-consent';
 
-const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ className = '' }) => {
+export default function CookieConsentBanner({ className = '' }: CookieConsentBannerProps) {
   const [showBanner, setShowBanner] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -246,7 +246,7 @@ interface CookiePreferencesProps {
   currentConsent: ConsentData | null;
 }
 
-const CookiePreferences: React.FC<CookiePreferencesProps> = ({ onSave, onBack, currentConsent }) => {
+function CookiePreferences({ onSave, onBack, currentConsent }: CookiePreferencesProps) {
   // Initialize with current consent state if available, otherwise default to false
   const [analyticsEnabled, setAnalyticsEnabled] = useState(
     currentConsent?.categories?.analytics ?? false
@@ -394,6 +394,4 @@ const CookiePreferences: React.FC<CookiePreferencesProps> = ({ onSave, onBack, c
       </div>
     </motion.div>
   );
-};
-
-export default CookieConsentBanner;
+}

@@ -11,7 +11,7 @@ interface BlogSearchCardProps {
   };
 }
 
-const BlogSearchCard: React.FC<BlogSearchCardProps> = ({ post }) => {
+export default function BlogSearchCard({ post }: BlogSearchCardProps) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -89,6 +89,4 @@ const BlogSearchCard: React.FC<BlogSearchCardProps> = ({ post }) => {
       </div>
     </article>
   );
-};
-
-export default BlogSearchCard;
+}

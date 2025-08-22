@@ -6,7 +6,7 @@ interface SearchBoxProps {
   className?: string;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({ mobile = false, className = '' }) => {
+export default function SearchBox({ mobile = false, className = '' }: SearchBoxProps) {
   const [query, setQuery] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,6 +54,4 @@ const SearchBox: React.FC<SearchBoxProps> = ({ mobile = false, className = '' })
       </div>
     </form>
   );
-};
-
-export default SearchBox;
+}

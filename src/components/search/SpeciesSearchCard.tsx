@@ -10,7 +10,7 @@ interface SpeciesSearchCardProps {
   };
 }
 
-const SpeciesSearchCard: React.FC<SpeciesSearchCardProps> = ({ species }) => {
+export default function SpeciesSearchCard({ species }: SpeciesSearchCardProps) {
   return (
     <div className="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-cosmic-rose/30">
       {/* Alien emoji header */}
@@ -71,6 +71,4 @@ const SpeciesSearchCard: React.FC<SpeciesSearchCardProps> = ({ species }) => {
       </div>
     </div>
   );
-};
-
-export default SpeciesSearchCard;
+}

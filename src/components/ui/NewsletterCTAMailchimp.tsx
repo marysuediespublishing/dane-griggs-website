@@ -10,13 +10,13 @@ interface NewsletterCTAMailchimpProps {
   onModalToggle?: (isOpen: boolean) => void;
 }
 
-const NewsletterCTAMailchimp: React.FC<NewsletterCTAMailchimpProps> = ({
+export default function NewsletterCTAMailchimp({
   variant = 'header',
   text,
   className = '',
   showModal: externalShowModal,
   onModalToggle
-}) => {
+}: NewsletterCTAMailchimpProps) {
   const [internalShowModal, setInternalShowModal] = useState(false);
   
   // Use external modal state if provided, otherwise use internal state
@@ -279,6 +279,4 @@ const NewsletterCTAMailchimp: React.FC<NewsletterCTAMailchimpProps> = ({
       `}} />
     </>
   );
-};
-
-export default NewsletterCTAMailchimp;
+}

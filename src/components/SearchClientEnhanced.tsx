@@ -14,7 +14,7 @@ interface SearchData {
   pages: any[];
 }
 
-const SearchClientEnhanced: React.FC = () => {
+export default function SearchClientEnhanced() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchData, setSearchData] = useState<SearchData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -476,6 +476,4 @@ const SearchClientEnhanced: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default SearchClientEnhanced;
+}

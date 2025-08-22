@@ -9,7 +9,7 @@ interface LocationSearchCardProps {
   };
 }
 
-const LocationSearchCard: React.FC<LocationSearchCardProps> = ({ location }) => {
+export default function LocationSearchCard({ location }: LocationSearchCardProps) {
   const getEnvironmentIcon = (type?: string) => {
     if (!type) return '🏛️';
     
@@ -84,6 +84,4 @@ const LocationSearchCard: React.FC<LocationSearchCardProps> = ({ location }) => 
       </div>
     </div>
   );
-};
-
-export default LocationSearchCard;
+}

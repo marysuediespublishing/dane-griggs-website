@@ -11,7 +11,7 @@ interface SeriesSearchCardProps {
   };
 }
 
-const SeriesSearchCard: React.FC<SeriesSearchCardProps> = ({ series }) => {
+export default function SeriesSearchCard({ series }: SeriesSearchCardProps) {
   const statusColor = series.completionStatus === 'complete' 
     ? 'bg-green-100 text-green-700' 
     : 'bg-amber-100 text-amber-700';
@@ -80,6 +80,4 @@ const SeriesSearchCard: React.FC<SeriesSearchCardProps> = ({ series }) => {
       </div>
     </div>
   );
-};
-
-export default SeriesSearchCard;
+}

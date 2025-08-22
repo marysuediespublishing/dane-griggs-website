@@ -11,7 +11,7 @@ interface CharacterSearchCardProps {
   };
 }
 
-const CharacterSearchCard: React.FC<CharacterSearchCardProps> = ({ character }) => {
+export default function CharacterSearchCard({ character }: CharacterSearchCardProps) {
   return (
     <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden">
       <div className="flex h-full">
@@ -90,6 +90,4 @@ const CharacterSearchCard: React.FC<CharacterSearchCardProps> = ({ character }) 
       </div>
     </div>
   );
-};
-
-export default CharacterSearchCard;
+}

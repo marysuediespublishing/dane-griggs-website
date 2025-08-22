@@ -12,7 +12,7 @@ interface BookSearchCardProps {
   };
 }
 
-const BookSearchCard: React.FC<BookSearchCardProps> = ({ book }) => {
+export default function BookSearchCard({ book }: BookSearchCardProps) {
   const coverSrc = book.cover?.src || book.cover;
   
   return (
@@ -91,6 +91,4 @@ const BookSearchCard: React.FC<BookSearchCardProps> = ({ book }) => {
       </div>
     </div>
   );
-};
-
-export default BookSearchCard;
+}

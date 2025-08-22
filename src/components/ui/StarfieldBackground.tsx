@@ -14,10 +14,10 @@ interface StarfieldBackgroundProps {
   className?: string;
 }
 
-const StarfieldBackground: React.FC<StarfieldBackgroundProps> = ({ 
+export default function StarfieldBackground({ 
   starCount = 150, 
   className = '' 
-}) => {
+}: StarfieldBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
   const animationFrameRef = useRef<number | null>(null);
@@ -189,6 +189,4 @@ const StarfieldBackground: React.FC<StarfieldBackgroundProps> = ({
       aria-hidden="true"
     />
   );
-};
-
-export default StarfieldBackground;
+}

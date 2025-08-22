@@ -11,13 +11,13 @@ interface BookCardProps {
   className?: string;
 }
 
-const BookCard: React.FC<BookCardProps> = ({ 
+export default function BookCard({ 
   book, 
   variant = 'standard', 
   showDescription = true,
   showSeriesOrder = false,
   className = '' 
-}) => {
+}: BookCardProps) {
   const [imageError, setImageError] = useState(false);
 
   const getSpeciesBadgeColor = (species: string) => {
@@ -368,6 +368,4 @@ const BookCard: React.FC<BookCardProps> = ({
       </div>
     </motion.div>
   );
-};
-
-export default BookCard;
+}

@@ -10,7 +10,7 @@ interface SearchData {
   locations: any[];
 }
 
-const SearchClientSimple: React.FC = () => {
+export default function SearchClientSimple() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchData, setSearchData] = useState<SearchData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -478,6 +478,4 @@ const SearchClientSimple: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default SearchClientSimple;
+}
