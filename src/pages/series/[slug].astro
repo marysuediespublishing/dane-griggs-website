@@ -281,7 +281,7 @@ const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCo
                 book={book}
                 variant="standard"
                 showSeriesOrder={true}
-                client:load
+                client:only="react"
               />
             ))}
           </div>

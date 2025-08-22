@@ -182,7 +182,7 @@ const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <slot />
     
     <!-- GDPR Cookie Consent -->
-    <CookieConsentBanner client:load />
+    <CookieConsentBanner client:only="react" />
     
     <!-- Global scripts -->
     <script is:inline>

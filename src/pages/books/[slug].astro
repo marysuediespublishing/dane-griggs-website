@@ -484,7 +484,7 @@ const genreNames = book.data.genres
               <BookCard 
                 book={seriesBook}
                 variant="standard"
-                client:load
+                client:only="react"
               />
             ))}
           </div>
@@ -521,7 +521,7 @@ const genreNames = book.data.genres
               <BookCard 
                 book={similarBook}
                 variant="standard"
-                client:load
+                client:only="react"
               />
             ))}
           </div>
@@ -544,7 +544,7 @@ const genreNames = book.data.genres
             variant="hero" 
             text="Get More Cosmic Romance"
             className="btn btn-secondary btn-lg px-8 py-4 text-lg"
-            client:load 
+            client:only="react" 
           />
         </div>
       </div>

@@ -35,7 +35,7 @@ const siteConfig = settingsCollection[0]?.data || {
 	<Header />
 	
 	<!-- Starfield Background -->
-	<StarfieldBackground starCount={250} client:load />
+	<StarfieldBackground starCount={250} client:only="react" />
 	
 	<main class="relative z-10">
 		<!-- Hero Section -->
@@ -86,7 +86,7 @@ const siteConfig = settingsCollection[0]?.data || {
 						<NewsletterCTA 
 							variant="hero" 
 							className="btn btn-secondary btn-lg px-8 py-4 text-lg"
-							client:load 
+							client:only="react" 
 						/>
 					</div>
 					
@@ -183,7 +183,7 @@ const siteConfig = settingsCollection[0]?.data || {
 					<NewsletterCTA 
 						variant="hero" 
 						class="btn btn-secondary btn-lg px-8 py-4 text-lg"
-						client:load 
+						client:only="react" 
 					/>
 				</div>
 			</div>

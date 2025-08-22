@@ -82,7 +82,7 @@ const siteConfig = {
   <Header />
   
   <!-- Starfield Background -->
-  <StarfieldBackground client:load />
+  <StarfieldBackground client:only="react" />
   
   <main class="relative z-10 min-h-screen bg-bg-primary">
     <!-- Hero Section -->
@@ -146,7 +146,7 @@ const siteConfig = {
               <BookCard 
                 book={book}
                 variant="featured"
-                client:load
+                client:only="react"
               />
             ))}
           </div>
@@ -172,7 +172,7 @@ const siteConfig = {
               <BookCard 
                 book={book}
                 variant="compact"
-                client:load
+                client:only="react"
               />
             ))}
           </div>
@@ -229,7 +229,7 @@ const siteConfig = {
             <BookCard 
               book={book}
               variant="standard"
-              client:load
+              client:only="react"
             />
           ))}
         </div>
@@ -265,7 +265,7 @@ const siteConfig = {
           <NewsletterCTA 
             variant="hero" 
             className="btn btn-secondary btn-lg px-8 py-4 text-lg"
-            client:load 
+            client:only="react" 
           />
         </div>
       </div>
