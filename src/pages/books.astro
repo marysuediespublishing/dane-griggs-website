@@ -56,11 +56,6 @@ const booksBySeries = books.reduce((acc, book) => {
 // Get featured books
 const featuredBooks = books.filter(book => book.data.featured);
 
-// Get latest releases (last 6 months)
-const sixMonthsAgo = new Date();
-sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-const latestReleases = books.filter(book => new Date(book.data.pubDate) > sixMonthsAgo);
-
 // Get site configuration for newsletter section
 const settingsCollection = await getCollection('settings');
 const siteConfigData = settingsCollection[0]?.data;
@@ -150,40 +145,6 @@ const siteConfig = {
               />
             ))}
           </div>
-        </div>
-      </section>
-    )}
-
-    <!-- Latest Releases Section -->
-    {latestReleases.length > 0 && (
-      <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-primary font-bold text-deep-space-navy mb-4">
-              Latest Releases
-            </h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-              Hot off the press - the newest adventures in alien romance
-            </p>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {latestReleases.slice(0, 8).map((book) => (
-              <BookCard 
-                book={book}
-                variant="compact"
-                client:only="react"
-              />
-            ))}
-          </div>
-          
-          {latestReleases.length > 8 && (
-            <div class="text-center mt-8">
-              <a href="#all-books" class="btn btn-primary btn-lg">
-                View All Latest Releases
-              </a>
-            </div>
-          )}
         </div>
       </section>
     )}

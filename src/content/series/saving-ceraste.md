@@ -3,7 +3,7 @@ title: Saving Ceraste
 description: Ten-book sci-fi romance series following human women who volunteer
   as alien brides to save lives and find love. Features strong heroines, no Mary
   Sue characters, and relationships that develop naturally over time.
-bookCount: 10
+bookCount: 11
 completionStatus: ongoing
 startDate: 2019-03-25T00:00:00.000Z
 completionDate: null
@@ -33,6 +33,7 @@ readingOrder:
   - war-brides-book
   - chancellors-pilot-book
   - rosie-christmas-book
+  - velshar
 featured: true
 alienSpecies:
   - cerastean

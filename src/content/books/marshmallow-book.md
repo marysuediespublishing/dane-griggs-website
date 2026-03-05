@@ -31,7 +31,7 @@ price: $2.99
 wordCount: 55737
 pageCount: 232
 status: published
-featured: true
+featured: false
 alienSpecies:
   - cerastean
   - human

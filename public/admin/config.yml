@@ -99,7 +99,17 @@ collections:
       - { label: "Overall Rating", name: "overallRating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, default: 0 }
       - { label: "Total Ratings", name: "totalRatings", widget: "number", default: 0 }
       - { label: "World Building Notes", name: "worldBuilding", widget: "text", required: false }
-      - { label: "Reading Order", name: "readingOrder", widget: "list", default: [] }
+      - label: "Reading Order"
+        name: "readingOrder"
+        widget: "relation"
+        collection: "books"
+        search_fields: ["title"]
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        multiple: true
+        default: []
+        required: false
+        options_length: 200
       - { label: "Featured Series", name: "featured", widget: "boolean", default: false }
       - { label: "Content", name: "body", widget: "markdown" }
 

@@ -92,11 +92,9 @@ const formatSpeciesName = (slug: string): string => {
 	).join(' ');
 };
 
-// Calculate series statistics
-const totalRatings = seriesBooks.reduce((sum, book) => sum + (book.data.ratingCount || 0), 0);
-const averageRating = seriesBooks.length > 0 
-  ? seriesBooks.reduce((sum, book) => sum + (book.data.rating || 0), 0) / seriesBooks.length
-  : 0;
+// Series statistics from admin
+const averageRating = seriesItem.data.overallRating || 0;
+const totalRatings = seriesItem.data.totalRatings || 0;
 const totalWordCount = seriesBooks.reduce((sum, book) => sum + (book.data.wordCount || 0), 0);
 ---
 

@@ -1,9 +1,9 @@
 ---
 title: The Chancellor's Pilot
 author: Dane Griggs
-description: The epic conclusion to the Saving Ceraste series brings political
-  intrigue, high-stakes action, and one final love story that ties together nine
-  books of human-Cerastean cooperation, romance, and the fight for survival.
+description: The ninth book in the Saving Ceraste series brings political
+  intrigue, high-stakes action, and a love story that ties together nine books
+  of human-Cerastean cooperation, romance, and the fight for survival.
 cover: ../../assets/chancellors-pilot-cover.jpg
 series: Saving Ceraste
 seriesOrder: 9
@@ -23,7 +23,6 @@ genres:
   - sci-fi romance
   - alien romance
   - political intrigue
-  - series finale
 isKU: true
 amazonUrl: https://amzn.to/45QXCmg
 goodreadsUrl: https://www.goodreads.com/book/show/60641815-the-chancellor-s-pilot
@@ -37,7 +36,6 @@ alienSpecies:
   - human
   - ostium
 ---
-
 # The Chancellor's Pilot
 
 The ninth book in the **Saving Ceraste** series brings the epic confrontation that fans have been waiting for, with political intrigue, galactic stakes, and a love story that ties everything together.
@@ -52,22 +50,22 @@ As two people whose duty to serve comes first, can Zoe and L’Forn give in to t
 
 ## What Makes This Book Special
 
-- **Series Conclusion**: Resolves all major plotlines from the nine-book arc
-- **Political Romance**: Love story with galactic implications
-- **All Characters Return**: Most couples from previous books play important roles
-- **High Stakes**: The future of three species depends on the outcomes
-- **Epic Scope**: Conclusion worthy of the series' ambitious world-building
-- **Payoff Moments**: Storylines that have been building since book one reach resolution
+* **Final Confrontation**: Resolves all major plotlines from the nine-book arc
+* **Political Romance**: Love story with galactic implications
+* **All Characters Return**: Most couples from previous books play important roles
+* **High Stakes**: The future of three species depends on the outcomes
+* **Epic Scope**: Confrontation worthy of the series' ambitious world-building
+* **Payoff Moments**: Storylines that have been building since book one reach resolution
 
 ## Content Notes
 
-- **Series Finale**: Best read after all previous books for maximum impact
-- Political intrigue and diplomatic negotiations
-- Epic scope with multiple worlds and species
-- Medium heat level focused on emotional resolution
-- Features entire cast in supporting/ensemble roles
-- Satisfying conclusion to all character arcs and romantic relationships
-- Sets up possibilities for future stories in the universe
+* **Series Finale**: Best read after all previous books for maximum impact
+* Political intrigue and diplomatic negotiations
+* Epic scope with multiple worlds and species
+* Medium heat level focused on emotional resolution
+* Features entire cast in supporting/ensemble roles
+* Satisfying conclusion to all character arcs and romantic relationships
+* Sets up possibilities for future stories in the universe
 
 ## Reader Investment
 
