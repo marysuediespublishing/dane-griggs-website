@@ -5,6 +5,18 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { readingTimeRemarkPlugin } from './src/utils/reading-time.mjs';
 
+// In `astro dev`, serve public/admin/index.html at /admin/ (GitHub Pages does this itself).
+// Don't add a src/pages/admin route: its build output overwrites the CMS page.
+const adminIndex = {
+  name: 'admin-index',
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (req.url === '/admin' || req.url === '/admin/') req.url = '/admin/index.html';
+      next();
+    });
+  },
+};
+
 export default defineConfig({
   site: 'https://danegriggs.com',
   output: 'static',
@@ -24,6 +36,7 @@ export default defineConfig({
     }
   },
   vite: {
+    plugins: [adminIndex],
     define: {
       __DATE__: `'${new Date().toISOString()}'`,
     },

@@ -11,7 +11,7 @@ Developer runs dev servers manually. NEVER run: `npm run dev`, `npm start`, `yar
 ## Tech Stack
 - **Astro** with TypeScript
 - **Tailwind CSS + shadcn/ui** for styling
-- **Decap CMS** for content management
+- **Sveltia CMS** (Decap-compatible) for content management, online at /admin via GitHub token
 - **Jest + Playwright** with shared mocks
 
 ## Spec Format (JSON in Markdown)
@@ -54,7 +54,7 @@ lib/test-mocks.ts       # Shared mock contracts
 tests/unit/             # Jest tests using shared mocks
 tests/e2e/              # Playwright tests using same mocks
 src/                    # Astro source files
-public/admin/           # Decap CMS admin interface
+public/admin/           # Sveltia CMS admin interface
 logs/dev.log            # Current dev server output
 ```
 
@@ -81,7 +81,7 @@ Update JSON status fields as work progresses:
 
 ## Instructions for Claude
 - Use Astro component patterns with TypeScript
-- Integrate with Decap CMS for content management
+- Integrate with Sveltia CMS (public/admin/config.yml) for content management
 - Add data-testid attributes matching E2E scenarios
 - Never start dev servers
 - Run quality checks before completion

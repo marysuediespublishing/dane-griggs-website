@@ -1,9 +1,14 @@
+# Sveltia CMS configuration (Decap CMS compatible)
+# Online:  /admin → "Sign In Using Access Token" (GitHub fine-grained token, Contents read/write on this repo)
+# Locally: npm run dev → http://localhost:4321/admin → "Work with Local Repository" (Chrome/Edge)
 backend:
-  name: git-gateway
+  name: github
+  repo: marysuediespublishing/dane-griggs-website
   branch: main
 
-# Enable local development mode for CMS editing
-local_backend: true
+# Leave blank optional fields out of saved files instead of writing '' (which breaks date/number schemas)
+output:
+  omit_empty_optional_fields: true
 
 # Media storage configuration
 media_folder: "public/images"
@@ -396,7 +401,8 @@ collections:
 # Site configuration
 site_url: https://danegriggs.com
 display_url: https://danegriggs.com
-logo_url: https://danegriggs.com/images/logo.png
+logo:
+  src: https://danegriggs.com/images/logo.png
 
 # Editor configuration
 editor:
