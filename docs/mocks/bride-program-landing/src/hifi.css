@@ -1,0 +1,52 @@
+/* The hi-fi skin: dane-griggs-website's own tokens (tailwind.config.mjs, global.css):
+   deep-space navy, cosmic rose, stellar gold, nebula purple; Playfair Display for
+   headings, Inter for the rest; the site's .btn-primary / .btn-secondary. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+:root { --navy: #1a1a2e; --rose: #d4336a; --gold: #f4a261; --purple: #6a4c93; --silver: #e9ecef; --muted: #718096; --text2: #4a5568; }
+body { background: #fff; color: var(--navy); font-family: Inter, "Helvetica Neue", Arial, sans-serif; font-size: 17px; line-height: 1.6; }
+a { color: var(--rose); }
+h1, h2, .title, .closer, .mark a { font-family: "Playfair Display", Georgia, serif; letter-spacing: -0.02em; }
+.mark { background: var(--navy); }
+.mark a { color: #fff; font-size: 22px; font-weight: 700; text-decoration: none; }
+main { background: radial-gradient(ellipse at 20% 0%, rgba(106, 76, 147, 0.10), transparent 55%), radial-gradient(ellipse at 90% 10%, rgba(212, 51, 106, 0.07), transparent 50%); }
+.set { mix-blend-mode: multiply; }
+.eyebrow { color: var(--rose); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; font-size: 13px; }
+h1 { font-size: 46px; line-height: 1.1; font-weight: 700; }
+h2 { font-size: 30px; font-weight: 700; }
+.hook { font-size: 20px; color: var(--text2); }
+.promise { color: var(--purple); font-weight: 600; }
+.stars { color: var(--gold); letter-spacing: 2px; }
+.rating { color: var(--text2); font-weight: 500; }
+.small { font-size: 14px; }
+.muted, .note, figcaption { color: var(--muted); font-size: 14px; }
+.pull { border-left: 4px solid var(--rose); }
+.pull .title { font-size: 26px; }
+.pull blockquote p:not(.title) { color: var(--text2); }
+.num { color: var(--purple); font-size: 12px; font-weight: 600; }
+.bt { font-weight: 600; line-height: 1.25; }
+.bh { font-size: 15px; color: var(--text2); }
+.books img { border-radius: 6px; box-shadow: 0 6px 16px rgba(26, 26, 46, 0.25); }
+.pitch { font-size: 19px; color: var(--text2); }
+.reviews { background: #221c3d; color: #fff; padding: 48px 0; box-shadow: 0 0 0 100vmax #221c3d; clip-path: inset(0 -100vmax); }
+.reviews h2 { color: #fff; }
+.card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(212, 51, 106, 0.35); border-radius: 12px; }
+.card .title { font-size: 19px; color: #fff; }
+.card p { color: #e2e8f0; }
+.card figcaption { color: #a0aec0; }
+.closer { font-size: 26px; font-weight: 700; }
+.panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 0 25px rgba(106, 76, 147, 0.2); }
+.consent { background: var(--silver); border-radius: 10px; font-size: 15px; color: var(--text2); }
+.btn { font-weight: 600; border: 2px solid transparent; border-radius: 10px; transition: all 0.2s; font-family: Inter, sans-serif; font-size: 17px; }
+.btn.sm { font-size: 14px; border-radius: 6px; }
+.btn.rose { background: var(--rose); border-color: var(--rose); color: #fff; }
+.btn.rose:hover { background: #c12d5e; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212, 51, 106, 0.3); }
+.btn.gold { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+.btn.gold:hover { background: #e89652; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(244, 162, 97, 0.3); }
+.btn.outline { border-color: var(--muted); color: var(--text2); background: transparent; }
+.paper a { color: var(--muted); font-size: 14px; text-decoration: underline; text-underline-offset: 2px; }
+.bar { background: rgba(26, 26, 46, 0.96); border-top: 1px solid rgba(212, 51, 106, 0.4); }
+.bar .note { color: #cbd5e0; font-size: 12px; }
+.foot { background: var(--navy); color: #a0aec0; font-size: 14px; }
+.foot a { color: #cbd5e0; }
+.status { background: #f1f3f4; border: 1px solid #c4c7c5; border-radius: 0 6px 0 0; font-size: 12px; color: #202124; font-family: system-ui, sans-serif; }
+@media (max-width: 640px) { h1 { font-size: 34px; } .hook { font-size: 18px; } }
