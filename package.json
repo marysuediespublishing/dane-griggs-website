@@ -12,7 +12,8 @@
     "test:e2e:ui": "playwright test --ui",
     "typecheck": "astro check",
     "lint": "eslint src --ext .ts,.tsx,.astro",
-    "format": "prettier --write src/**/*.{ts,tsx,astro,md}"
+    "format": "prettier --write src/**/*.{ts,tsx,astro,md}",
+    "test:landing": "playwright test -c playwright.landing.config.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

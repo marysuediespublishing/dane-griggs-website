@@ -1,0 +1,43 @@
+---
+// The three buttons of an ad landing page: Kindle Unlimited (primary), buy the
+// Kindle edition, and a quiet print link. Every link carries data-landing-cta, which
+// landing-client.ts reads to swap a campaign's links in and to fire the click events.
+import type { LandingLinks } from '../../lib/landing';
+
+export interface Props {
+  links: LandingLinks;
+  buyLabel: string;
+  /** e.g. "9 books for $9.99 — $26.91 bought separately"; empty for none. */
+  valueLine?: string;
+  paperbackLabel?: string;
+  /** Names this set of buttons in data-testid (a page has several: side, closing, bar). */
+  where: string;
+  /** The phone's fixed bar: smaller notes, no print link. */
+  compact?: boolean;
+}
+
+const { links, buyLabel, valueLine = '', paperbackLabel = 'Prefer paper? Book 1 in paperback →', where, compact = false } = Astro.props;
+const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-text-muted mt-1 mb-4';
+---
+
+<!-- lg: the buttons sit in a 22rem sidebar, a size down so the KU label fits one line -->
+<div data-testid={`landing-ctas-${where}`}>
+  <a href={links.ku} data-landing-cta="ku" data-testid={`landing-cta-ku-${where}`} class="btn btn-primary btn-lg w-full lg:!text-base lg:!px-4">
+    Read free with Kindle Unlimited
+  </a>
+  <p class={`text-center ${note}`}>Free for Kindle Unlimited members</p>
+  <a href={links.buy} data-landing-cta="buy" data-testid={`landing-cta-buy-${where}`} class="btn btn-secondary btn-lg w-full lg:!text-base lg:!px-4">
+    {buyLabel}
+  </a>
+  {valueLine && <p class={`text-center ${note}`}>{valueLine}</p>}
+  {!compact && (
+    <p class="text-center mt-4">
+      <a
+        href={links.paperback}
+        data-landing-cta="paperback"
+        data-testid={`landing-cta-paperback-${where}`}
+        class="text-sm text-text-muted underline underline-offset-2 hover:text-text-secondary"
+      >{paperbackLabel}</a>
+    </p>
+  )}
+</div>

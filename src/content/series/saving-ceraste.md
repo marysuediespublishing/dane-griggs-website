@@ -35,6 +35,11 @@ readingOrder:
   - rosie-christmas-book
   - velshar
 featured: true
+boxSetAsin: B0B2M4RGCS
+boxSetBlurb: |-
+  Maya joins for the chance to save the life of a loved one. Serena jumps at the chance to help cure cancer. Kidnap victim Chelsea just wants to escape her tormentors, but ends up finding love with not one but two aliens... And the list goes on.
+
+  Some women want adventure, some want to serve the greater good and some want an escape but all find the love they never knew they needed.
 alienSpecies:
   - cerastean
   - human

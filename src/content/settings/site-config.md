@@ -35,6 +35,11 @@ newsletter:
     - Behind-the-scenes writing insights
     - Reader-only contests and giveaways
     - No spam, ever - unsubscribe anytime
+metaPixelId: "2527209327539510"
+landingAttributionTag: ""
+paperbackAttributionTag: ""
+pressCtrEndpoint: ""
+amazonBadge: ""
 ---
 
 # Site Configuration

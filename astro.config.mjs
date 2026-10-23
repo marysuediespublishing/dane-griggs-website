@@ -26,7 +26,8 @@ export default defineConfig({
     }),
     react(),
     mdx(),
-    sitemap()
+    // Ad landing pages (…/box-set) are unlinked and noindex: keep them out of the sitemap too.
+    sitemap({ filter: (page) => !/\/box-set\/?$/.test(page) })
   ],
   markdown: {
     remarkPlugins: [readingTimeRemarkPlugin],

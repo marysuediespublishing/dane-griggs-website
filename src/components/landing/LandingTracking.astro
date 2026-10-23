@@ -1,0 +1,17 @@
+---
+// The browser half of an ad landing page: ships the page's config (pixel id, CTR
+// endpoint, per-campaign links) and starts landing-client.ts on it.
+import { scriptJson, type LandingConfig } from '../../lib/landing';
+
+export interface Props {
+  config: LandingConfig;
+}
+
+const { config } = Astro.props;
+---
+
+<script type="application/json" id="landing-config" set:html={scriptJson(config)} />
+<script>
+  import { startLandingFromPage } from '../../lib/landing-client';
+  startLandingFromPage();
+</script>

@@ -67,6 +67,11 @@ const series = defineCollection({
 			worldBuilding: z.string().optional(),
 			readingOrder: z.array(z.string()).default([]),
 			featured: z.boolean().default(false),
+			// Box-set landing page (/series/<slug>/box-set): all optional
+			boxSetAsin: z.string().optional(),
+			boxSetBlurb: z.string().optional(),
+			boxSetPrice: z.string().optional(),
+			boxSetSeparatePrice: z.string().optional(),
 		}),
 });
 
@@ -115,6 +120,18 @@ const settings = defineCollection({
 			leadMagnetDescription: z.string().optional(),
 			benefits: z.array(z.string()).optional(),
 		}).optional(),
+		// Ad landing pages: Meta pixel, Amazon Attribution tags (box set, paperback), Press CTR beacon
+		metaPixelId: z.string().optional(),
+		landingAttributionTag: z.string().optional(),
+		paperbackAttributionTag: z.string().optional(),
+		// Per-campaign tags, picked by the visitor's utm_campaign; empty → the defaults above
+		landingAttributionTags: z.array(z.object({
+			campaign: z.string(),
+			tag: z.string().optional(),
+			paperbackTag: z.string().optional(),
+		})).optional(),
+		pressCtrEndpoint: z.string().optional(),
+		amazonBadge: z.string().optional(),
 	}),
 });
 

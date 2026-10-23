@@ -1,0 +1,55 @@
+---
+// Ad landing pages: the slim chrome. The name mark linking home, the page, and a
+// footer with only the legal links, so the page has one exit (the buttons). No site
+// pixel, cookie banner or newsletter popup: the landing pieces carry their own
+// pixel and consent (src/lib/landing-client.ts). Kept out of search and the sitemap.
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  image: string;
+}
+
+const { title, description, image } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:site_name" content="Dane Griggs - Sci-Fi Romance Author" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>{title}</title>
+  </head>
+  <body class="bg-bg-primary text-text-primary min-h-screen antialiased overflow-x-clip">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="bg-deep-space-navy px-6 py-3.5" data-testid="landing-header">
+      <a href="/" class="font-primary font-bold text-xl text-solar-white hover:text-stellar-gold hover:no-underline">Dane Griggs</a>
+    </header>
+
+    <slot />
+
+    <footer class="bg-deep-space-navy text-sm text-solar-white/60 text-center px-6 py-5" data-testid="landing-footer">
+      © {new Date().getFullYear()} Dane Griggs ·
+      <a href="/privacy-policy" class="text-solar-white/80 hover:text-stellar-gold">Privacy policy</a> ·
+      <a href="/cookie-policy" class="text-solar-white/80 hover:text-stellar-gold">Cookie policy</a>
+    </footer>
+  </body>
+</html>

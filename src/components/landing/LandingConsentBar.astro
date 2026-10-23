@@ -1,0 +1,16 @@
+---
+// The in-page Allow / No thanks bar for visitors outside a US time zone. Hidden
+// until landing-client.ts decides to ask; the buttons work whatever the answer.
+---
+
+<div id="landing-consent" hidden class="max-w-6xl mx-auto mb-6" data-testid="landing-consent">
+  <div class="flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl bg-starlight-silver px-4 py-3 text-sm text-text-secondary">
+    <p class="flex-1">
+      We use a Meta pixel to measure our ads. <a href="/cookie-policy">Cookie policy</a>
+    </p>
+    <div class="flex gap-2">
+      <button type="button" data-consent="granted" data-testid="landing-consent-allow" class="btn btn-sm btn-primary">Allow</button>
+      <button type="button" data-consent="denied" data-testid="landing-consent-deny" class="btn btn-sm border-text-muted text-text-secondary bg-transparent">No thanks</button>
+    </div>
+  </div>
+</div>

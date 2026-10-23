@@ -1,0 +1,247 @@
+---
+// The Bride Program Box Set landing page: where readers land from the Meta ad.
+// Unlinked from the site nav. Design: docs/mocks/bride-program-landing (job 4212).
+// CMS inputs (all optional, see README "Box-set landing pages"):
+//   series boxSetAsin / boxSetBlurb / boxSetPrice / boxSetSeparatePrice, and
+//   site-config metaPixelId / landingAttributionTag / paperbackAttributionTag /
+//   landingAttributionTags / pressCtrEndpoint / amazonBadge
+import { Image } from 'astro:assets';
+import { getCollection, getEntry } from 'astro:content';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
+import LandingCtas from '../../../components/landing/LandingCtas.astro';
+import LandingConsentBar from '../../../components/landing/LandingConsentBar.astro';
+import LandingTracking from '../../../components/landing/LandingTracking.astro';
+import { landingSetup, money, toLandingReview } from '../../../lib/landing';
+
+const SERIES_SLUG = 'saving-ceraste';
+const PAGE = 'bride-program-box-set';
+// The box set is Books 1–9 of the series' reading order.
+const SET_SIZE = 9;
+const HOOK = 'What could possibly entice human women to willingly join a program meant to match them with snake-like alien husbands?';
+// Book 1 in paperback (ISBN 9781090344373): a quiet link that measures interest in print.
+const PAPERBACK_URL = 'https://www.amazon.com/dp/1090344378';
+// Goodreads reviews of the box set (src/content/testimonials), by id: the pull-quote
+// under the hero, then four lower down. `excerpt` replaces a long review's body,
+// with "…" wherever text is cut.
+const PULL_QUOTE = {
+  id: '2024-01-05-fleur-gray-bride-program-box-set',
+  excerpt: "I found the first book of this series, while doom scrolling for something to read at 2am. Nothing held my interest for more than a chapter or two. 3 days later I've completed the series and am totally addicted.",
+};
+const REVIEWS: { id: string; excerpt?: string }[] = [
+  {
+    id: '2022-06-01-sarah-kellum-bride-program-box-set',
+    excerpt: 'I have read the individual books but to be able to from one right into the next one was really nice. In this series you have so many intertwined story lines it really keeps your attention.',
+  },
+  {
+    id: '2026-01-26-emersyn-torres-bride-program-box-set',
+    excerpt: 'I enjoyed the "Bride Program" box set for the diversity of the women featured. … the women were not all lonely timid females, but women of courage and substance.',
+  },
+  {
+    id: '2024-02-08-ken-templeton-bride-program-box-set',
+    excerpt: 'I just finished book 2 and am thoroughly enjoying this series!! It’s different in a very good way.',
+  },
+  { id: '2026-02-23-blanca-bride-program-box-set' },
+];
+// One line under each cover, lifted from each book's page. Short enough not to wrap
+// at phone width.
+const BOOK_HOOKS: Record<string, string> = {
+  'the-bride-program-book': 'Maya volunteers to save her sister.',
+  'bedside-manners-aliens-book': 'A doctor and a clueless alien physician.',
+  'threesomes-guide-galaxy-book': 'Kidnapped, escaped, and loved by two.',
+  'bride-program-honeymoon-book': 'A girls’ trip to the planet Xerini.',
+  'insatiable-curiosity-book': 'A grounded astronaut gets to space.',
+  'aliens-gossip-queen-book': 'She loves gossip. He loves dogs.',
+  'marshmallow-book': 'The gruff general escorts her home.',
+  'war-brides-book': 'The rule-maker falls for a rule-breaker.',
+  'chancellors-pilot-book': 'A fighter pilot and the chancellor.',
+};
+const BLURB_PARAGRAPHS = 3;
+
+const series = await getEntry('series', SERIES_SLUG);
+if (!series) throw new Error(`Missing series entry: ${SERIES_SLUG}`);
+
+const allBooks = await getCollection('books');
+const books = series.data.readingOrder
+  .slice(0, SET_SIZE)
+  .map((slug) => allBooks.find((book) => book.id === slug))
+  .filter((book): book is NonNullable<typeof book> => Boolean(book));
+
+const testimonials = await getCollection('testimonials');
+const review = (id: string, excerpt?: string) => {
+  const t = testimonials.find((entry) => entry.id === id);
+  return t ? toLandingReview(t.data.quote, t.data.reviewerName, excerpt) : undefined;
+};
+const pullQuote = review(PULL_QUOTE.id, PULL_QUOTE.excerpt);
+const reviews = REVIEWS.map((r) => review(r.id, r.excerpt)).filter((r): r is NonNullable<typeof r> => Boolean(r));
+
+// Series-wide numbers, labelled as such: the box set has its own (smaller) count.
+const rating = series.data.overallRating;
+const ratingCount = series.data.totalRatings;
+const showRating = rating > 0 && ratingCount > 0;
+const stars = '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+
+const siteConfig = await getEntry('settings', 'site-config');
+const amazonBadge = siteConfig?.data.amazonBadge?.trim();
+
+const asin = series.data.boxSetAsin?.trim();
+const { links, config } = landingSetup(
+  PAGE,
+  {
+    kindleUrl: asin
+      ? `https://www.amazon.com/dp/${asin}`
+      : 'https://www.amazon.com/s?k=Bride+Program+Box+Set+Dane+Griggs&i=digital-text',
+    paperbackUrl: PAPERBACK_URL,
+  },
+  siteConfig?.data,
+);
+
+const price = money(series.data.boxSetPrice);
+const separatePrice = money(series.data.boxSetSeparatePrice);
+const buyLabel = price ? `Buy the Kindle box set — ${price}` : 'Buy the Kindle box set';
+const valueLine = price && separatePrice ? `${books.length} books for ${price} — ${separatePrice} bought separately` : '';
+
+const pitch = (series.data.boxSetBlurb?.trim() || series.data.description)
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean)
+  .slice(0, BLURB_PARAGRAPHS);
+---
+
+<LandingLayout
+  title="The Bride Program Box Set: All Nine Books | Dane Griggs"
+  description="All nine Bride Program alien romances in one box set. Sexy escapes with heart, humor, and no Mary Sues. Free for Kindle Unlimited members."
+  image="/images/landing/bride-program-box-set-og.jpg"
+>
+  <main
+    id="main-content"
+    class="px-4 pt-8 pb-44 lg:pt-12 lg:pb-16 bg-[radial-gradient(ellipse_at_20%_0%,rgba(106,76,147,0.10),transparent_55%),radial-gradient(ellipse_at_90%_10%,rgba(212,51,106,0.07),transparent_50%)]"
+    data-testid="landing-page"
+  >
+    <LandingConsentBar />
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_22rem] gap-10 items-start">
+      <div>
+        <!-- Hero: the set, hook, promise, rating -->
+        <section class="grid sm:grid-cols-[minmax(0,18rem)_1fr] gap-6 sm:gap-8 items-center text-center sm:text-left">
+          <img
+            src="/images/landing/bride-program-box-set-640.jpg"
+            alt="The Bride Program Box Set, Books 1–9 by Dane Griggs"
+            width="640"
+            height="505"
+            class="w-full max-w-[18rem] mx-auto mix-blend-multiply"
+            fetchpriority="high"
+          />
+          <div>
+            <p class="text-cosmic-rose font-semibold uppercase tracking-[0.08em] sm:tracking-[0.14em] text-xs sm:text-sm mb-2">The complete Bride Program · {books.length} books</p>
+            <h1 class="text-4xl md:text-5xl font-primary font-bold text-deep-space-navy mb-3">The Bride Program Box Set</h1>
+            <p class="text-lg md:text-xl text-text-secondary mb-3" data-testid="landing-hook">{HOOK}</p>
+            <p class="text-nebula-purple font-semibold mb-4">Sexy escapes with heart, humor, and no Mary Sues.</p>
+            {showRating && (
+              <div>
+                <p class="text-text-secondary font-medium">
+                  <span class="text-stellar-gold tracking-widest" aria-hidden="true">{stars}</span>
+                  {rating.toFixed(1)} average across the series
+                </p>
+                <p class="text-sm text-text-muted">{ratingCount.toLocaleString('en-US')} ratings across the {series.data.title} series</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {pullQuote && (
+          <figure class="mt-10 border-l-4 border-cosmic-rose pl-5">
+            <blockquote>
+              {pullQuote.title && <p class="font-primary font-semibold text-2xl text-deep-space-navy mb-2">“{pullQuote.title}”</p>}
+              <p class="text-text-secondary">{pullQuote.body}</p>
+            </blockquote>
+            <figcaption class="mt-2 text-sm text-text-muted">{pullQuote.reviewer}, Goodreads review of the Bride Program Box Set</figcaption>
+          </figure>
+        )}
+
+        <!-- The nine books in series order, one hook line each -->
+        <section class="mt-12" data-testid="landing-books">
+          <h2 class="text-2xl md:text-3xl font-primary font-bold text-deep-space-navy mb-6">All {books.length === 9 ? 'nine' : books.length} books inside</h2>
+          <ol class="grid sm:grid-cols-2 gap-x-6 gap-y-4">
+            {books.map((book) => (
+              <li class="flex items-center gap-3.5">
+                <Image
+                  src={book.data.cover}
+                  alt={`${book.data.title} cover`}
+                  width={112}
+                  class="w-14 shrink-0 rounded-md shadow-lg shadow-deep-space-navy/25 aspect-[2/3] object-cover"
+                />
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-nebula-purple">Book {book.data.seriesOrder}</p>
+                  <p class="font-semibold text-deep-space-navy leading-tight">{book.data.title}</p>
+                  {BOOK_HOOKS[book.id] && <p class="text-sm text-text-secondary mt-0.5 whitespace-nowrap">{BOOK_HOOKS[book.id]}</p>}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <!-- Pitch -->
+        <section class="mt-12 space-y-4 text-lg text-text-secondary">
+          {pitch.map((paragraph) => <p>{paragraph}</p>)}
+        </section>
+
+        <!-- Reviews, two by two, on a full-width navy band -->
+        {reviews.length > 0 && (
+          <section class="mt-12 py-12 bg-[#221c3d] shadow-[0_0_0_100vmax_#221c3d] [clip-path:inset(0_-100vmax)]" data-testid="landing-reviews">
+            <h2 class="text-2xl md:text-3xl font-primary font-bold text-solar-white mb-6">What readers say on Goodreads</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+              {reviews.map((r) => (
+                <figure class="rounded-xl border border-cosmic-rose/35 bg-solar-white/5 p-6 flex flex-col">
+                  <blockquote class="flex-1">
+                    {r.title && <p class="font-primary font-semibold text-lg text-solar-white mb-1.5">“{r.title}”</p>}
+                    <p class="text-slate-200">{r.body}</p>
+                  </blockquote>
+                  <figcaption class="mt-4 text-sm text-slate-400">{r.reviewer}, Goodreads review of the Bride Program Box Set</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Closing line; on phones the buttons follow it (at desktop the sidebar has them) -->
+        <section id="landing-closing" class="mt-12 text-center lg:text-left">
+          <p class="font-primary font-bold text-2xl text-deep-space-navy mb-6">
+            Nine brides. Nine alien heroes. No Mary Sues. All nine books, one click.
+          </p>
+          <div class="lg:hidden max-w-md mx-auto">
+            <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="closing" />
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar: rating and the buttons, always on screen at desktop widths -->
+      <aside class="hidden lg:block lg:sticky lg:top-8">
+        <div class="rounded-2xl border border-border-light bg-solar-white p-6 shadow-nebula">
+          {showRating && (
+            <div class="mb-5 text-sm">
+              <p class="text-text-secondary font-medium">
+                <span class="text-stellar-gold tracking-widest" aria-hidden="true">{stars}</span>
+                {rating.toFixed(1)} average across the series
+              </p>
+              <p class="text-xs text-text-muted mt-0.5">{ratingCount.toLocaleString('en-US')} ratings across the series</p>
+            </div>
+          )}
+          <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="side" />
+          {amazonBadge && <img src={amazonBadge} alt="Available at Amazon" class="h-10 w-auto mx-auto mt-5" loading="lazy" />}
+        </div>
+      </aside>
+    </div>
+
+    <!-- Phone: the buttons in a bar fixed to the bottom; it slides away while the closing buttons are in view -->
+    <div
+      id="landing-cta-bar"
+      class="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-cosmic-rose/40 bg-deep-space-navy/95 backdrop-blur px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-200"
+    >
+      <div class="max-w-md mx-auto">
+        <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="bar" compact />
+      </div>
+    </div>
+  </main>
+
+  <LandingTracking config={config} />
+</LandingLayout>
