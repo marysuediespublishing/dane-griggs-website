@@ -9,7 +9,10 @@ import { extname, join } from 'node:path';
 import type { BrowserContext, Page } from '@playwright/test';
 import type { LandingConfig } from '../../src/lib/landing';
 
-export const ORIGIN = 'https://danegriggs.test';
+/** Dane's production host: the pixel and the beacon send only here (routed, so nothing leaves the machine). */
+export const ORIGIN = 'https://danegriggs.com';
+/** A local build: the pixel and the beacon only log `[pixel] …` lines. */
+export const LOCAL_ORIGIN = 'http://localhost:4321';
 export const BOX_SET_PATH = '/series/saving-ceraste/box-set/';
 export const CTR_ENDPOINT = 'https://press.test/ctr';
 const DIST = join(process.cwd(), 'dist');
@@ -35,19 +38,22 @@ export interface Served {
   beacons: Record<string, unknown>[];
   /** Whether the browser asked for Meta's fbevents.js. */
   pixelRequested: () => boolean;
+  /** Requests to Meta (fbevents.js, /tr) and the CTR endpoint, as URLs. */
+  sent: string[];
 }
 
 /** Edits the page's landing config before the browser sees it (e.g. to add a campaign). */
 export type ConfigEdit = (config: LandingConfig) => LandingConfig;
 
-export async function serveDist(context: BrowserContext, edit?: ConfigEdit): Promise<Served> {
+export async function serveDist(context: BrowserContext, edit?: ConfigEdit, origin = ORIGIN): Promise<Served> {
   if (!existsSync(join(DIST, BOX_SET_PATH, 'index.html'))) {
     throw new Error('dist/ has no box-set page: run `npm run build` first');
   }
   const beacons: Record<string, unknown>[] = [];
+  const sent: string[] = [];
   let pixel = false;
 
-  await context.route(`${ORIGIN}/**`, async (route) => {
+  await context.route(`${origin}/**`, async (route) => {
     const { pathname } = new URL(route.request().url());
     const file = distFile(pathname);
     if (!file) return route.fulfill({ status: 404, body: 'not found' });
@@ -65,11 +71,17 @@ export async function serveDist(context: BrowserContext, edit?: ConfigEdit): Pro
   // Meta's script is stubbed empty: fbq() calls stay in window.fbq.queue, where the tests read them.
   await context.route('https://connect.facebook.net/**', (route) => {
     pixel = true;
+    sent.push(route.request().url());
     return route.fulfill({ status: 200, contentType: 'text/javascript', body: '' });
+  });
+  await context.route('https://www.facebook.com/tr**', (route) => {
+    sent.push(route.request().url());
+    return route.fulfill({ status: 204, body: '' });
   });
   await context.route('https://fonts.googleapis.com/**', (route) => route.fulfill({ status: 200, contentType: 'text/css', body: '' }));
   await context.route('https://www.amazon.com/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: 'amazon' }));
   await context.route(`${CTR_ENDPOINT}**`, async (route) => {
+    sent.push(route.request().url());
     beacons.push(JSON.parse(route.request().postData() ?? '{}') as Record<string, unknown>);
     return route.fulfill({ status: 204, body: '' });
   });
@@ -79,7 +91,7 @@ export async function serveDist(context: BrowserContext, edit?: ConfigEdit): Pro
       if ((event.target as Element | null)?.closest?.('[data-landing-cta]')) event.preventDefault();
     });
   });
-  return { beacons, pixelRequested: () => pixel };
+  return { beacons, pixelRequested: () => pixel, sent };
 }
 
 /** The fbq() calls the page has made, as argument lists. */

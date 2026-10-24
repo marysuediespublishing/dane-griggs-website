@@ -36,6 +36,9 @@ newsletter:
     - Reader-only contests and giveaways
     - No spam, ever - unsubscribe anytime
 metaPixelId: "2527209327539510"
+pixelHosts:
+  - danegriggs.com
+  - www.danegriggs.com
 landingAttributionTag: ""
 paperbackAttributionTag: ""
 pressCtrEndpoint: ""

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import CookieConsentBanner from '../components/CookieConsentBanner';
 import MailchimpPopup from '../components/MailchimpPopup.astro';
+import MetaPixel from '../components/MetaPixel.astro';
 
 export interface Props {
   title: string;
@@ -115,61 +116,8 @@ const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     })();
     </script>
 
-    <!-- Meta Pixel Code -->
-    <script is:inline>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-
-    // Initialize pixel
-    fbq('init', '2527209327539510');
-
-    // Check global consent state and apply
-    if (window.__gdprConsent && window.__gdprConsent.marketing) {
-      // User has previously consented to marketing cookies
-      fbq('consent', 'grant');
-      fbq('track', 'PageView');
-      // Mark that we've already tracked PageView to avoid duplicates
-      window.__metaPixelPageViewTracked = true;
-    } else {
-      // No consent or consent denied
-      fbq('consent', 'revoke');
-    }
-
-    // Global function to update Meta Pixel consent
-    window.updateMetaPixelConsent = function(granted) {
-      if (granted) {
-        fbq('consent', 'grant');
-        // Only track PageView if not already tracked
-        if (!window.__metaPixelPageViewTracked) {
-          fbq('track', 'PageView');
-          window.__metaPixelPageViewTracked = true;
-        }
-      } else {
-        fbq('consent', 'revoke');
-      }
-    };
-
-    // Test function for debugging
-    window.testPixelEvent = function() {
-      console.log('Testing Meta Pixel with ViewContent event...');
-      fbq('track', 'ViewContent', {
-        content_name: 'Test Book',
-        content_category: 'Book',
-        value: 4.99,
-        currency: 'USD'
-      });
-    };
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=2527209327539510&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
+    <!-- Meta Pixel: production hosts only -->
+    <MetaPixel />
     
     <title>{title}</title>
   </head>

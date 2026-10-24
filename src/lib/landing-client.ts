@@ -9,8 +9,11 @@
  *   cookies in the site's own banner).
  * - Each button fires its custom pixel event (LandingClickKU / Buy / Paperback)
  *   and, once Press has an endpoint, a keepalive `press.landing.ctr` beacon.
+ * - Both send only on the production hosts (config.pixelHosts). Anywhere else the
+ *   same calls are `[pixel] …` console lines: nothing loads from Meta, nothing posts.
  */
 import { LANDING_EVENTS, type LandingConfig, type LandingCta, type LandingLinks } from './landing';
+import { beaconLine, isPixelHost, pixelLine } from './pixel-hosts';
 
 type Fbq = ((...args: unknown[]) => void) & {
   callMethod?: (...args: unknown[]) => void;
@@ -118,11 +121,17 @@ function loadFbq(w: PixelWindow): Fbq {
   return n;
 }
 
+/** Off the production hosts: an fbq that logs each call and sends nothing. */
+function consoleFbq(): Fbq {
+  return ((...args: unknown[]) => console.log(pixelLine(args))) as Fbq;
+}
+
 export function startLanding(config: LandingConfig, w: PixelWindow = window): void {
   const doc = w.document;
   const params = new URLSearchParams(w.location.search);
   const session = () => w.sessionStorage;
   const local = () => w.localStorage;
+  const live = isPixelHost(w.location.hostname, config.pixelHosts ?? []);
 
   // Ad visitor: ?from=ad or utm_source=meta. Only labels the click events' source;
   // the Attribution tags are on every link.
@@ -145,7 +154,7 @@ export function startLanding(config: LandingConfig, w: PixelWindow = window): vo
   let pixel: Fbq | undefined;
   const loadPixel = () => {
     if (pixel) return;
-    pixel = loadFbq(w);
+    pixel = live ? loadFbq(w) : consoleFbq();
     pixel('init', config.pixelId);
     pixel('track', 'PageView', campaign ? { campaign } : {});
   };
@@ -182,7 +191,9 @@ export function startLanding(config: LandingConfig, w: PixelWindow = window): vo
       const cta = a.dataset.landingCta as LandingCta;
       const detail = { page: config.page, cta, source: fromAd ? 'ad' : 'organic', campaign };
       if (pixel) pixel('trackCustom', LANDING_EVENTS[cta], detail);
-      if (config.ctrEndpoint) {
+      if (config.ctrEndpoint && !live) {
+        console.log(beaconLine({ metric: 'press.landing.ctr', ...detail }));
+      } else if (config.ctrEndpoint) {
         try {
           w.fetch(config.ctrEndpoint, {
             method: 'POST',

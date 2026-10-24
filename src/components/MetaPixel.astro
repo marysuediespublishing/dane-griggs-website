@@ -1,0 +1,92 @@
+---
+// The sitewide Meta pixel (BaseHead and Layout), from site-config's metaPixelId.
+// It loads Meta's script only on the production hosts (site-config pixelHosts,
+// src/lib/pixel-hosts.ts); anywhere else window.fbq logs each call as a
+// `[pixel] …` console line and nothing is sent. The landing pages run their own
+// pixel (src/lib/landing-client.ts) and don't use this.
+//
+// No <noscript> image: it can't check the host (or consent), so it would send a
+// PageView from every local build viewed without script.
+import { getEntry } from 'astro:content';
+import { pixelHosts } from '../lib/pixel-hosts';
+
+const siteConfig = await getEntry('settings', 'site-config');
+const pixelId = siteConfig?.data.metaPixelId?.trim() || '';
+const hosts = pixelHosts(siteConfig?.data.pixelHosts);
+---
+
+{pixelId && (
+<script is:inline define:vars={{ pixelId, hosts }}>
+(function () {
+  var host = location.hostname.toLowerCase().replace(/\.$/, '');
+  var live = hosts.indexOf(host) !== -1;
+
+  if (live) {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+  } else if (!window.fbq) {
+    // Same lines as pixelLine() in src/lib/pixel-hosts.ts.
+    var log = function () {
+      var args = Array.prototype.slice.call(arguments);
+      var method = args[0];
+      if (method === 'track' || method === 'trackCustom') {
+        console.log('[pixel] ' + String(args[1]) + ' ' + JSON.stringify(args[2] === undefined ? {} : args[2]));
+      } else {
+        console.log(['[pixel]', String(method)].concat(args.slice(1).map(function (a) {
+          return typeof a === 'string' ? a : JSON.stringify(a);
+        })).join(' '));
+      }
+    };
+    log.loaded = true;
+    log.version = '2.0';
+    log.queue = [];
+    window.fbq = window._fbq = log;
+  }
+
+  fbq('init', pixelId);
+
+  // Check global consent state and apply
+  if (window.__gdprConsent && window.__gdprConsent.marketing) {
+    // User has previously consented to marketing cookies
+    fbq('consent', 'grant');
+    fbq('track', 'PageView');
+    // Mark that we've already tracked PageView to avoid duplicates
+    window.__metaPixelPageViewTracked = true;
+  } else {
+    // No consent or consent denied
+    fbq('consent', 'revoke');
+  }
+
+  // Global function to update Meta Pixel consent
+  window.updateMetaPixelConsent = function(granted) {
+    if (granted) {
+      fbq('consent', 'grant');
+      // Only track PageView if not already tracked
+      if (!window.__metaPixelPageViewTracked) {
+        fbq('track', 'PageView');
+        window.__metaPixelPageViewTracked = true;
+      }
+    } else {
+      fbq('consent', 'revoke');
+    }
+  };
+
+  // Test function for debugging
+  window.testPixelEvent = function() {
+    console.log('Testing Meta Pixel with ViewContent event...');
+    fbq('track', 'ViewContent', {
+      content_name: 'Test Book',
+      content_category: 'Book',
+      value: 4.99,
+      currency: 'USD'
+    });
+  };
+})();
+</script>
+)}

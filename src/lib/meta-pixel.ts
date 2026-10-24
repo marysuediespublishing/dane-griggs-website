@@ -12,6 +12,7 @@
  */
 
 import type { BookInteractionEvent, NewsletterEvent } from './analytics';
+import { DEFAULT_PIXEL_HOSTS, isPixelHost } from './pixel-hosts';
 
 // Declare fbq function for TypeScript with proper properties
 declare global {
@@ -112,6 +113,13 @@ class MetaPixel {
       // Pixel is already initialized by inline script
       this.isInitialized = true;
       this.log('Meta Pixel already initialized by inline script');
+      return;
+    }
+
+    // Never load Meta's script off the production hosts (MetaPixel.astro has
+    // already put a console-logging fbq there when the site has a pixel id).
+    if (!isPixelHost(window.location.hostname, DEFAULT_PIXEL_HOSTS)) {
+      this.log('Not a production host - Meta Pixel not loaded');
       return;
     }
 

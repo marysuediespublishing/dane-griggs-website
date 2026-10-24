@@ -7,6 +7,7 @@
  * shared piece: a new landing page is one page file using these helpers and the
  * components in src/components/landing/.
  */
+import { pixelHosts } from './pixel-hosts';
 
 /** The three buttons: Kindle Unlimited, buy the Kindle edition, and print. */
 export type LandingCta = 'ku' | 'buy' | 'paperback';
@@ -29,6 +30,8 @@ export interface LandingSettings {
   paperbackAttributionTag?: string;
   landingAttributionTags?: { campaign: string; tag?: string; paperbackTag?: string }[];
   pressCtrEndpoint?: string;
+  /** The hosts the pixel and the beacon fire on; anywhere else they log to the console. */
+  pixelHosts?: string[];
 }
 
 /** What the browser half needs; serialised into the page. */
@@ -37,6 +40,8 @@ export interface LandingConfig {
   page: string;
   pixelId: string;
   ctrEndpoint: string;
+  /** Production hostnames: the pixel and the beacon send only here (see pixel-hosts.ts). */
+  pixelHosts: string[];
   /** Links per utm_campaign; a campaign not listed keeps the links the page shipped with. */
   campaignLinks: Record<string, LandingLinks>;
 }
@@ -93,6 +98,7 @@ export function landingSetup(page: string, targets: LandingTargets, settings: La
     page,
     pixelId: settings.metaPixelId?.trim() || '',
     ctrEndpoint: settings.pressCtrEndpoint?.trim() || '',
+    pixelHosts: pixelHosts(settings.pixelHosts),
     campaignLinks,
   };
   return { links, config };
