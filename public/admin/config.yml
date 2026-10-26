@@ -116,6 +116,7 @@ collections:
         required: false
         options_length: 200
       - { label: "Box Set ASIN", name: "boxSetAsin", widget: "string", required: false, hint: "Kindle box set. Empty: the landing page's buttons go to an Amazon search" }
+      - { label: "Box Set Product Slug", name: "boxSetSlug", widget: "string", required: false, hint: "The box set's slug in Press's Books (e.g. the-bride-program-box-set): the key its Attribution tags are kept under. Empty: <series>-box-set" }
       - { label: "Box Set Blurb", name: "boxSetBlurb", widget: "text", required: false, hint: "Landing page pitch; empty uses the description. Only the first paragraphs show" }
       - { label: "Box Set Price", name: "boxSetPrice", widget: "string", required: false, hint: "e.g. 9.99; empty: the Buy button shows no price" }
       - { label: "Box Set Price Bought Separately", name: "boxSetSeparatePrice", widget: "string", required: false }
@@ -260,17 +261,6 @@ collections:
       # Ad landing pages (README "Box-set landing pages")
       - { label: "Meta Pixel ID", name: "metaPixelId", widget: "string", required: false, hint: "Dane's dataset id, for the whole site and the landing pages. Empty: no pixel" }
       - { label: "Pixel Hosts", name: "pixelHosts", widget: "list", required: false, hint: "The only hostnames the pixel and the Press CTR beacon send from (danegriggs.com, www.danegriggs.com). Anywhere else (localhost, previews) they log [pixel] lines to the console. Empty: those two" }
-      - { label: "Landing Attribution Tag (box set)", name: "landingAttributionTag", widget: "string", required: false, hint: "Amazon Attribution URL (or its maas=... query) for the KU and Buy buttons, for every visitor" }
-      - { label: "Paperback Attribution Tag", name: "paperbackAttributionTag", widget: "string", required: false, hint: "Amazon Attribution URL for the 'Book 1 in paperback' link" }
-      - label: "Landing Attribution Tags by Campaign"
-        name: "landingAttributionTags"
-        widget: "list"
-        required: false
-        hint: "A visitor whose utm_campaign matches a row gets that row's tags; an empty tag falls back to the defaults above"
-        fields:
-          - { label: "Campaign (utm_campaign)", name: "campaign", widget: "string" }
-          - { label: "Box set tag", name: "tag", widget: "string", required: false }
-          - { label: "Paperback tag", name: "paperbackTag", widget: "string", required: false }
       - { label: "Press CTR Endpoint", name: "pressCtrEndpoint", widget: "string", required: false, hint: "Empty: clicks count only as pixel events" }
       - { label: "Amazon Badge", name: "amazonBadge", widget: "image", required: false, hint: "Amazon's official 'Available at Amazon' badge, unaltered" }
       - { label: "Content", name: "body", widget: "markdown", required: false }

@@ -1,7 +1,7 @@
 // The landing system's pure parts: tags on links, per-campaign links, consent.
 import { test, expect } from '@playwright/test';
-import { LANDING_EVENTS, landingLinks, landingSetup, money, toLandingReview, withTag } from '../../src/lib/landing';
-import { decideConsent, isUsZone, linksForCampaign, siteMarketingConsent } from '../../src/lib/landing-client';
+import { LANDING_EVENTS, landingLinks, landingSetup, money, tagFor, toLandingReview, withTag } from '../../src/lib/landing';
+import { decideConsent, isUsZone, siteMarketingConsent, utmOf } from '../../src/lib/landing-client';
 import { DEFAULT_PIXEL_HOSTS, beaconLine, isPixelHost, pixelHosts, pixelLine } from '../../src/lib/pixel-hosts';
 
 const KINDLE = 'https://www.amazon.com/dp/B0B2M4RGCS';
@@ -24,35 +24,42 @@ test.describe('withTag', () => {
   });
 });
 
-test.describe('landingLinks', () => {
-  const targets = { kindleUrl: KINDLE, paperbackUrl: PRINT };
+test.describe('landingLinks: a tag per product and door', () => {
+  const targets = { kindleUrl: KINDLE, paperbackUrl: PRINT, product: 'the-bride-program-box-set', printProduct: 'the-bride-program' };
+  const TAG_KU = 'https://www.amazon.com/dp/B0B2M4RGCS?maas=maas_adg_KU_afap_abs&ref_=aa_maas&tag=maas';
+  const attributionTags = {
+    US: {
+      'the-bride-program-box-set': { ku: TAG_KU, kindle: TAG_A },
+      'the-bride-program': { print: TAG_P },
+    },
+  };
 
-  test('KU and Buy share the Kindle link; print has its own tag', () => {
-    const { links } = landingLinks(targets, { landingAttributionTag: TAG_A, paperbackAttributionTag: TAG_P });
-    expect(links.ku).toContain('maas_adg_AAA');
-    expect(links.buy).toBe(links.ku);
-    expect(links.paperback).toContain('maas_adg_PPP');
+  test('KU and Buy take the box set\'s own KU and Kindle tags; print takes book 1\'s Print tag', () => {
+    const { links, missing } = landingLinks(targets, { attributionTags });
+    expect(links.ku).toContain('maas_adg_KU');
+    expect(links.buy).toContain('maas_adg_AAA');
+    expect(links.paperback).toBe(`${PRINT}?${TAG_P}`);
+    expect(missing).toEqual([]);
   });
 
-  test('each campaign gets its own tags; an empty one falls back to the default', () => {
-    const { campaignLinks } = landingLinks(targets, {
-      landingAttributionTag: TAG_A,
-      paperbackAttributionTag: TAG_P,
-      landingAttributionTags: [
-        { campaign: 'x', tag: TAG_X, paperbackTag: '' },
-        { campaign: '  ', tag: TAG_X },
-      ],
+  test('a missing tag, or one for another product page, leaves the bare /dp link and is listed', () => {
+    const { links, missing } = landingLinks(targets, {
+      attributionTags: { US: { 'the-bride-program-box-set': { ku: 'https://www.amazon.com/dp/B0OTHERASN?maas=x' } } },
     });
-    expect(Object.keys(campaignLinks)).toEqual(['x']);
-    expect(campaignLinks.x.ku).toContain('maas_adg_XXX');
-    expect(campaignLinks.x.buy).toContain('maas_adg_XXX');
-    expect(campaignLinks.x.paperback).toContain('maas_adg_PPP');
+    expect(links).toEqual({ ku: KINDLE, buy: KINDLE, paperback: PRINT });
+    expect(missing.map((m) => `${m.product}.${m.door}`)).toEqual(['the-bride-program-box-set.ku', 'the-bride-program-box-set.kindle', 'the-bride-program.print']);
   });
 
-  test('no settings: plain links, no campaigns, no pixel, no beacon', () => {
+  test('the tag is the link\'s storefront\'s', () => {
+    expect(tagFor({ UK: { p: { kindle: TAG_X } } }, 'p', 'kindle', 'https://www.amazon.co.uk/dp/B0B2M4RGCS')).toBe(TAG_X);
+    expect(tagFor({ UK: { p: { kindle: TAG_X } } }, 'p', 'kindle', KINDLE)).toBeUndefined();
+  });
+
+  test('no settings: plain links, the three missing, no pixel, no beacon', () => {
     const { links, config } = landingSetup('p', targets);
     expect(links).toEqual({ ku: KINDLE, buy: KINDLE, paperback: PRINT });
-    expect(config).toEqual({ page: 'p', pixelId: '', ctrEndpoint: '', pixelHosts: [...DEFAULT_PIXEL_HOSTS], campaignLinks: {} });
+    expect(config).toMatchObject({ page: 'p', pixelId: '', ctrEndpoint: '', pixelHosts: [...DEFAULT_PIXEL_HOSTS] });
+    expect(config.missingTags).toHaveLength(3);
   });
 
   test('site-config pixelHosts reach the browser config', () => {
@@ -87,13 +94,13 @@ test.describe('pixel hosts', () => {
   });
 });
 
-test('linksForCampaign: a known campaign swaps, unknown or none keeps the page links', () => {
-  const x = { ku: 'k', buy: 'b', paperback: 'p' };
-  const config = { page: 'p', pixelId: '1', ctrEndpoint: '', pixelHosts: [], campaignLinks: { x } };
-  expect(linksForCampaign(config, 'x')).toBe(x);
-  expect(linksForCampaign(config, 'y')).toBeUndefined();
-  expect(linksForCampaign(config, '')).toBeUndefined();
-  expect(linksForCampaign(config, 'constructor')).toBeUndefined();
+test('utmOf: every utm_* of the query, unchanged, and nothing else', () => {
+  expect(utmOf(new URLSearchParams('from=ad&utm_source=meta&utm_campaign=Bride%20X&fbclid=1&utm_content=a'))).toEqual({
+    utm_source: 'meta',
+    utm_campaign: 'Bride X',
+    utm_content: 'a',
+  });
+  expect(utmOf(new URLSearchParams(''))).toEqual({});
 });
 
 test.describe('consent', () => {

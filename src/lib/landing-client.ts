@@ -1,9 +1,9 @@
 /**
  * Ad landing pages: the browser half (see landing.ts for the build-time half).
  *
- * - utm_campaign, remembered for the tab session, swaps in that campaign's
- *   Attribution links (an unknown campaign or none keeps the page's own) and
- *   rides on every pixel event as `campaign`.
+ * - The page's utm_* (which ad sent the visitor), remembered for the tab session,
+ *   ride unchanged on every click event; utm_campaign also as `campaign`. The
+ *   links' Attribution tags are the build's, per (product, door): no ad changes them.
  * - The Meta pixel loads without a click in a US time zone, after "Allow"
  *   anywhere else, and not at all for a visitor who declined (here, or marketing
  *   cookies in the site's own banner).
@@ -12,7 +12,7 @@
  * - Both send only on the production hosts (config.pixelHosts). Anywhere else the
  *   same calls are `[pixel] …` console lines: nothing loads from Meta, nothing posts.
  */
-import { LANDING_EVENTS, type LandingConfig, type LandingCta, type LandingLinks } from './landing';
+import { LANDING_EVENTS, type LandingConfig, type LandingCta } from './landing';
 import { beaconLine, isPixelHost, pixelLine } from './pixel-hosts';
 
 type Fbq = ((...args: unknown[]) => void) & {
@@ -29,7 +29,7 @@ export type Consent = 'granted' | 'denied' | 'ask' | 'none';
 export const CONSENT_KEY = 'dg_marketing_consent';
 export const SITE_CONSENT_KEY = 'gdpr-consent';
 const AD_KEY = 'dg_landing_from_ad';
-const CAMPAIGN_KEY = 'dg_landing_campaign';
+const UTM_KEY = 'dg_landing_utm';
 
 // IANA zones for the 50 states and DC; the site is static, so the browser's time
 // zone is the region signal.
@@ -40,11 +40,13 @@ export function isUsZone(zone: string): boolean {
   return US_ZONE.test(zone);
 }
 
-/** The links for a campaign, or undefined to keep the page's own. */
-export function linksForCampaign(config: LandingConfig, campaign: string): LandingLinks | undefined {
-  return campaign && Object.prototype.hasOwnProperty.call(config.campaignLinks, campaign)
-    ? config.campaignLinks[campaign]
-    : undefined;
+/** The utm_* of a page's query, in order. */
+export function utmOf(params: URLSearchParams): Record<string, string> {
+  const utm: Record<string, string> = {};
+  params.forEach((value, key) => {
+    if (key.startsWith('utm_')) utm[key] = value;
+  });
+  return utm;
 }
 
 /**
@@ -139,17 +141,18 @@ export function startLanding(config: LandingConfig, w: PixelWindow = window): vo
   if (fromAd) store(session, AD_KEY, '1');
   else fromAd = stored(session, AD_KEY) === '1';
 
-  let campaign = params.get('utm_campaign') ?? '';
-  if (campaign) store(session, CAMPAIGN_KEY, campaign);
-  else campaign = stored(session, CAMPAIGN_KEY) ?? '';
+  let utm = utmOf(params);
+  if (Object.keys(utm).length) store(session, UTM_KEY, JSON.stringify(utm));
+  else {
+    try {
+      utm = JSON.parse(stored(session, UTM_KEY) ?? '{}') ?? {};
+    } catch {
+      utm = {};
+    }
+  }
+  const campaign = utm.utm_campaign ?? '';
 
   const ctas = doc.querySelectorAll<HTMLAnchorElement>('[data-landing-cta]');
-  const links = linksForCampaign(config, campaign);
-  if (links) {
-    ctas.forEach((a) => {
-      a.href = links[a.dataset.landingCta as LandingCta];
-    });
-  }
 
   let pixel: Fbq | undefined;
   const loadPixel = () => {
@@ -189,7 +192,7 @@ export function startLanding(config: LandingConfig, w: PixelWindow = window): vo
   ctas.forEach((a) => {
     a.addEventListener('click', () => {
       const cta = a.dataset.landingCta as LandingCta;
-      const detail = { page: config.page, cta, source: fromAd ? 'ad' : 'organic', campaign };
+      const detail = { page: config.page, cta, source: fromAd ? 'ad' : 'organic', campaign, ...utm };
       if (pixel) pixel('trackCustom', LANDING_EVENTS[cta], detail);
       if (config.ctrEndpoint && !live) {
         console.log(beaconLine({ metric: 'press.landing.ctr', ...detail }));

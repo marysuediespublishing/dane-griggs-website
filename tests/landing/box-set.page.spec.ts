@@ -5,13 +5,8 @@ import { BOX_SET_PATH, CTR_ENDPOINT, ORIGIN, pixelCalls, serveDist, type ConfigE
 const URL_ = `${ORIGIN}${BOX_SET_PATH}`;
 const KINDLE = 'https://www.amazon.com/dp/B0B2M4RGCS';
 const PRINT = 'https://www.amazon.com/dp/1090344378';
-const X = {
-  ku: `${KINDLE}?maas=maas_adg_XXX_afap_abs&ref_=aa_maas&tag=maas`,
-  buy: `${KINDLE}?maas=maas_adg_XXX_afap_abs&ref_=aa_maas&tag=maas`,
-  paperback: `${PRINT}?maas=maas_adg_XPP_afap_abs&ref_=aa_maas&tag=maas`,
-};
-// Campaign "x" with its own tags, and the Press endpoint on.
-const withCampaignX: ConfigEdit = (config) => ({ ...config, ctrEndpoint: CTR_ENDPOINT, campaignLinks: { x: X } });
+// The Press endpoint on.
+const withEndpoint: ConfigEdit = (config) => ({ ...config, ctrEndpoint: CTR_ENDPOINT });
 
 // The phone layout shows the closing set; desktop the sidebar.
 const where = (page: Page) => ((page.viewportSize()?.width ?? 1280) >= 1024 ? 'side' : 'closing');
@@ -48,7 +43,7 @@ test.describe('US visitor', () => {
   test.use({ timezoneId: 'America/New_York' });
 
   test('pixel loads on Dane’s dataset with PageView carrying the campaign', async ({ page, context }) => {
-    const served = await serveDist(context, withCampaignX);
+    const served = await serveDist(context, withEndpoint);
     await page.goto(`${URL_}?utm_source=meta&utm_campaign=x`);
     await expect.poll(() => pixelCalls(page)).toContainEqual(['init', '2527209327539510']);
     expect(await pixelCalls(page)).toContainEqual(['track', 'PageView', { campaign: 'x' }]);
@@ -57,13 +52,13 @@ test.describe('US visitor', () => {
   });
 
   test('each button fires its event and the CTR beacon', async ({ page, context }) => {
-    const served = await serveDist(context, withCampaignX);
+    const served = await serveDist(context, withEndpoint);
     await page.goto(`${URL_}?utm_source=meta&utm_campaign=x`);
     await expect.poll(() => pixelCalls(page)).toContainEqual(['init', '2527209327539510']);
     const events = { ku: 'LandingClickKU', buy: 'LandingClickBuy', paperback: 'LandingClickPaperback' } as const;
     for (const [cta, event] of Object.entries(events)) {
       await page.getByTestId(`landing-cta-${cta}-${where(page)}`).click();
-      const detail = { page: 'bride-program-box-set', cta, source: 'ad', campaign: 'x' };
+      const detail = { page: 'bride-program-box-set', cta, source: 'ad', campaign: 'x', utm_source: 'meta', utm_campaign: 'x' };
       expect(await pixelCalls(page)).toContainEqual(['trackCustom', event, detail]);
       await expect.poll(() => served.beacons).toContainEqual({ metric: 'press.landing.ctr', ...detail });
     }
@@ -84,32 +79,38 @@ test.describe('US visitor', () => {
   });
 });
 
-test.describe('tags swap by utm_campaign', () => {
+test.describe('tags per product and door, not per ad', () => {
   test.use({ timezoneId: 'America/New_York' });
 
-  test('a known campaign gets its own links on every button', async ({ page, context }) => {
-    await serveDist(context, withCampaignX);
+  test('no tag yet: every button is the bare /dp link whatever the campaign, and the page lists the three as missing', async ({ page, context }) => {
+    await serveDist(context, withEndpoint);
     await page.goto(`${URL_}?utm_campaign=x`);
     for (const set of ['side', 'closing', 'bar']) {
       for (const cta of ['ku', 'buy', 'paperback'] as const) {
         if (set === 'bar' && cta === 'paperback') continue;
-        await expect(page.getByTestId(`landing-cta-${cta}-${set}`)).toHaveAttribute('href', X[cta]);
+        await expect(page.getByTestId(`landing-cta-${cta}-${set}`)).toHaveAttribute('href', cta === 'paperback' ? PRINT : KINDLE);
       }
     }
+    const config = JSON.parse((await page.locator('#landing-config').textContent()) ?? '{}');
+    expect(config.missingTags).toEqual([
+      { product: 'the-bride-program-box-set', door: 'ku', href: KINDLE },
+      { product: 'the-bride-program-box-set', door: 'kindle', href: KINDLE },
+      { product: 'the-bride-program', door: 'print', href: PRINT },
+    ]);
+    expect(config).not.toHaveProperty('campaignLinks');
   });
 
-  test('the campaign is remembered for the tab session', async ({ page, context }) => {
-    await serveDist(context, withCampaignX);
-    await page.goto(`${URL_}?utm_campaign=x`);
+  test('the utm_* are remembered for the tab session and ride every click unchanged', async ({ page, context }) => {
+    await serveDist(context, withEndpoint);
+    await page.goto(`${URL_}?utm_source=meta&utm_medium=paid&utm_campaign=x&utm_content=ad-b`);
     await page.goto(URL_);
-    await expect(page.getByTestId('landing-cta-ku-side')).toHaveAttribute('href', X.ku);
-  });
-
-  test('an unknown campaign keeps the default links', async ({ page, context }) => {
-    await serveDist(context, withCampaignX);
-    await page.goto(`${URL_}?utm_campaign=someone-else`);
-    await expect(page.getByTestId('landing-cta-ku-side')).toHaveAttribute('href', KINDLE);
-    await expect(page.getByTestId('landing-cta-paperback-side')).toHaveAttribute('href', PRINT);
+    await expect.poll(() => pixelCalls(page)).toContainEqual(['init', '2527209327539510']);
+    await page.getByTestId(`landing-cta-buy-${where(page)}`).click();
+    expect(await pixelCalls(page)).toContainEqual([
+      'trackCustom',
+      'LandingClickBuy',
+      { page: 'bride-program-box-set', cta: 'buy', source: 'ad', campaign: 'x', utm_source: 'meta', utm_medium: 'paid', utm_campaign: 'x', utm_content: 'ad-b' },
+    ]);
   });
 });
 

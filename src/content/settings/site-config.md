@@ -39,8 +39,6 @@ metaPixelId: "2527209327539510"
 pixelHosts:
   - danegriggs.com
   - www.danegriggs.com
-landingAttributionTag: ""
-paperbackAttributionTag: ""
 pressCtrEndpoint: ""
 amazonBadge: ""
 ---

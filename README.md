@@ -76,8 +76,8 @@ lib/              # Shared utilities and test mocks
 
 It is built from shared pieces, so the next landing page is a single page file:
 
-- `src/lib/landing.ts`: the Attribution tags on the links, per-campaign links, and the click-event names.
-- `src/lib/landing-client.ts`: the browser side. It handles the `utm_campaign` swap, consent, Dane's pixel, the click events and the Press beacon.
+- `src/lib/landing.ts`: the Attribution tags on the links, per product and door, and the click-event names.
+- `src/lib/landing-client.ts`: the browser side. It handles consent, Dane’s pixel, and the click events (carrying the page’s `utm_*` unchanged) and the Press beacon.
 - `src/layouts/LandingLayout.astro`: the slim chrome, with no site pixel, cookie banner or popup.
 - `src/components/landing/`: `LandingCtas`, `LandingConsentBar` and `LandingTracking`.
 
@@ -91,9 +91,8 @@ The page's inputs are CMS fields, all optional:
 | `boxSetSeparatePrice` | `src/content/series/saving-ceraste.md` | No value line. When `boxSetPrice` is also set, "9 books for $X — $Y bought separately" shows under the Buy button |
 | `metaPixelId` | `src/content/settings/site-config.md` | No pixel loads. When set (Dane's dataset `2527209327539510`), it is the pixel for the whole site too (`src/components/MetaPixel.astro`). On a landing page it loads without a click if the browser's time zone is a US zone. Anyone else sees an in-page Allow / No thanks bar first. A visitor who declined marketing cookies in the site's own banner gets no pixel |
 | `pixelHosts` | `src/content/settings/site-config.md` | `danegriggs.com` and `www.danegriggs.com`. The pixel (sitewide and on the landing pages) and the Press beacon send only from these hostnames. On any other host (localhost, 127.0.0.1, a preview, the GitHub Pages default domain) the same calls are logged to the console as `[pixel] PageView {…}`, `[pixel] LandingClickKU {…}`, `[pixel] beacon {…}`, and nothing is sent. `npx astro preview` serves whatever is in `dist/`, so rebuild before a local walk |
-| `landingAttributionTag` | `src/content/settings/site-config.md` | No Amazon Attribution tag on the KU and Buy buttons. When set (the whole Attribution URL, or just its query `maas=...&ref_=aa_maas&tag=maas`), its query is added for every visitor |
-| `paperbackAttributionTag` | `src/content/settings/site-config.md` | No tag on the "Book 1 in paperback" link. When set, it is added the same way |
-| `landingAttributionTags` | `src/content/settings/site-config.md` | Every visitor gets the two tags above. Each row has a `campaign` (a `utm_campaign` value) with its own `tag` and `paperbackTag`. A visitor whose `utm_campaign` matches a row gets that row's tags instead. An unknown campaign, or an empty tag in a row, gets the default |
+| `boxSetSlug` | `src/content/series/saving-ceraste.md` | The box set's product key is `<series>-box-set`. Set to its slug in Press's Books (`the-bride-program-box-set`), the key its Attribution tags are kept under |
+| `attributionTags` | `src/content/settings/site-config.md` | No Amazon Attribution tag: each button is the bare `/dp/<ASIN>` link and the build prints `[attribution] missing on <page>: …`. Written by Press's Ad Desk (Attribution → Import tags, ad_desk_007): `<market>` → `<product slug>` → `ku` / `kindle` / `print`, each the Attribution URL. KU and Buy take the box set's `ku` and `kindle` tags, the paperback link book 1's `print` tag (`PRINT_PRODUCT`, `the-bride-program`) — for every visitor, whatever ad sent them. A tag whose `/dp/<ASIN>` is not the button's own is not used |
 | `pressCtrEndpoint` | `src/content/settings/site-config.md` | Clicks are counted only as the custom pixel events `LandingClickKU` / `LandingClickBuy` / `LandingClickPaperback`. When set, each click also POSTs a keepalive `press.landing.ctr` beacon. `PageView` and the click events carry the visitor's `utm_campaign` as `campaign` |
 | `amazonBadge` | `src/content/settings/site-config.md` | No badge. When set, it must be Amazon's official "Available at Amazon" badge, unaltered (Amazon's brand-usage terms) |
 

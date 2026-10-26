@@ -42,7 +42,7 @@ for (const origin of [LOCAL_ORIGIN, 'http://127.0.0.1:4321', 'https://danegriggs
       expect(lines).toContain('[pixel] PageView {"campaign":"x"}');
 
       await page.getByTestId(`landing-cta-ku-${where(page)}`).click();
-      const detail = JSON.stringify({ page: 'bride-program-box-set', cta: 'ku', source: 'ad', campaign: 'x' });
+      const detail = JSON.stringify({ page: 'bride-program-box-set', cta: 'ku', source: 'ad', campaign: 'x', utm_source: 'meta', utm_campaign: 'x' });
       await expect.poll(() => lines).toContain(`[pixel] LandingClickKU ${detail}`);
       await expect
         .poll(() => lines)

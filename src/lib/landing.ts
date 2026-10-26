@@ -23,15 +23,32 @@ export const LANDING_EVENTS: Readonly<Record<LandingCta, string>> = {
 
 export type LandingLinks = Record<LandingCta, string>;
 
+/**
+ * Amazon Attribution tags per product and door (Press ad_desk_007, written by Ad
+ * Desk's Import tags): site-config `attributionTags.<market>.<product slug>.<door>`,
+ * each the whole Attribution URL. A button takes its product's tag for its door,
+ * whatever ad sent the visitor.
+ */
+export type TagDoor = 'ku' | 'kindle' | 'print';
+export type AttributionTags = Record<string, Record<string, Partial<Record<TagDoor, string>>>>;
+
+/** The tag door each button takes: KU's, Kindle's (the Buy button), Print's. */
+export const CTA_DOOR: Readonly<Record<LandingCta, TagDoor>> = { ku: 'ku', buy: 'kindle', paperback: 'print' };
+
 /** site-config's landing fields (src/content.config.ts, settings). */
 export interface LandingSettings {
   metaPixelId?: string;
-  landingAttributionTag?: string;
-  paperbackAttributionTag?: string;
-  landingAttributionTags?: { campaign: string; tag?: string; paperbackTag?: string }[];
+  attributionTags?: AttributionTags;
   pressCtrEndpoint?: string;
   /** The hosts the pixel and the beacon fire on; anywhere else they log to the console. */
   pixelHosts?: string[];
+}
+
+/** A button with no tag: it links to the bare product page. */
+export interface MissingTag {
+  product: string;
+  door: TagDoor;
+  href: string;
 }
 
 /** What the browser half needs; serialised into the page. */
@@ -42,16 +59,20 @@ export interface LandingConfig {
   ctrEndpoint: string;
   /** Production hostnames: the pixel and the beacon send only here (see pixel-hosts.ts). */
   pixelHosts: string[];
-  /** Links per utm_campaign; a campaign not listed keeps the links the page shipped with. */
-  campaignLinks: Record<string, LandingLinks>;
+  /** The buttons with no Attribution tag, for whoever reads the page. */
+  missingTags: MissingTag[];
 }
 
-/** Where the buttons go, before any Attribution tag. */
+/** Where the buttons go, before any Attribution tag, and the products they are. */
 export interface LandingTargets {
   /** The Kindle edition: both the KU and the Buy button. */
   kindleUrl: string;
   /** Print (book 1 in paperback on the box-set pages). */
   paperbackUrl: string;
+  /** The Kindle edition's product slug in Press's Books (a box set's own). */
+  product: string;
+  /** The print link's product slug (book 1's on the box-set pages). */
+  printProduct: string;
 }
 
 /**
@@ -66,40 +87,66 @@ export function withTag(href: string, tag?: string): string {
   return url.toString();
 }
 
-/**
- * The links every visitor gets (the default tags: the page is unlinked from the site,
- * so everyone on it came from an ad), and each campaign's own. An empty tag in a
- * campaign row falls back to the default one.
- */
-export function landingLinks(
-  targets: LandingTargets,
-  settings: LandingSettings = {},
-): { links: LandingLinks; campaignLinks: Record<string, LandingLinks> } {
-  const build = (kindleTag?: string, paperbackTag?: string): LandingLinks => {
-    const kindle = withTag(targets.kindleUrl, kindleTag);
-    return { ku: kindle, buy: kindle, paperback: withTag(targets.paperbackUrl, paperbackTag) };
-  };
-  const defaultTag = settings.landingAttributionTag;
-  const defaultPaperbackTag = settings.paperbackAttributionTag;
-
-  const campaignLinks: Record<string, LandingLinks> = {};
-  for (const row of settings.landingAttributionTags ?? []) {
-    const campaign = row.campaign?.trim();
-    if (!campaign) continue;
-    campaignLinks[campaign] = build(row.tag?.trim() || defaultTag, row.paperbackTag?.trim() || defaultPaperbackTag);
-  }
-  return { links: build(defaultTag, defaultPaperbackTag), campaignLinks };
+/** The ASIN of an Amazon `/dp/<ASIN>` link, or ''. */
+export function dpAsin(href?: string): string {
+  return /\/dp\/([0-9A-Z]{10})(?=[/?#]|$)/i.exec(href ?? '')?.[1]?.toUpperCase() ?? '';
 }
 
-/** The page's links and the browser config, from site-config. */
+const MARKETS: Record<string, string> = {
+  'www.amazon.com': 'US',
+  'www.amazon.co.uk': 'UK',
+  'www.amazon.ca': 'CA',
+  'www.amazon.de': 'DE',
+  'www.amazon.fr': 'FR',
+  'www.amazon.it': 'IT',
+  'www.amazon.es': 'ES',
+};
+
+/** The storefront a link goes to, as Press names it ('US'), or ''. */
+export function marketOf(href: string): string {
+  try {
+    return MARKETS[new URL(href).hostname.toLowerCase()] ?? '';
+  } catch {
+    return '';
+  }
+}
+
+/** The tag for one button: its product's for its door, in the link's storefront,
+ *  and only when the tag is for the button's own product page. */
+export function tagFor(tags: AttributionTags | undefined, product: string, door: TagDoor, href: string): string | undefined {
+  const tag = tags?.[marketOf(href)]?.[product]?.[door]?.trim();
+  if (!tag) return undefined;
+  const asin = dpAsin(tag);
+  return !asin || asin === dpAsin(href) ? tag : undefined;
+}
+
+/** The three links, each with its (product, door) tag, and the buttons that have none. */
+export function landingLinks(targets: LandingTargets, settings: LandingSettings = {}): { links: LandingLinks; missing: MissingTag[] } {
+  const missing: MissingTag[] = [];
+  const link = (cta: LandingCta) => {
+    const href = cta === 'paperback' ? targets.paperbackUrl : targets.kindleUrl;
+    const product = cta === 'paperback' ? targets.printProduct : targets.product;
+    const tag = tagFor(settings.attributionTags, product, CTA_DOOR[cta], href);
+    if (!tag) missing.push({ product, door: CTA_DOOR[cta], href });
+    return withTag(href, tag);
+  };
+  return { links: { ku: link('ku'), buy: link('buy'), paperback: link('paperback') }, missing };
+}
+
+/** The page's links and the browser config, from site-config. The build prints the
+ *  buttons with no tag, so a product's missing tags are seen. */
 export function landingSetup(page: string, targets: LandingTargets, settings: LandingSettings = {}) {
-  const { links, campaignLinks } = landingLinks(targets, settings);
+  const { links, missing } = landingLinks(targets, settings);
+  if (missing.length) {
+    const label = { ku: 'KU', kindle: 'Kindle', print: 'Print' } as const;
+    console.warn(`[attribution] missing on ${page}: ${missing.map((m) => `${m.product} · ${label[m.door]}`).join(', ')}`);
+  }
   const config: LandingConfig = {
     page,
     pixelId: settings.metaPixelId?.trim() || '',
     ctrEndpoint: settings.pressCtrEndpoint?.trim() || '',
     pixelHosts: pixelHosts(settings.pixelHosts),
-    campaignLinks,
+    missingTags: missing,
   };
   return { links, config };
 }

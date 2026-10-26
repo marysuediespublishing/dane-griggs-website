@@ -2,9 +2,8 @@
 // The Bride Program Box Set landing page: where readers land from the Meta ad.
 // Unlinked from the site nav. Design: docs/mocks/bride-program-landing (job 4212).
 // CMS inputs (all optional, see README "Box-set landing pages"):
-//   series boxSetAsin / boxSetBlurb / boxSetPrice / boxSetSeparatePrice, and
-//   site-config metaPixelId / landingAttributionTag / paperbackAttributionTag /
-//   landingAttributionTags / pressCtrEndpoint / amazonBadge
+//   series boxSetAsin / boxSetSlug / boxSetBlurb / boxSetPrice / boxSetSeparatePrice, and
+//   site-config metaPixelId / attributionTags / pressCtrEndpoint / amazonBadge
 import { Image } from 'astro:assets';
 import { getCollection, getEntry } from 'astro:content';
 import LandingLayout from '../../../layouts/LandingLayout.astro';
@@ -20,6 +19,8 @@ const SET_SIZE = 9;
 const HOOK = 'What could possibly entice human women to willingly join a program meant to match them with snake-like alien husbands?';
 // Book 1 in paperback (ISBN 9781090344373): a quiet link that measures interest in print.
 const PAPERBACK_URL = 'https://www.amazon.com/dp/1090344378';
+// Book 1's product slug in Press's Books: the print link takes its Print tag.
+const PRINT_PRODUCT = 'the-bride-program';
 // Goodreads reviews of the box set (src/content/testimonials), by id: the pull-quote
 // under the hero, then four lower down. `excerpt` replaces a long review's body,
 // with "…" wherever text is cut.
@@ -91,6 +92,8 @@ const { links, config } = landingSetup(
       ? `https://www.amazon.com/dp/${asin}`
       : 'https://www.amazon.com/s?k=Bride+Program+Box+Set+Dane+Griggs&i=digital-text',
     paperbackUrl: PAPERBACK_URL,
+    product: series.data.boxSetSlug?.trim() || `${SERIES_SLUG}-box-set`,
+    printProduct: PRINT_PRODUCT,
   },
   siteConfig?.data,
 );
