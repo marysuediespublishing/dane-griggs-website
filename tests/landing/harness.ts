@@ -47,7 +47,7 @@ export type ConfigEdit = (config: LandingConfig) => LandingConfig;
 
 export async function serveDist(context: BrowserContext, edit?: ConfigEdit, origin = ORIGIN): Promise<Served> {
   if (!existsSync(join(DIST, BOX_SET_PATH, 'index.html'))) {
-    throw new Error('dist/ has no box-set page: run `npm run build` first');
+    throw new Error('dist/ has no box-set page: run `npm run build:landing-test` first');
   }
   const beacons: Record<string, unknown>[] = [];
   const sent: string[] = [];
@@ -58,7 +58,7 @@ export async function serveDist(context: BrowserContext, edit?: ConfigEdit, orig
     const file = distFile(pathname);
     if (!file) return route.fulfill({ status: 404, body: 'not found' });
     let body = readFileSync(file);
-    if (edit && pathname === BOX_SET_PATH) {
+    if (edit && pathname.endsWith(BOX_SET_PATH)) {
       const html = body.toString('utf8').replace(
         /(<script type="application\/json" id="landing-config">)(.*?)(<\/script>)/s,
         (_m, open: string, json: string, close: string) =>
@@ -79,7 +79,9 @@ export async function serveDist(context: BrowserContext, edit?: ConfigEdit, orig
     return route.fulfill({ status: 204, body: '' });
   });
   await context.route('https://fonts.googleapis.com/**', (route) => route.fulfill({ status: 200, contentType: 'text/css', body: '' }));
-  await context.route('https://www.amazon.com/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: 'amazon' }));
+  for (const store of ['com', 'de', 'fr']) {
+    await context.route(`https://www.amazon.${store}/**`, (route) => route.fulfill({ status: 200, contentType: 'text/html', body: 'amazon' }));
+  }
   await context.route(`${CTR_ENDPOINT}**`, async (route) => {
     sent.push(route.request().url());
     beacons.push(JSON.parse(route.request().postData() ?? '{}') as Record<string, unknown>);

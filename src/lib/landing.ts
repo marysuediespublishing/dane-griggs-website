@@ -55,6 +55,9 @@ export interface MissingTag {
 export interface LandingConfig {
   /** Names the page in the click events and the CTR beacon. */
   page: string;
+  /** The storefront the page's buttons go to, as Press names it (US, DE, FR): sent as `market`
+   *  on every click event and the beacon. */
+  market: string;
   pixelId: string;
   ctrEndpoint: string;
   /** Production hostnames: the pixel and the beacon send only here (see pixel-hosts.ts). */
@@ -67,12 +70,15 @@ export interface LandingConfig {
 export interface LandingTargets {
   /** The Kindle edition: both the KU and the Buy button. */
   kindleUrl: string;
-  /** Print (book 1 in paperback on the box-set pages). */
+  /** Print (book 1 in paperback on the box-set pages); '' for none (no print link). */
   paperbackUrl: string;
   /** The Kindle edition's product slug in Press's Books (a box set's own). */
   product: string;
   /** The print link's product slug (book 1's on the box-set pages). */
   printProduct: string;
+  /** The edition is in Kindle Unlimited in this storefront (default true); false: no KU link,
+   *  and no KU tag is missing. */
+  ku?: boolean;
 }
 
 /**
@@ -92,7 +98,7 @@ export function dpAsin(href?: string): string {
   return /\/dp\/([0-9A-Z]{10})(?=[/?#]|$)/i.exec(href ?? '')?.[1]?.toUpperCase() ?? '';
 }
 
-const MARKETS: Record<string, string> = {
+export const MARKETS: Record<string, string> = {
   'www.amazon.com': 'US',
   'www.amazon.co.uk': 'UK',
   'www.amazon.ca': 'CA',
@@ -111,6 +117,37 @@ export function marketOf(href: string): string {
   }
 }
 
+/** The storefront host per market: the inverse of `marketOf` ('DE' → www.amazon.de). */
+export const STOREFRONTS: Record<string, string> = Object.fromEntries(
+  Object.entries(MARKETS).map(([host, market]) => [market, host]),
+);
+
+function storefront(market: string): string {
+  const host = STOREFRONTS[market.toUpperCase()];
+  if (!host) throw new Error(`No Amazon storefront for market ${market}`);
+  return `https://${host}`;
+}
+
+/** `https://www.amazon.<tld>/dp/<ASIN>` in the market's storefront (US by default), or ''. */
+export function amazonDp(asin: string | undefined, market = 'US'): string {
+  return asin?.trim() ? `${storefront(market)}/dp/${asin.trim()}` : '';
+}
+
+/** A Kindle-store search in the market's storefront: the fallback when a product has no ASIN. */
+export function amazonSearch(terms: string, market = 'US'): string {
+  return `${storefront(market)}/s?${new URLSearchParams({ k: terms, i: 'digital-text' })}`;
+}
+
+/** The landing pages' languages besides English, and the market each one sells in. */
+export const LANDING_LANGS = ['de', 'fr'] as const;
+export type LandingLang = 'en' | (typeof LANDING_LANGS)[number];
+export const LANG_MARKET: Readonly<Record<LandingLang, string>> = { en: 'US', de: 'DE', fr: 'FR' };
+
+/** A landing page's path in a language: English at the root, the others under /<lang>. */
+export function langPath(lang: LandingLang, path: string): string {
+  return lang === 'en' ? path : `/${lang}${path}`;
+}
+
 /** The tag for one button: its product's for its door, in the link's storefront,
  *  and only when the tag is for the button's own product page. */
 export function tagFor(tags: AttributionTags | undefined, product: string, door: TagDoor, href: string): string | undefined {
@@ -125,6 +162,7 @@ export function landingLinks(targets: LandingTargets, settings: LandingSettings 
   const missing: MissingTag[] = [];
   const link = (cta: LandingCta) => {
     const href = cta === 'paperback' ? targets.paperbackUrl : targets.kindleUrl;
+    if (!href || (cta === 'ku' && targets.ku === false)) return '';
     const product = cta === 'paperback' ? targets.printProduct : targets.product;
     const tag = tagFor(settings.attributionTags, product, CTA_DOOR[cta], href);
     if (!tag) missing.push({ product, door: CTA_DOOR[cta], href });
@@ -135,14 +173,16 @@ export function landingLinks(targets: LandingTargets, settings: LandingSettings 
 
 /** The page's links and the browser config, from site-config. The build prints the
  *  buttons with no tag, so a product's missing tags are seen. */
-export function landingSetup(page: string, targets: LandingTargets, settings: LandingSettings = {}) {
+export function landingSetup(page: string, targets: LandingTargets, settings: LandingSettings = {}, market = 'US') {
   const { links, missing } = landingLinks(targets, settings);
   if (missing.length) {
     const label = { ku: 'KU', kindle: 'Kindle', print: 'Print' } as const;
-    console.warn(`[attribution] missing on ${page}: ${missing.map((m) => `${m.product} · ${label[m.door]}`).join(', ')}`);
+    const where = market === 'US' ? page : `${page} (${market})`;
+    console.warn(`[attribution] missing on ${where}: ${missing.map((m) => `${m.product} · ${label[m.door]}`).join(', ')}`);
   }
   const config: LandingConfig = {
     page,
+    market,
     pixelId: settings.metaPixelId?.trim() || '',
     ctrEndpoint: settings.pressCtrEndpoint?.trim() || '',
     pixelHosts: pixelHosts(settings.pixelHosts),

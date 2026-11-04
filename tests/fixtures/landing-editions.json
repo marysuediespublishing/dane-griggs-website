@@ -1,0 +1,51 @@
+{
+  "_note": "Test build only (LANDING_EDITIONS_FIXTURE): made-up DE/FR editions and tags so the /de/ and /fr/ box-set page is tested before Books has the real ones (Todd's #6968). ASINs starting B0FIX are not real. The content's editions win over these.",
+  "series": {
+    "saving-ceraste": {
+      "de": {
+        "asin": "B0FIXDE001",
+        "paperbackAsin": "B0FIXDE0P1",
+        "title": "Das Bräute-Programm: Sammelband",
+        "seriesName": "Das Bräute-Programm",
+        "hook": "Was könnte Frauen von der Erde dazu bringen, freiwillig außerirdische Ehemänner zu heiraten?",
+        "tagline": "Prickelnde Fluchten mit Herz und Humor.",
+        "price": "9,99 €",
+        "separatePrice": "26,91 €",
+        "kuEnrolled": true,
+        "rating": 4.4,
+        "ratingCount": 1234,
+        "blurb": "Die Cerasteaner bieten der Erde ein Heilmittel gegen Krebs. Der Preis: menschliche Bräute.\n\nMaya meldet sich freiwillig, um ihre Schwester zu retten.\n\nNeun Bräute, neun Helden, ein Sammelband.\n\nDieser vierte Absatz steht nicht auf der Seite."
+      },
+      "fr": {
+        "asin": "B0FIXFR001",
+        "title": "Le Programme des fiancées : l’intégrale",
+        "hook": "Qu’est-ce qui pourrait pousser des femmes à épouser volontairement des extraterrestres ?",
+        "kuEnrolled": false,
+        "blurb": "Les Cérastéens offrent à la Terre un remède contre le cancer, en échange d’épouses humaines.\n\nMaya se porte volontaire pour sauver sa sœur.",
+        "reviews": [{ "title": "Génial", "body": "Une série drôle et prenante, lue d’une traite.", "reviewer": "Camille" }]
+      }
+    }
+  },
+  "books": {
+    "the-bride-program-book": {
+      "de": { "title": "Das Bräute-Programm", "hook": "Maya meldet sich, um ihre Schwester zu retten." },
+      "fr": { "title": "Le Programme des fiancées" }
+    }
+  },
+  "attributionTags": {
+    "DE": {
+      "the-bride-program-box-set": {
+        "ku": "https://www.amazon.de/dp/B0FIXDE001?maas=maas_adg_FIXTURE_DE_KU&ref_=aa_maas&tag=maas",
+        "kindle": "https://www.amazon.de/dp/B0FIXDE001?maas=maas_adg_FIXTURE_DE_KINDLE&ref_=aa_maas&tag=maas"
+      },
+      "the-bride-program": {
+        "print": "https://www.amazon.de/dp/B0FIXDE0P1?maas=maas_adg_FIXTURE_DE_PRINT&ref_=aa_maas&tag=maas"
+      }
+    },
+    "FR": {
+      "the-bride-program-box-set": {
+        "kindle": "https://www.amazon.fr/dp/B0OTHERFR1?maas=maas_adg_FIXTURE_FR_WRONG_ASIN&ref_=aa_maas&tag=maas"
+      }
+    }
+  }
+}

@@ -60,6 +60,29 @@ collections:
       - { label: "Genres", name: "genres", widget: "list", default: [] }
       - { label: "Available on Kindle Unlimited", name: "isKU", widget: "boolean", default: true }
       - { label: "Amazon URL", name: "amazonUrl", widget: "string", required: false }
+      - label: "Editions"
+        name: "editions"
+        widget: "object"
+        required: false
+        collapsed: true
+        hint: "The book in German and French, from Books: its title on the /de/ and /fr/ box-set pages"
+        fields:
+          - label: "German (amazon.de)"
+            name: "de"
+            widget: "object"
+            required: false
+            fields:
+              - { label: "Kindle ASIN (amazon.de)", name: "asin", widget: "string", required: false }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Box-set line", name: "hook", widget: "string", required: false, hint: "One short line under the cover on the box-set page" }
+          - label: "French (amazon.fr)"
+            name: "fr"
+            widget: "object"
+            required: false
+            fields:
+              - { label: "Kindle ASIN (amazon.fr)", name: "asin", widget: "string", required: false }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Box-set line", name: "hook", widget: "string", required: false, hint: "One short line under the cover on the box-set page" }
       - { label: "Goodreads URL", name: "goodreadsUrl", widget: "string", required: false }
       - { label: "Price", name: "price", widget: "string", required: false }
       - { label: "Word Count", name: "wordCount", widget: "number", required: false }
@@ -120,6 +143,70 @@ collections:
       - { label: "Box Set Blurb", name: "boxSetBlurb", widget: "text", required: false, hint: "Landing page pitch; empty uses the description. Only the first paragraphs show" }
       - { label: "Box Set Price", name: "boxSetPrice", widget: "string", required: false, hint: "e.g. 9.99; empty: the Buy button shows no price" }
       - { label: "Box Set Price Bought Separately", name: "boxSetSeparatePrice", widget: "string", required: false }
+      - { label: "Box Set Image", name: "boxSetCover", widget: "image", required: false, hint: "The box-set image: the build makes the landing page's 640 hero and 1200x630 share image from it" }
+      - label: "Box Set Editions"
+        name: "editions"
+        widget: "object"
+        required: false
+        collapsed: true
+        hint: "The box set in German and French, from Books. A /de/ or /fr/ landing page is built only when its edition is here"
+        fields:
+          - label: "German (amazon.de)"
+            name: "de"
+            widget: "object"
+            required: false
+            collapsed: true
+            fields:
+              - { label: "Kindle ASIN (amazon.de)", name: "asin", widget: "string" }
+              - { label: "Book 1 Paperback ASIN or ISBN-10 (amazon.de)", name: "paperbackAsin", widget: "string", required: false, hint: "The print link. Empty: no print link" }
+              - { label: "Title", name: "title", widget: "string", hint: "As Amazon shows it" }
+              - { label: "Blurb", name: "blurb", widget: "text", hint: "As Amazon shows it; the first three paragraphs show" }
+              - { label: "In Kindle Unlimited (amazon.de)", name: "kuEnrolled", widget: "boolean", default: true, hint: "Off: no KU button" }
+              - { label: "Box Set Image", name: "cover", widget: "image", required: false, hint: "This edition's own; empty: the English one" }
+              - { label: "Series Name", name: "seriesName", widget: "string", required: false, hint: "For the line over the title; empty: the language's plain 'the complete series'" }
+              - { label: "Hook", name: "hook", widget: "string", required: false }
+              - { label: "Tagline", name: "tagline", widget: "string", required: false }
+              - { label: "Price", name: "price", widget: "string", required: false, hint: "As the storefront shows it, e.g. 9,99 €" }
+              - { label: "Price Bought Separately", name: "separatePrice", widget: "string", required: false }
+              - { label: "Rating", name: "rating", widget: "number", value_type: "float", required: false, hint: "This edition's own; empty: no rating shown" }
+              - { label: "Rating Count", name: "ratingCount", widget: "number", value_type: "int", required: false }
+              - label: "Reviews"
+                name: "reviews"
+                widget: "list"
+                required: false
+                hint: "This edition's own reader reviews only; a translated English review is not one"
+                fields:
+                  - { label: "Title", name: "title", widget: "string", required: false }
+                  - { label: "Review", name: "body", widget: "text" }
+                  - { label: "Reviewer", name: "reviewer", widget: "string" }
+          - label: "French (amazon.fr)"
+            name: "fr"
+            widget: "object"
+            required: false
+            collapsed: true
+            fields:
+              - { label: "Kindle ASIN (amazon.fr)", name: "asin", widget: "string" }
+              - { label: "Book 1 Paperback ASIN or ISBN-10 (amazon.fr)", name: "paperbackAsin", widget: "string", required: false, hint: "The print link. Empty: no print link" }
+              - { label: "Title", name: "title", widget: "string", hint: "As Amazon shows it" }
+              - { label: "Blurb", name: "blurb", widget: "text", hint: "As Amazon shows it; the first three paragraphs show" }
+              - { label: "In Kindle Unlimited (amazon.fr)", name: "kuEnrolled", widget: "boolean", default: true, hint: "Off: no KU button" }
+              - { label: "Box Set Image", name: "cover", widget: "image", required: false, hint: "This edition's own; empty: the English one" }
+              - { label: "Series Name", name: "seriesName", widget: "string", required: false, hint: "For the line over the title; empty: the language's plain 'the complete series'" }
+              - { label: "Hook", name: "hook", widget: "string", required: false }
+              - { label: "Tagline", name: "tagline", widget: "string", required: false }
+              - { label: "Price", name: "price", widget: "string", required: false, hint: "As the storefront shows it, e.g. 9,99 €" }
+              - { label: "Price Bought Separately", name: "separatePrice", widget: "string", required: false }
+              - { label: "Rating", name: "rating", widget: "number", value_type: "float", required: false, hint: "This edition's own; empty: no rating shown" }
+              - { label: "Rating Count", name: "ratingCount", widget: "number", value_type: "int", required: false }
+              - label: "Reviews"
+                name: "reviews"
+                widget: "list"
+                required: false
+                hint: "This edition's own reader reviews only; a translated English review is not one"
+                fields:
+                  - { label: "Title", name: "title", widget: "string", required: false }
+                  - { label: "Review", name: "body", widget: "text" }
+                  - { label: "Reviewer", name: "reviewer", widget: "string" }
       - { label: "Featured Series", name: "featured", widget: "boolean", default: false }
       - { label: "Content", name: "body", widget: "markdown" }
 

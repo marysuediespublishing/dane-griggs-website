@@ -2,7 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Ad landing pages: unit tests for src/lib/landing*.ts, and the built pages in a
 // browser. The built site is served by request routing (tests/landing/harness.ts),
-// so there is no web server: run `npm run build` first.
+// so there is no web server: run `npm run build:landing-test` first (the build with the
+// test DE/FR editions, tests/fixtures/landing-editions.json).
 export default defineConfig({
   testDir: './tests/landing',
   fullyParallel: true,

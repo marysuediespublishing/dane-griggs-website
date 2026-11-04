@@ -37,6 +37,7 @@ readingOrder:
 featured: true
 boxSetAsin: B0B2M4RGCS
 boxSetSlug: the-bride-program-box-set
+boxSetCover: /images/bride-program-box-set.jpg
 boxSetBlurb: |-
   Maya joins for the chance to save the life of a loved one. Serena jumps at the chance to help cure cancer. Kidnap victim Chelsea just wants to escape her tormentors, but ends up finding love with not one but two aliens... And the list goes on.
 

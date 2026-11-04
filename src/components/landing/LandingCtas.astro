@@ -3,6 +3,8 @@
 // Kindle edition, and a quiet print link. Every link carries data-landing-cta, which
 // landing-client.ts reads to swap a campaign's links in and to fire the click events.
 import type { LandingLinks } from '../../lib/landing';
+import type { LandingStrings } from '../../i18n/landing';
+import { en } from '../../i18n/landing.en';
 
 export interface Props {
   links: LandingLinks;
@@ -14,23 +16,30 @@ export interface Props {
   where: string;
   /** The phone's fixed bar: smaller notes, no print link. */
   compact?: boolean;
+  /** The edition is in Kindle Unlimited in this storefront; false: no KU button. */
+  ku?: boolean;
+  /** The fixed copy in the page's language */
+  strings?: LandingStrings;
 }
 
-const { links, buyLabel, valueLine = '', paperbackLabel = 'Prefer paper? Book 1 in paperback →', where, compact = false } = Astro.props;
+const { links, buyLabel, valueLine = '', where, compact = false, ku = true, strings = en } = Astro.props;
+const paperbackLabel = Astro.props.paperbackLabel ?? strings.preferPaper;
 const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-text-muted mt-1 mb-4';
 ---
 
 <!-- lg: the buttons sit in a 22rem sidebar, a size down so the KU label fits one line -->
 <div data-testid={`landing-ctas-${where}`}>
+  {ku && (
   <a href={links.ku} data-landing-cta="ku" data-testid={`landing-cta-ku-${where}`} class="btn btn-primary btn-lg w-full lg:!text-base lg:!px-4">
-    Read free with Kindle Unlimited
+    {strings.readFree}
   </a>
-  <p class={`text-center ${note}`}>Free for Kindle Unlimited members</p>
+  <p class={`text-center ${note}`}>{strings.freeFor}</p>
+  )}
   <a href={links.buy} data-landing-cta="buy" data-testid={`landing-cta-buy-${where}`} class="btn btn-secondary btn-lg w-full lg:!text-base lg:!px-4">
     {buyLabel}
   </a>
   {valueLine && <p class={`text-center ${note}`}>{valueLine}</p>}
-  {!compact && (
+  {!compact && links.paperback && (
     <p class="text-center mt-4">
       <a
         href={links.paperback}

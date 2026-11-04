@@ -38,3 +38,14 @@ There is one decision per screen. **Kindle Unlimited** is the primary button, be
 ## The build's walk
 
 `build/` holds the built page (`dist/`), opened with `?utm_source=meta&utm_campaign=x`, with each button hovered and none clicked: `desktop-*` at 1280 wide and `phone-*` on a Pixel 5. To redo it, run `npm run build && node docs/mocks/bride-program-landing/src/walk.mjs`. The script prints where each button goes and what the pixel was told. On 10-23 it printed, at both widths, `init 2527209327539510` and `PageView {campaign: "x"}`, with no click events, and the page stayed on `/series/saving-ceraste/box-set/`. The KU and Buy buttons went to `https://www.amazon.com/dp/B0B2M4RGCS` and print went to `https://www.amazon.com/dp/1090344378`. The links had no tags because site-config has no Attribution tags yet, and `x` is not a configured campaign. The tag swap itself is covered by `npm run test:landing`, which gives campaign `x` its own tags.
+
+## The walk in German and French (job 6967, Press suite_006 §2)
+
+`build-de/` and `build-fr/` are the `/de/` and `/fr/` pages, built with the test editions (`npm run build:landing-test`, `tests/fixtures/landing-editions.json`: made-up ASINs starting `B0FIX`, made-up words) and walked by a visitor in Berlin and in Paris, so the consent bar asks first and the pixel waits for Allow. Redo with `node docs/mocks/bride-program-landing/src/walk.mjs de` (or `fr`).
+
+On 11-03 it printed, at both widths:
+
+- **DE** (in KU, a paperback, every tag): KU → `https://www.amazon.de/dp/B0FIXDE001?maas=maas_adg_FIXTURE_DE_KU…`, Buy → `…?maas=maas_adg_FIXTURE_DE_KINDLE…`, print → `https://www.amazon.de/dp/B0FIXDE0P1?maas=maas_adg_FIXTURE_DE_PRINT…`; pixel calls `[]` (no Allow clicked), still on `/de/series/saving-ceraste/box-set/`.
+- **FR** (not in KU, no paperback, its one Kindle tag is for another ASIN): no KU button and no print link at either width; Buy → the bare `https://www.amazon.fr/dp/B0FIXFR001`; pixel calls `[]`, still on `/fr/series/saving-ceraste/box-set/`.
+
+The words are the fixture's, not Books'; the German and French fixed copy (`src/i18n/landing.de.ts`, `.fr.ts`) is machine-drafted and waits for a native reader. Until an edition has its own box-set image (`editions.<lang>.cover`) the page shows the English one, whose cover reads "Books 1–9".

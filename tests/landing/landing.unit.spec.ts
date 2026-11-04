@@ -1,6 +1,23 @@
-// The landing system's pure parts: tags on links, per-campaign links, consent.
+// The landing system's pure parts: tags on links, per-campaign links, consent, markets, strings.
 import { test, expect } from '@playwright/test';
-import { LANDING_EVENTS, landingLinks, landingSetup, money, tagFor, toLandingReview, withTag } from '../../src/lib/landing';
+import {
+  amazonDp,
+  amazonSearch,
+  LANDING_EVENTS,
+  LANDING_LANGS,
+  LANG_MARKET,
+  landingLinks,
+  landingSetup,
+  langPath,
+  marketOf,
+  money,
+  STOREFRONTS,
+  tagFor,
+  toLandingReview,
+  withTag,
+} from '../../src/lib/landing';
+import { LANDING_STRINGS } from '../../src/i18n';
+import { formatCount, formatRating, type LandingStrings } from '../../src/i18n/landing';
 import { decideConsent, isUsZone, siteMarketingConsent, utmOf } from '../../src/lib/landing-client';
 import { DEFAULT_PIXEL_HOSTS, beaconLine, isPixelHost, pixelHosts, pixelLine } from '../../src/lib/pixel-hosts';
 
@@ -150,4 +167,104 @@ test('money and reviews', () => {
   expect(toLandingReview('Title here\n\nBody  one.\nTwo', 'R')).toEqual({ title: 'Title here', body: 'Body one. Two', reviewer: 'R' });
   expect(toLandingReview('Just a body', 'R')).toEqual({ title: '', body: 'Just a body', reviewer: 'R' });
   expect(toLandingReview('T\n\nlong', 'R', 'cut … short').body).toBe('cut … short');
+});
+
+// suite_006 §2: a market is a storefront, a tag set and a language.
+
+test.describe('markets: the storefront per market', () => {
+  test('amazonDp builds the market’s /dp link, US by default', () => {
+    expect(amazonDp('B0B2M4RGCS')).toBe('https://www.amazon.com/dp/B0B2M4RGCS');
+    expect(amazonDp('B0FIXDE001', 'DE')).toBe('https://www.amazon.de/dp/B0FIXDE001');
+    expect(amazonDp(' B0FIXFR001 ', 'FR')).toBe('https://www.amazon.fr/dp/B0FIXFR001');
+    expect(amazonDp(undefined, 'DE')).toBe('');
+    expect(() => amazonDp('B0FIXDE001', 'XX')).toThrow('No Amazon storefront for market XX');
+  });
+  test('the search fallback goes to the market’s storefront too', () => {
+    expect(amazonSearch('Bride Program Box Set Dane Griggs')).toBe(
+      'https://www.amazon.com/s?k=Bride+Program+Box+Set+Dane+Griggs&i=digital-text',
+    );
+    expect(amazonSearch('Bride Program', 'FR')).toBe('https://www.amazon.fr/s?k=Bride+Program&i=digital-text');
+  });
+  test('the storefront table is marketOf the other way round', () => {
+    for (const [market, host] of Object.entries(STOREFRONTS)) expect(marketOf(`https://${host}/dp/X`)).toBe(market);
+    for (const lang of LANDING_LANGS) expect(marketOf(amazonDp('B0FIXDE001', LANG_MARKET[lang]))).toBe(LANG_MARKET[lang]);
+  });
+  test('a DE link takes the DE tag, never the US one', () => {
+    const tags = {
+      US: { 'the-bride-program-box-set': { ku: 'https://www.amazon.com/dp/B0B2M4RGCS?maas=US_KU' } },
+      DE: { 'the-bride-program-box-set': { ku: 'https://www.amazon.de/dp/B0FIXDE001?maas=DE_KU' } },
+    };
+    expect(tagFor(tags, 'the-bride-program-box-set', 'ku', amazonDp('B0FIXDE001', 'DE'))).toBe(tags.DE['the-bride-program-box-set'].ku);
+    expect(tagFor(tags, 'the-bride-program-box-set', 'ku', amazonDp('B0FIXFR001', 'FR'))).toBeUndefined();
+  });
+  test('English pages stay at the root; the others under /<lang>', () => {
+    expect(langPath('en', '/series/saving-ceraste/box-set/')).toBe('/series/saving-ceraste/box-set/');
+    expect(langPath('de', '/series/saving-ceraste/box-set/')).toBe('/de/series/saving-ceraste/box-set/');
+  });
+  test('the config names the market; no print link or KU door is no link and no missing tag', () => {
+    const targets = { kindleUrl: amazonDp('B0FIXFR001', 'FR'), paperbackUrl: '', product: 'the-bride-program-box-set', printProduct: 'the-bride-program' };
+    const { links, config } = landingSetup('bride-program-box-set', targets, {}, 'FR');
+    expect(config.market).toBe('FR');
+    expect(links.paperback).toBe('');
+    expect(config.missingTags.map((m) => m.door)).toEqual(['ku', 'kindle']);
+    const notKu = landingSetup('bride-program-box-set', { ...targets, ku: false }, {}, 'FR');
+    expect(notKu.links.ku).toBe('');
+    expect(notKu.config.missingTags.map((m) => m.door)).toEqual(['kindle']);
+  });
+});
+
+test.describe('strings: one table per language', () => {
+  const sample = (s: LandingStrings): string[] => [
+    s.readFree,
+    s.freeFor,
+    s.buyBoxSet('9'),
+    s.buyBoxSet(),
+    s.valueLine(9, 'a', 'b'),
+    s.preferPaper,
+    s.completeSeries('X', 9),
+    s.completeSet(9),
+    s.booksInside(9),
+    s.book(1),
+    s.coverOf('X'),
+    s.boxSetAlt('X', 9),
+    s.seriesAverage('4'),
+    s.ratingsAcross('1', 'X'),
+    s.ratingsAcrossShort('1'),
+    s.readersSay,
+    s.reviewCite('R'),
+    s.quote('Q'),
+    s.closing(9),
+    s.availableAtAmazon,
+    s.pageTitle('X', 9),
+    s.pageDescription('X', 9, true),
+    ...Object.values(s.consent),
+    ...Object.values(s.chrome),
+  ];
+  test('every table has every key', () => {
+    const keys = Object.keys(LANDING_STRINGS.en).sort();
+    for (const lang of LANDING_LANGS) expect(Object.keys(LANDING_STRINGS[lang]).sort()).toEqual(keys);
+  });
+  test('the English table is the copy the page has always carried', () => {
+    const en = LANDING_STRINGS.en;
+    expect(en.completeSeries('Bride Program', 9)).toBe('The complete Bride Program · 9 books');
+    expect(en.booksInside(9)).toBe('All nine books inside');
+    expect(en.booksInside(8)).toBe('All 8 books inside');
+    expect(en.buyBoxSet('$9.99')).toBe('Buy the Kindle box set — $9.99');
+    expect(formatRating(en, 4.5)).toBe('4.5');
+    expect(formatCount(en, 7344)).toBe('7,344');
+  });
+  for (const lang of LANDING_LANGS) {
+    test(`${lang}: no English fixed copy`, () => {
+      const english = new Set(sample(LANDING_STRINGS.en));
+      const ours = sample(LANDING_STRINGS[lang]);
+      // Kindle Unlimited keeps its name in DE and FR; nothing else may match English.
+      expect(ours.filter((line) => english.has(line))).toEqual([]);
+      for (const line of ours) expect(line).not.toMatch(/\b(the|books|with|members|buy|review|ratings|average|Goodreads)\b/i);
+    });
+  }
+  test('numbers as the language writes them', () => {
+    expect(formatRating(LANDING_STRINGS.de, 4.4)).toBe('4,4');
+    expect(formatCount(LANDING_STRINGS.de, 1234)).toBe('1.234');
+    expect(formatRating(LANDING_STRINGS.fr, 4.4)).toBe('4,4');
+  });
 });

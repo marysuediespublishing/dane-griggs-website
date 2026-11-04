@@ -58,7 +58,7 @@ test.describe('US visitor', () => {
     const events = { ku: 'LandingClickKU', buy: 'LandingClickBuy', paperback: 'LandingClickPaperback' } as const;
     for (const [cta, event] of Object.entries(events)) {
       await page.getByTestId(`landing-cta-${cta}-${where(page)}`).click();
-      const detail = { page: 'bride-program-box-set', cta, source: 'ad', campaign: 'x', utm_source: 'meta', utm_campaign: 'x' };
+      const detail = { page: 'bride-program-box-set', market: 'US', cta, source: 'ad', campaign: 'x', utm_source: 'meta', utm_campaign: 'x' };
       expect(await pixelCalls(page)).toContainEqual(['trackCustom', event, detail]);
       await expect.poll(() => served.beacons).toContainEqual({ metric: 'press.landing.ctr', ...detail });
     }
@@ -74,7 +74,7 @@ test.describe('US visitor', () => {
     expect(await pixelCalls(page)).toContainEqual([
       'trackCustom',
       'LandingClickKU',
-      { page: 'bride-program-box-set', cta: 'ku', source: 'organic', campaign: '' },
+      { page: 'bride-program-box-set', market: 'US', cta: 'ku', source: 'organic', campaign: '' },
     ]);
   });
 });
@@ -109,7 +109,7 @@ test.describe('tags per product and door, not per ad', () => {
     expect(await pixelCalls(page)).toContainEqual([
       'trackCustom',
       'LandingClickBuy',
-      { page: 'bride-program-box-set', cta: 'buy', source: 'ad', campaign: 'x', utm_source: 'meta', utm_medium: 'paid', utm_campaign: 'x', utm_content: 'ad-b' },
+      { page: 'bride-program-box-set', market: 'US', cta: 'buy', source: 'ad', campaign: 'x', utm_source: 'meta', utm_medium: 'paid', utm_campaign: 'x', utm_content: 'ad-b' },
     ]);
   });
 });

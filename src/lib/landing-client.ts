@@ -8,7 +8,8 @@
  *   anywhere else, and not at all for a visitor who declined (here, or marketing
  *   cookies in the site's own banner).
  * - Each button fires its custom pixel event (LandingClickKU / Buy / Paperback)
- *   and, once Press has an endpoint, a keepalive `press.landing.ctr` beacon.
+ *   and, once Press has an endpoint, a keepalive `press.landing.ctr` beacon. Both
+ *   carry `market`, the storefront the page's buttons go to (US, DE, FR).
  * - Both send only on the production hosts (config.pixelHosts). Anywhere else the
  *   same calls are `[pixel] …` console lines: nothing loads from Meta, nothing posts.
  */
@@ -192,7 +193,7 @@ export function startLanding(config: LandingConfig, w: PixelWindow = window): vo
   ctas.forEach((a) => {
     a.addEventListener('click', () => {
       const cta = a.dataset.landingCta as LandingCta;
-      const detail = { page: config.page, cta, source: fromAd ? 'ad' : 'organic', campaign, ...utm };
+      const detail = { page: config.page, market: config.market, cta, source: fromAd ? 'ad' : 'organic', campaign, ...utm };
       if (pixel) pixel('trackCustom', LANDING_EVENTS[cta], detail);
       if (config.ctrEndpoint && !live) {
         console.log(beaconLine({ metric: 'press.landing.ctr', ...detail }));

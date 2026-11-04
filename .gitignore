@@ -50,3 +50,5 @@ public/admin/dist/
 playwright-report/
 chrome/
 .vercel/
+# Landing-page cover copies, made by the build (src/integrations/landing-covers.mjs)
+public/images/landing/

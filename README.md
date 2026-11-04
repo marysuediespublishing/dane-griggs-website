@@ -55,7 +55,8 @@ If the org requires approval, approve the token under org Settings → Personal 
 | `npm run test` | Run Jest unit tests |
 | `npm run test:e2e` | Run Playwright end-to-end tests |
 | `npm run test:e2e:ui` | Run Playwright tests with interactive UI |
-| `npm run test:landing` | Landing-page tests: unit tests, then the built pages in a browser. Run `npm run build` first; no server needed |
+| `npm run test:landing` | Landing-page tests: unit tests, then the built pages in a browser, English, German and French. Run `npm run build:landing-test` first (the build with the test editions); no server needed |
+| `npm run build:landing-test` | The build the landing tests run on: `npm run build` plus made-up DE/FR editions and tags (`tests/fixtures/landing-editions.json`). Never deploy it |
 
 ## Project Structure
 
@@ -74,6 +75,16 @@ lib/              # Shared utilities and test mocks
 
 `/series/saving-ceraste/box-set` is the Meta-ad landing page for *The Bride Program Box Set: Books 1–9*. It is not linked from the site, and it is kept out of search (noindex) and the sitemap. Its design (lo-fi, hi-fi, the walk, a flip-through video) is in `docs/mocks/bride-program-landing/`.
 
+`/de/series/saving-ceraste/box-set` and `/fr/series/saving-ceraste/box-set` are the same page in German and French (Press suite_006 §2), for the DE and FR ads. Each is built only when the series has that edition (`editions.de` / `editions.fr`); otherwise the build prints `[landing] not built: /de/… (… has no de edition)` and there is no page. A language page:
+
+- links to that market's storefront (`amazon.de`, `amazon.fr`) with that market's Attribution tags (`attributionTags.DE` / `.FR`, same products and doors as the English page);
+- takes the box set's words from the edition (title, hook, tagline, blurb, price, rating, reviews: the edition's own only — a translated English review is not one) and each book's title in the list from the book's `editions.<lang>.title` (its English title when Books has none);
+- shows the Kindle Unlimited button only when the edition's `kuEnrolled` is true, and the print link only when it has a `paperbackAsin` (Book 1 in paperback in that storefront);
+- takes its fixed copy from `src/i18n/landing.<lang>.ts`. **The German and French tables are machine-drafted**: a native reader checks them before the first ad in that market (a step of the first run's approve card);
+- sends `market` (`US`, `DE`, `FR`) with every click event and the Press beacon; the English page sends `US`.
+
+The English page and the language pages link each other with `<link rel="alternate" hreflang>` (only when there is more than one). The template is `src/components/landing/BrideProgramBoxSet.astro`; `src/pages/series/saving-ceraste/box-set.astro` renders it in English and `src/pages/[lang]/series/saving-ceraste/box-set.astro` in German and French. The walk in a language: `npm run build:landing-test && node docs/mocks/bride-program-landing/src/walk.mjs de` (screenshots in `build-de/`). To check a change leaves the English pages as they were, build before and after and run `node scripts/compare-dist.mjs <before-dist> <after-dist> --skip de/ --skip fr/`.
+
 It is built from shared pieces, so the next landing page is a single page file:
 
 - `src/lib/landing.ts`: the Attribution tags on the links, per product and door, and the click-event names.
@@ -91,12 +102,14 @@ The page's inputs are CMS fields, all optional:
 | `boxSetSeparatePrice` | `src/content/series/saving-ceraste.md` | No value line. When `boxSetPrice` is also set, "9 books for $X — $Y bought separately" shows under the Buy button |
 | `metaPixelId` | `src/content/settings/site-config.md` | No pixel loads. When set (Dane's dataset `2527209327539510`), it is the pixel for the whole site too (`src/components/MetaPixel.astro`). On a landing page it loads without a click if the browser's time zone is a US zone. Anyone else sees an in-page Allow / No thanks bar first. A visitor who declined marketing cookies in the site's own banner gets no pixel |
 | `pixelHosts` | `src/content/settings/site-config.md` | `danegriggs.com` and `www.danegriggs.com`. The pixel (sitewide and on the landing pages) and the Press beacon send only from these hostnames. On any other host (localhost, 127.0.0.1, a preview, the GitHub Pages default domain) the same calls are logged to the console as `[pixel] PageView {…}`, `[pixel] LandingClickKU {…}`, `[pixel] beacon {…}`, and nothing is sent. `npx astro preview` serves whatever is in `dist/`, so rebuild before a local walk |
+| `boxSetCover` | `src/content/series/saving-ceraste.md` | The page fails to build: it is the box-set image (`/images/bride-program-box-set.jpg`). Every `astro dev` / `astro build` makes the page's 640-wide hero and the 1200x630 share image from it into `public/images/landing/` (not in git; `src/integrations/landing-covers.mjs`). A bigger image dropped in its place reaches both with nothing else to do |
+| `editions` | `src/content/series/saving-ceraste.md` (and each book's) | No German or French page. Per language (`de`, `fr`): `asin`, `title`, `blurb`, `kuEnrolled` required; `paperbackAsin`, `cover` (the edition's own box-set image; the build makes its copies too), `seriesName`, `hook`, `tagline`, `price` / `separatePrice` (as the storefront shows them, e.g. `9,99 €`), `rating` / `ratingCount`, `reviews`. Written from Press's Books |
 | `boxSetSlug` | `src/content/series/saving-ceraste.md` | The box set's product key is `<series>-box-set`. Set to its slug in Press's Books (`the-bride-program-box-set`), the key its Attribution tags are kept under |
 | `attributionTags` | `src/content/settings/site-config.md` | No Amazon Attribution tag: each button is the bare `/dp/<ASIN>` link and the build prints `[attribution] missing on <page>: …`. Written by Press's Ad Desk (Attribution → Import tags, ad_desk_007): `<market>` → `<product slug>` → `ku` / `kindle` / `print`, each the Attribution URL. KU and Buy take the box set's `ku` and `kindle` tags, the paperback link book 1's `print` tag (`PRINT_PRODUCT`, `the-bride-program`) — for every visitor, whatever ad sent them. A tag whose `/dp/<ASIN>` is not the button's own is not used |
 | `pressCtrEndpoint` | `src/content/settings/site-config.md` | Clicks are counted only as the custom pixel events `LandingClickKU` / `LandingClickBuy` / `LandingClickPaperback`. When set, each click also POSTs a keepalive `press.landing.ctr` beacon. `PageView` and the click events carry the visitor's `utm_campaign` as `campaign` |
 | `amazonBadge` | `src/content/settings/site-config.md` | No badge. When set, it must be Amazon's official "Available at Amazon" badge, unaltered (Amazon's brand-usage terms) |
 
-These are constants at the top of the page file: the paperback link (`PAPERBACK_URL`, book 1, ISBN 9781090344373), the hook, the one-line book hooks (`BOOK_HOOKS`) and the review picks (testimonial ids). The reviews are Goodreads reviews of the box set, kept in `src/content/testimonials/`. The box-set image and the 1200x630 `og:image` are in `public/images/landing/`.
+These are constants at the top of the page file: the paperback link (`PAPERBACK_URL`, book 1, ISBN 9781090344373), the hook, the one-line book hooks (`BOOK_HOOKS`) and the review picks (testimonial ids). The reviews are Goodreads reviews of the box set, kept in `src/content/testimonials/`. The box-set image is `public/images/bride-program-box-set.jpg` (`boxSetCover`); the build makes the page's copies of it.
 
 ## Tech Stack
 

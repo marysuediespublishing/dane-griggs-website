@@ -18,6 +18,42 @@ const blog = defineCollection({
 		}),
 });
 
+// A product's edition in another language (Press suite_006 §2): the market's ASINs and the
+// edition's own words, as Amazon shows them. A /<lang>/ landing page is built only for a
+// product with an edition in that language. Written from Press's Books.
+const editionReview = z.object({ title: z.string().optional(), body: z.string(), reviewer: z.string() });
+const seriesEdition = z.object({
+	// The edition's Kindle ASIN in the language's storefront (amazon.de, amazon.fr)
+	asin: z.string(),
+	// The print link: Book 1 in paperback in that storefront (ASIN or ISBN-10); none, no print link
+	paperbackAsin: z.string().optional(),
+	// The box set's title as Amazon shows it, e.g. "Das Bräute-Programm"
+	title: z.string(),
+	blurb: z.string(),
+	// In Kindle Unlimited in that marketplace: false shows two buttons, not three
+	kuEnrolled: z.boolean(),
+	// The edition's own box-set image (/images/…), when it is not the English one
+	cover: z.string().optional(),
+	// The series' name in the language, for the line over the title; none, a plain "the complete series"
+	seriesName: z.string().optional(),
+	// The hero's one line, and the short line under it; none, not shown
+	hook: z.string().optional(),
+	tagline: z.string().optional(),
+	// As the storefront shows it, e.g. "9,99 €"
+	price: z.string().optional(),
+	separatePrice: z.string().optional(),
+	// The edition's own ratings and reviews; a translated English review is not one
+	rating: z.number().min(0).max(5).optional(),
+	ratingCount: z.number().optional(),
+	reviews: z.array(editionReview).default([]),
+});
+const bookEdition = z.object({
+	asin: z.string().optional(),
+	title: z.string(),
+	// One line under the cover on a box-set page
+	hook: z.string().optional(),
+});
+
 // Books collection
 const books = defineCollection({
 	loader: glob({ base: './src/content/books', pattern: '**/*.{md,mdx}' }),
@@ -45,6 +81,8 @@ const books = defineCollection({
 			pageCount: z.number().optional(),
 			status: z.enum(['published', 'pre-order', 'upcoming', 'draft']).default('published'),
 			featured: z.boolean().default(false),
+			// The book in other languages (its title on a /<lang>/ box-set page)
+			editions: z.object({ de: bookEdition.optional(), fr: bookEdition.optional() }).optional(),
 		}),
 });
 
@@ -74,6 +112,11 @@ const series = defineCollection({
 			boxSetBlurb: z.string().optional(),
 			boxSetPrice: z.string().optional(),
 			boxSetSeparatePrice: z.string().optional(),
+			// The box-set image (/images/…): the build makes the page's 640 hero and 1200x630
+			// share image from it (src/integrations/landing-covers.mjs)
+			boxSetCover: z.string().optional(),
+			// The box set's editions in other languages (/<lang>/series/<slug>/box-set)
+			editions: z.object({ de: seriesEdition.optional(), fr: seriesEdition.optional() }).optional(),
 		}),
 });
 

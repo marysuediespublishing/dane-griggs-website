@@ -1,0 +1,23 @@
+---
+// The Bride Program Box Set landing page in German and French (Press suite_006 §2): built for
+// each language the box set has an edition in (series editions.<lang>); the build says which
+// it skipped. The template is src/components/landing/BrideProgramBoxSet.astro.
+import { getEntry } from 'astro:content';
+import BrideProgramBoxSet from '../../../../components/landing/BrideProgramBoxSet.astro';
+import { seriesEdition } from '../../../../lib/editions';
+import { LANDING_LANGS, type LandingLang } from '../../../../lib/landing';
+
+export async function getStaticPaths() {
+  const series = await getEntry('series', 'saving-ceraste');
+  if (!series) throw new Error('Missing series entry: saving-ceraste');
+  return LANDING_LANGS.filter((lang) => {
+    if (seriesEdition(series, lang)) return true;
+    console.warn(`[landing] not built: /${lang}/series/saving-ceraste/box-set/ (the-bride-program-box-set has no ${lang} edition)`);
+    return false;
+  }).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: LandingLang };
+---
+
+<BrideProgramBoxSet lang={lang} />

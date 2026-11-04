@@ -1,0 +1,317 @@
+---
+// The Bride Program Box Set landing page: where readers land from the Meta ad, in English
+// (/series/saving-ceraste/box-set/) and in each language the box set has an edition in
+// (/<lang>/series/saving-ceraste/box-set/, Press suite_006 §2). Unlinked from the site nav.
+// Design: docs/mocks/bride-program-landing (job 4212).
+// CMS inputs (all optional, see README "Box-set landing pages"):
+//   series boxSetAsin / boxSetSlug / boxSetBlurb / boxSetPrice / boxSetSeparatePrice /
+//   boxSetCover / editions, and site-config metaPixelId / attributionTags / pressCtrEndpoint /
+//   amazonBadge
+// English is the original: its words are the constants below and the series'. A German or
+// French page takes the product's words from the series' editions.<lang> (and each book's
+// editions.<lang> for the list), the fixed copy from src/i18n/landing.<lang>.ts, and links
+// to that market's storefront with that market's Attribution tags.
+import { join } from 'node:path';
+import sharp from 'sharp';
+import { Image } from 'astro:assets';
+import { getCollection, getEntry } from 'astro:content';
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import LandingCtas from './LandingCtas.astro';
+import LandingConsentBar from './LandingConsentBar.astro';
+import LandingTracking from './LandingTracking.astro';
+import { LANDING_STRINGS } from '../../i18n';
+import { formatCount, formatRating } from '../../i18n/landing';
+import { bookEdition, seriesEdition, withFixtureTags } from '../../lib/editions';
+import {
+  amazonDp,
+  amazonSearch,
+  LANDING_LANGS,
+  LANG_MARKET,
+  langPath,
+  landingSetup,
+  money,
+  toLandingReview,
+  type LandingLang,
+  type LandingReview,
+} from '../../lib/landing';
+import { landingCovers } from '../../integrations/landing-covers.mjs';
+
+export interface Props {
+  lang: LandingLang;
+}
+
+const { lang } = Astro.props;
+const strings = LANDING_STRINGS[lang];
+const market = LANG_MARKET[lang];
+const PATH = '/series/saving-ceraste/box-set/';
+
+const SERIES_SLUG = 'saving-ceraste';
+const PAGE = 'bride-program-box-set';
+// The box set is Books 1–9 of the series' reading order.
+const SET_SIZE = 9;
+const HOOK = 'What could possibly entice human women to willingly join a program meant to match them with snake-like alien husbands?';
+// Book 1 in paperback (ISBN 9781090344373): a quiet link that measures interest in print.
+const PAPERBACK_URL = 'https://www.amazon.com/dp/1090344378';
+// Book 1's product slug in Press's Books: the print link takes its Print tag.
+const PRINT_PRODUCT = 'the-bride-program';
+// Goodreads reviews of the box set (src/content/testimonials), by id: the pull-quote
+// under the hero, then four lower down. `excerpt` replaces a long review's body,
+// with "…" wherever text is cut.
+const PULL_QUOTE = {
+  id: '2024-01-05-fleur-gray-bride-program-box-set',
+  excerpt: "I found the first book of this series, while doom scrolling for something to read at 2am. Nothing held my interest for more than a chapter or two. 3 days later I've completed the series and am totally addicted.",
+};
+const REVIEWS: { id: string; excerpt?: string }[] = [
+  {
+    id: '2022-06-01-sarah-kellum-bride-program-box-set',
+    excerpt: 'I have read the individual books but to be able to from one right into the next one was really nice. In this series you have so many intertwined story lines it really keeps your attention.',
+  },
+  {
+    id: '2026-01-26-emersyn-torres-bride-program-box-set',
+    excerpt: 'I enjoyed the "Bride Program" box set for the diversity of the women featured. … the women were not all lonely timid females, but women of courage and substance.',
+  },
+  {
+    id: '2024-02-08-ken-templeton-bride-program-box-set',
+    excerpt: 'I just finished book 2 and am thoroughly enjoying this series!! It’s different in a very good way.',
+  },
+  { id: '2026-02-23-blanca-bride-program-box-set' },
+];
+// One line under each cover, lifted from each book's page. Short enough not to wrap
+// at phone width.
+const BOOK_HOOKS: Record<string, string> = {
+  'the-bride-program-book': 'Maya volunteers to save her sister.',
+  'bedside-manners-aliens-book': 'A doctor and a clueless alien physician.',
+  'threesomes-guide-galaxy-book': 'Kidnapped, escaped, and loved by two.',
+  'bride-program-honeymoon-book': 'A girls’ trip to the planet Xerini.',
+  'insatiable-curiosity-book': 'A grounded astronaut gets to space.',
+  'aliens-gossip-queen-book': 'She loves gossip. He loves dogs.',
+  'marshmallow-book': 'The gruff general escorts her home.',
+  'war-brides-book': 'The rule-maker falls for a rule-breaker.',
+  'chancellors-pilot-book': 'A fighter pilot and the chancellor.',
+};
+const BLURB_PARAGRAPHS = 3;
+
+const series = await getEntry('series', SERIES_SLUG);
+if (!series) throw new Error(`Missing series entry: ${SERIES_SLUG}`);
+const edition = seriesEdition(series, lang);
+if (lang !== 'en' && !edition) throw new Error(`The ${SERIES_SLUG} box set has no ${lang} edition`);
+
+const allBooks = await getCollection('books');
+const books = series.data.readingOrder
+  .slice(0, SET_SIZE)
+  .map((slug) => allBooks.find((book) => book.id === slug))
+  .filter((book): book is NonNullable<typeof book> => Boolean(book));
+
+// The list's title and line per book: in another language, the book's edition's title (its
+// English one when Books has none) and only the edition's own line.
+const bookTitle = (book: (typeof books)[number]) => bookEdition(book, lang)?.title ?? book.data.title;
+const bookHook = (book: (typeof books)[number]) => (edition ? bookEdition(book, lang)?.hook : BOOK_HOOKS[book.id]);
+
+// Reviews: English, Goodreads reviews of the box set; another language, only the edition's own.
+const testimonials = await getCollection('testimonials');
+const review = (id: string, excerpt?: string) => {
+  const t = testimonials.find((entry) => entry.id === id);
+  return t ? toLandingReview(t.data.quote, t.data.reviewerName, excerpt) : undefined;
+};
+const pullQuote = edition ? undefined : review(PULL_QUOTE.id, PULL_QUOTE.excerpt);
+const reviews: LandingReview[] = edition
+  ? edition.reviews.map((r) => ({ title: r.title ?? '', body: r.body, reviewer: r.reviewer }))
+  : REVIEWS.map((r) => review(r.id, r.excerpt)).filter((r): r is NonNullable<typeof r> => Boolean(r));
+
+// English: series-wide numbers, labelled as such: the box set has its own (smaller) count.
+// Another language: the edition's own, when Books has them.
+const rating = edition ? (edition.rating ?? 0) : series.data.overallRating;
+const ratingCount = edition ? (edition.ratingCount ?? 0) : series.data.totalRatings;
+const showRating = rating > 0 && ratingCount > 0;
+const stars = '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+const ratingText = formatRating(strings, rating);
+const countText = formatCount(strings, ratingCount);
+
+const siteConfig = await getEntry('settings', 'site-config');
+const amazonBadge = siteConfig?.data.amazonBadge?.trim();
+
+// The market's storefront. English keeps its search fallback and Book 1's paperback; an
+// edition always has its ASIN, and a print link only when it has a paperback.
+const asin = edition ? edition.asin : series.data.boxSetAsin?.trim();
+const ku = edition ? edition.kuEnrolled : true;
+const { links, config } = landingSetup(
+  PAGE,
+  {
+    kindleUrl: asin ? amazonDp(asin, market) : amazonSearch('Bride Program Box Set Dane Griggs', market),
+    paperbackUrl: edition ? amazonDp(edition.paperbackAsin, market) : PAPERBACK_URL,
+    product: series.data.boxSetSlug?.trim() || `${SERIES_SLUG}-box-set`,
+    printProduct: PRINT_PRODUCT,
+    ku,
+  },
+  siteConfig?.data && { ...siteConfig.data, attributionTags: withFixtureTags(siteConfig.data.attributionTags) },
+  market,
+);
+
+const price = edition ? edition.price?.trim() || '' : money(series.data.boxSetPrice);
+const separatePrice = edition ? edition.separatePrice?.trim() || '' : money(series.data.boxSetSeparatePrice);
+const buyLabel = strings.buyBoxSet(price);
+const valueLine = price && separatePrice ? strings.valueLine(books.length, price, separatePrice) : '';
+
+const pitch = (edition ? edition.blurb : series.data.boxSetBlurb?.trim() || series.data.description)
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean)
+  .slice(0, BLURB_PARAGRAPHS);
+
+// The words at the top: English's are this page's; an edition's are its own.
+const title = edition ? edition.title : 'The Bride Program Box Set';
+const seriesName = edition ? edition.seriesName?.trim() : 'Bride Program';
+const eyebrow = seriesName ? strings.completeSeries(seriesName, books.length) : strings.completeSet(books.length);
+const hook = edition ? edition.hook : HOOK;
+const tagline = edition ? edition.tagline : 'Sexy escapes with heart, humor, and no Mary Sues.';
+
+// The box-set image: the build's copies of the edition's own, else the English one.
+const covers = landingCovers(edition?.cover) ?? landingCovers(series.data.boxSetCover);
+if (!covers) throw new Error(`The ${SERIES_SLUG} series has no boxSetCover (/images/…) for its box-set page`);
+const heroSize = await sharp(join(process.cwd(), 'public', covers.hero)).metadata();
+
+// hreflang: the page in every language it is built in (English alone: none).
+const langs: LandingLang[] = ['en', ...LANDING_LANGS.filter((l) => seriesEdition(series, l))];
+const alternates = langs.length > 1 ? langs.map((l) => ({ hreflang: l, href: langPath(l, PATH) })) : [];
+---
+
+<LandingLayout
+  title={strings.pageTitle(title, books.length)}
+  description={strings.pageDescription(title, books.length, ku)}
+  image={covers.og}
+  strings={strings}
+  alternates={alternates}
+>
+  <main
+    id="main-content"
+    class="px-4 pt-8 pb-44 lg:pt-12 lg:pb-16 bg-[radial-gradient(ellipse_at_20%_0%,rgba(106,76,147,0.10),transparent_55%),radial-gradient(ellipse_at_90%_10%,rgba(212,51,106,0.07),transparent_50%)]"
+    data-testid="landing-page"
+  >
+    <LandingConsentBar strings={strings} />
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_22rem] gap-10 items-start">
+      <div>
+        <!-- Hero: the set, hook, promise, rating -->
+        <section class="grid sm:grid-cols-[minmax(0,18rem)_1fr] gap-6 sm:gap-8 items-center text-center sm:text-left">
+          <img
+            src={covers.hero}
+            alt={strings.boxSetAlt(title, books.length)}
+            width={heroSize.width}
+            height={heroSize.height}
+            class="w-full max-w-[18rem] mx-auto mix-blend-multiply"
+            fetchpriority="high"
+          />
+          <div>
+            <p class="text-cosmic-rose font-semibold uppercase tracking-[0.08em] sm:tracking-[0.14em] text-xs sm:text-sm mb-2">{eyebrow}</p>
+            <h1 class="text-4xl md:text-5xl font-primary font-bold text-deep-space-navy mb-3">{title}</h1>
+            {hook && <p class="text-lg md:text-xl text-text-secondary mb-3" data-testid="landing-hook">{hook}</p>}
+            {tagline && <p class="text-nebula-purple font-semibold mb-4">{tagline}</p>}
+            {showRating && (
+              <div>
+                <p class="text-text-secondary font-medium">
+                  <span class="text-stellar-gold tracking-widest" aria-hidden="true">{stars}</span>
+                  {strings.seriesAverage(ratingText)}
+                </p>
+                <p class="text-sm text-text-muted">{strings.ratingsAcross(countText, series.data.title)}</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {pullQuote && (
+          <figure class="mt-10 border-l-4 border-cosmic-rose pl-5">
+            <blockquote>
+              {pullQuote.title && <p class="font-primary font-semibold text-2xl text-deep-space-navy mb-2">{strings.quote(pullQuote.title)}</p>}
+              <p class="text-text-secondary">{pullQuote.body}</p>
+            </blockquote>
+            <figcaption class="mt-2 text-sm text-text-muted">{strings.reviewCite(pullQuote.reviewer)}</figcaption>
+          </figure>
+        )}
+
+        <!-- The nine books in series order, one hook line each -->
+        <section class="mt-12" data-testid="landing-books">
+          <h2 class="text-2xl md:text-3xl font-primary font-bold text-deep-space-navy mb-6">{strings.booksInside(books.length)}</h2>
+          <ol class="grid sm:grid-cols-2 gap-x-6 gap-y-4">
+            {books.map((book) => (
+              <li class="flex items-center gap-3.5">
+                <Image
+                  src={book.data.cover}
+                  alt={strings.coverOf(bookTitle(book))}
+                  width={112}
+                  class="w-14 shrink-0 rounded-md shadow-lg shadow-deep-space-navy/25 aspect-[2/3] object-cover"
+                />
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-nebula-purple">{strings.book(book.data.seriesOrder ?? 0)}</p>
+                  <p class="font-semibold text-deep-space-navy leading-tight">{bookTitle(book)}</p>
+                  {bookHook(book) && <p class="text-sm text-text-secondary mt-0.5 whitespace-nowrap">{bookHook(book)}</p>}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <!-- Pitch -->
+        <section class="mt-12 space-y-4 text-lg text-text-secondary">
+          {pitch.map((paragraph) => <p>{paragraph}</p>)}
+        </section>
+
+        <!-- Reviews, two by two, on a full-width navy band -->
+        {reviews.length > 0 && (
+          <section class="mt-12 py-12 bg-[#221c3d] shadow-[0_0_0_100vmax_#221c3d] [clip-path:inset(0_-100vmax)]" data-testid="landing-reviews">
+            <h2 class="text-2xl md:text-3xl font-primary font-bold text-solar-white mb-6">{strings.readersSay}</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+              {reviews.map((r) => (
+                <figure class="rounded-xl border border-cosmic-rose/35 bg-solar-white/5 p-6 flex flex-col">
+                  <blockquote class="flex-1">
+                    {r.title && <p class="font-primary font-semibold text-lg text-solar-white mb-1.5">{strings.quote(r.title)}</p>}
+                    <p class="text-slate-200">{r.body}</p>
+                  </blockquote>
+                  <figcaption class="mt-4 text-sm text-slate-400">{strings.reviewCite(r.reviewer)}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Closing line; on phones the buttons follow it (at desktop the sidebar has them) -->
+        <section id="landing-closing" class="mt-12 text-center lg:text-left">
+          <p class="font-primary font-bold text-2xl text-deep-space-navy mb-6">
+            {strings.closing(books.length)}
+          </p>
+          <div class="lg:hidden max-w-md mx-auto">
+            <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="closing" ku={ku} strings={strings} />
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar: rating and the buttons, always on screen at desktop widths -->
+      <aside class="hidden lg:block lg:sticky lg:top-8">
+        <div class="rounded-2xl border border-border-light bg-solar-white p-6 shadow-nebula">
+          {showRating && (
+            <div class="mb-5 text-sm">
+              <p class="text-text-secondary font-medium">
+                <span class="text-stellar-gold tracking-widest" aria-hidden="true">{stars}</span>
+                {strings.seriesAverage(ratingText)}
+              </p>
+              <p class="text-xs text-text-muted mt-0.5">{strings.ratingsAcrossShort(countText)}</p>
+            </div>
+          )}
+          <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="side" ku={ku} strings={strings} />
+          {amazonBadge && <img src={amazonBadge} alt={strings.availableAtAmazon} class="h-10 w-auto mx-auto mt-5" loading="lazy" />}
+        </div>
+      </aside>
+    </div>
+
+    <!-- Phone: the buttons in a bar fixed to the bottom; it slides away while the closing buttons are in view -->
+    <div
+      id="landing-cta-bar"
+      class="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-cosmic-rose/40 bg-deep-space-navy/95 backdrop-blur px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-200"
+    >
+      <div class="max-w-md mx-auto">
+        <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="bar" compact ku={ku} strings={strings} />
+      </div>
+    </div>
+  </main>
+
+  <LandingTracking config={config} />
+</LandingLayout>
