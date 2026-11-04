@@ -3,8 +3,11 @@ import { test, expect, type Page } from '@playwright/test';
 import { BOX_SET_PATH, CTR_ENDPOINT, ORIGIN, pixelCalls, serveDist, type ConfigEdit } from './harness';
 
 const URL_ = `${ORIGIN}${BOX_SET_PATH}`;
-const KINDLE = 'https://www.amazon.com/dp/B0B2M4RGCS';
 const PRINT = 'https://www.amazon.com/dp/1090344378';
+// site-config attributionTags.US.the-bride-program-box-set (Desk's import, de70ad7). Book 1 has no print tag yet.
+const KU_TAG = 'https://www.amazon.com/dp/B0B2M4RGCS?maas=maas_adg_3F91A019135483A3CEB6AC54EEF39FAA_afap_abs&ref_=aa_maas&tag=maas';
+const KINDLE_TAG = 'https://www.amazon.com/dp/B0B2M4RGCS?maas=maas_adg_EE79A1F0E61FC2AB6B4C507B25EE46E5_afap_abs&ref_=aa_maas&tag=maas';
+const HREF = { ku: KU_TAG, buy: KINDLE_TAG, paperback: PRINT } as const;
 // The Press endpoint on.
 const withEndpoint: ConfigEdit = (config) => ({ ...config, ctrEndpoint: CTR_ENDPOINT });
 
@@ -22,7 +25,7 @@ test.describe('renders static', () => {
     await expect(page.getByTestId('landing-books').locator('li')).toHaveCount(9);
     await expect(page.getByTestId('landing-reviews').locator('figure')).toHaveCount(4);
     for (const cta of ['ku', 'buy'] as const) {
-      await expect(page.getByTestId(`landing-cta-${cta}-${where(page)}`)).toHaveAttribute('href', KINDLE);
+      await expect(page.getByTestId(`landing-cta-${cta}-${where(page)}`)).toHaveAttribute('href', HREF[cta]);
     }
     await expect(page.getByTestId(`landing-cta-paperback-${where(page)}`)).toHaveAttribute('href', PRINT);
     await expect(page.getByTestId('landing-consent')).toBeHidden();
@@ -82,21 +85,17 @@ test.describe('US visitor', () => {
 test.describe('tags per product and door, not per ad', () => {
   test.use({ timezoneId: 'America/New_York' });
 
-  test('no tag yet: every button is the bare /dp link whatever the campaign, and the page lists the three as missing', async ({ page, context }) => {
+  test('each button takes its door\'s tag whatever the campaign; the untagged paperback is the bare /dp link and listed as missing', async ({ page, context }) => {
     await serveDist(context, withEndpoint);
     await page.goto(`${URL_}?utm_campaign=x`);
     for (const set of ['side', 'closing', 'bar']) {
       for (const cta of ['ku', 'buy', 'paperback'] as const) {
         if (set === 'bar' && cta === 'paperback') continue;
-        await expect(page.getByTestId(`landing-cta-${cta}-${set}`)).toHaveAttribute('href', cta === 'paperback' ? PRINT : KINDLE);
+        await expect(page.getByTestId(`landing-cta-${cta}-${set}`)).toHaveAttribute('href', HREF[cta]);
       }
     }
     const config = JSON.parse((await page.locator('#landing-config').textContent()) ?? '{}');
-    expect(config.missingTags).toEqual([
-      { product: 'the-bride-program-box-set', door: 'ku', href: KINDLE },
-      { product: 'the-bride-program-box-set', door: 'kindle', href: KINDLE },
-      { product: 'the-bride-program', door: 'print', href: PRINT },
-    ]);
+    expect(config.missingTags).toEqual([{ product: 'the-bride-program', door: 'print', href: PRINT }]);
     expect(config).not.toHaveProperty('campaignLinks');
   });
 
