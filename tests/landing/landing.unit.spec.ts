@@ -11,6 +11,7 @@ import {
   landingSetup,
   missingLine,
   langPath,
+  landingQuotes,
   marketOf,
   money,
   STOREFRONTS,
@@ -172,6 +173,36 @@ test('money and reviews', () => {
 });
 
 // suite_006 §2: a market is a storefront, a tag set and a language.
+
+test.describe('landingQuotes: a landing block\'s pull quote and reviews', () => {
+  const entry = (id: string, reviewerName: string, quote: string, reviewerPlatform = 'amazon', bookTitle?: string) => ({
+    id,
+    data: { quote, reviewerName, reviewerPlatform, bookTitle },
+  });
+  const testimonials = [
+    entry('lead', 'Kindle Customer', 'Oh wow!\n\nLoved it.'),
+    entry('two', 'Coder jane', 'Worth the wait!\n\nFirst paragraph.\n\nSecond paragraph.'),
+    entry('other', 'Blanca', 'Box set\n\nAll good.', 'goodreads', 'The Bride Program Box Set'),
+  ];
+
+  test('a block that names none renders none', () => {
+    expect(landingQuotes({}, testimonials, 'A Book')).toEqual({ pullQuote: undefined, reviews: [] });
+    expect(landingQuotes({ reviews: [] }, testimonials, 'A Book')).toEqual({ pullQuote: undefined, reviews: [] });
+  });
+
+  test('the lead and each review, in the block\'s order, cited with reviewer and platform', () => {
+    const q = landingQuotes({ pullQuote: { id: 'lead' }, reviews: [{ id: 'other' }, { id: 'two', excerpt: 'First paragraph.' }] }, testimonials, 'A Book');
+    expect(q.pullQuote).toEqual({ title: 'Oh wow!', body: 'Loved it.', reviewer: 'Kindle Customer', cite: 'Kindle Customer, Amazon review of A Book' });
+    expect(q.reviews.map((r) => [r.title, r.body, r.cite])).toEqual([
+      ['Box set', 'All good.', 'Blanca, Goodreads review of The Bride Program Box Set'],
+      ['Worth the wait!', 'First paragraph.', 'Coder jane, Amazon review of A Book'],
+    ]);
+  });
+
+  test('an id with no testimonial shows nothing', () => {
+    expect(landingQuotes({ pullQuote: { id: 'nope' }, reviews: [{ id: 'nope' }] }, testimonials, 'A Book')).toEqual({ pullQuote: undefined, reviews: [] });
+  });
+});
 
 test.describe('markets: the storefront per market', () => {
   test('amazonDp builds the market’s /dp link, US by default', () => {

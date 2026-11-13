@@ -30,8 +30,9 @@ import {
   amazonSearch,
   landingDoorsSetup,
   money,
-  toLandingReview,
-  type LandingReview,
+  citedReview,
+  landingQuotes,
+  type ReviewPick,
   type LandingTargets,
 } from '../../lib/landing';
 import { landingCovers } from '../../integrations/landing-covers.mjs';
@@ -42,13 +43,11 @@ export interface Props {
 
 type Book = CollectionEntry<'books'>;
 type Series = CollectionEntry<'series'>;
-type ReviewPick = { id: string; excerpt?: string };
 type Rating = { value: number; count: number; label: string };
 
 const { book } = Astro.props;
 const landing = book.data.landing!;
 const BLURB_PARAGRAPHS = 3;
-const PLATFORM: Record<string, string> = { amazon: 'Amazon', goodreads: 'Goodreads', bookbub: 'BookBub' };
 
 const allBooks = await getCollection('books');
 const allSeries = await getCollection('series');
@@ -66,14 +65,7 @@ const ratingOf = (value: number, count: number, label: string): Rating | undefin
   value > 0 && count > 0 ? { value, count, label } : undefined;
 
 // A testimonial, picked by id, cited with its platform and what it reviewed.
-const review = (pick?: ReviewPick): (LandingReview & { cite: string }) | undefined => {
-  const t = pick && testimonials.find((entry) => entry.id === pick.id);
-  if (!pick || !t) return undefined;
-  const r = toLandingReview(t.data.quote, t.data.reviewerName, pick.excerpt);
-  const platform = PLATFORM[t.data.reviewerPlatform];
-  const about = t.data.bookTitle ?? book.data.title;
-  return { ...r, cite: `${r.reviewer}${platform ? `, ${platform} review` : ''} of ${about}` };
-};
+const review = (pick?: ReviewPick) => citedReview(pick, testimonials, book.data.title);
 
 interface Door extends LandingTargets {
   target: string;
@@ -157,8 +149,7 @@ if (landing.sameWorld) {
 
 const { links, config } = landingDoorsSetup(`${book.id}-landing`, doors, siteConfig?.data);
 
-const pullQuote = review(landing.pullQuote);
-const reviews = landing.reviews.map(review).filter((r): r is NonNullable<typeof r> => Boolean(r));
+const { pullQuote, reviews } = landingQuotes(landing, testimonials, book.data.title);
 const rating = ratingOf(book.data.rating, book.data.ratingCount, 'ratings');
 const amazonBadge = siteConfig?.data.amazonBadge?.trim();
 

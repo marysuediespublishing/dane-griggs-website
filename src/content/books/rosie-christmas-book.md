@@ -41,6 +41,13 @@ landing:
   seriesStart:
     title: Start with The Bride Program Box Set
     line: All nine books, one click.
+  pullQuote:
+    id: 2025-08-13-kindle-customer-a-rosie-christmas
+  reviews:
+    - id: 2023-12-12-coder-jane-a-rosie-christmas
+    - id: 2023-12-22-kindle-customer-a-rosie-christmas
+    - id: 2025-02-01-t-lewis-a-rosie-christmas
+      excerpt: "What a beautiful, sweet story! Especially for those of us who are no longer in our younger years lol! The author did a wonderful job with this holiday story and now I’m hoping to read more on the rejuvenation of their home world Ceraste!"
 ---
 
 # A Rosie Christmas

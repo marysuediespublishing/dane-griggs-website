@@ -231,6 +231,48 @@ export function toLandingReview(quote: string, reviewer: string, excerpt?: strin
   return { title: hasTitle ? first.trim() : '', body: body.replace(/\s+/g, ' ').trim(), reviewer };
 }
 
+/** A testimonial picked by id (a `landing:` block's pullQuote, reviews, or a door's review). */
+export interface ReviewPick {
+  id: string;
+  excerpt?: string;
+}
+
+/** What a landing page reads of a testimonials entry. */
+export interface TestimonialEntry {
+  id: string;
+  data: { quote: string; reviewerName: string; reviewerPlatform: string; bookTitle?: string };
+}
+
+export type CitedReview = LandingReview & { cite: string };
+
+const PLATFORM: Record<string, string> = { amazon: 'Amazon', goodreads: 'Goodreads', bookbub: 'BookBub' };
+
+/**
+ * A picked testimonial, cited with its platform and what it reviewed ("Coder jane, Amazon
+ * review of A Rosie Christmas"); undefined when nothing is picked or no entry has the id.
+ */
+export function citedReview(pick: ReviewPick | undefined, testimonials: TestimonialEntry[], about: string): CitedReview | undefined {
+  const t = pick && testimonials.find((entry) => entry.id === pick.id);
+  if (!pick || !t) return undefined;
+  const r = toLandingReview(t.data.quote, t.data.reviewerName, pick.excerpt);
+  const platform = PLATFORM[t.data.reviewerPlatform];
+  return { ...r, cite: `${r.reviewer}${platform ? `, ${platform} review` : ''} of ${t.data.bookTitle ?? about}` };
+}
+
+/** A book landing page's pull quote and reviews, from its `landing:` block: none when it names none. */
+export function landingQuotes(
+  landing: { pullQuote?: ReviewPick; reviews?: ReviewPick[] },
+  testimonials: TestimonialEntry[],
+  about: string,
+): { pullQuote?: CitedReview; reviews: CitedReview[] } {
+  return {
+    pullQuote: citedReview(landing.pullQuote, testimonials, about),
+    reviews: (landing.reviews ?? [])
+      .map((pick) => citedReview(pick, testimonials, about))
+      .filter((r): r is CitedReview => Boolean(r)),
+  };
+}
+
 /** JSON safe inside a <script> element. */
 export function scriptJson(value: unknown): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');

@@ -15,6 +15,14 @@ const ROSIE = tags['a-rosie-christmas'];
 const BOX_SET = tags['the-bride-program-box-set'];
 // Book 1's paperback (ISBN-10), the box-set door's print link: Book 1 has no Print tag yet.
 const BOOK_ONE_PRINT = 'https://www.amazon.com/dp/1090344376';
+// A Rosie Christmas's quotes as its landing block picks them from the testimonials collection.
+const testimonial = (pick: { id: string; excerpt?: string }) => {
+  const t = matter(readFileSync(join(process.cwd(), 'src/content/testimonials', `${pick.id}.md`), 'utf8')).data;
+  const [title, ...rest] = String(t.quote).split('\n\n');
+  return { title, body: pick.excerpt ?? rest.join(' '), reviewer: String(t.reviewerName) };
+};
+const ROSIE_LEAD = testimonial(rosie.landing.pullQuote);
+const ROSIE_REVIEWS = (rosie.landing.reviews as { id: string; excerpt?: string }[]).map(testimonial);
 const withEndpoint: ConfigEdit = (config) => ({ ...config, ctrEndpoint: CTR_ENDPOINT });
 
 test.describe('which books have one', () => {
@@ -53,7 +61,7 @@ test.describe('which books have one', () => {
 test.describe('renders static', () => {
   test.use({ javaScriptEnabled: false, timezoneId: 'America/New_York' });
 
-  test('the hook, two doors and no reviews, with working links and no script', async ({ page, context }) => {
+  test('the hook, two doors and Lis\'s Amazon reviews, with working links and no script', async ({ page, context }) => {
     const served = await serveDist(context);
     await page.goto(URL_);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('A Rosie Christmas');
@@ -68,9 +76,23 @@ test.describe('renders static', () => {
       'series-start',
     ]);
     await expect(page.getByTestId('landing-door-series-start')).toContainText('The Bride Program Box Set');
-    // The reviews collection has no review of this book: no pull-quote, no reviews.
-    await expect(page.getByTestId('landing-pull-quote')).toHaveCount(0);
-    await expect(page.getByTestId('landing-reviews')).toHaveCount(0);
+    // Lis's Amazon reviews (#8694, #62084): the lead as the pull quote, the rest as reviews,
+    // each with its reviewer's name, words as in the testimonial (an excerpt where the block has one).
+    const pull = page.getByTestId('landing-pull-quote');
+    await expect(pull).toHaveCount(1);
+    await expect(pull.locator('blockquote')).toContainText(`“${ROSIE_LEAD.title}”`);
+    await expect(pull.locator('blockquote')).toContainText(ROSIE_LEAD.body);
+    await expect(pull.locator('figcaption')).toHaveText('Kindle Customer, Amazon review of A Rosie Christmas');
+    const reviews = page.getByTestId('landing-reviews').locator('figure');
+    await expect(reviews).toHaveCount(rosie.landing.reviews.length);
+    for (const [i, r] of ROSIE_REVIEWS.entries()) {
+      await expect(reviews.nth(i).locator('blockquote')).toContainText(`“${r.title}”`);
+      await expect(reviews.nth(i).locator('blockquote')).toContainText(r.body);
+      await expect(reviews.nth(i).locator('figcaption')).toHaveText(`${r.reviewer}, Amazon review of A Rosie Christmas`);
+    }
+    expect(ROSIE_REVIEWS.map((r) => r.reviewer)).toEqual(['Coder jane', 'Kindle Customer', 'T. Lewis']);
+    // T. Lewis's review shows its first paragraph only (the block's excerpt), not the second.
+    await expect(reviews.nth(2)).not.toContainText('unanswered questions');
     await expect(page.getByTestId('landing-pitch')).toContainText('Rosie Simson is committed to serving as the Human Bride Liaison');
     await expect(page.getByTestId('landing-consent')).toBeHidden();
     expect(served.pixelRequested()).toBe(false);
