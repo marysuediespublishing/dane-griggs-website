@@ -19,6 +19,8 @@ const BOOK_ONE_PRINT = 'https://www.amazon.com/dp/1090344376';
 const testimonial = (pick: { id: string; excerpt?: string }) => {
   const t = matter(readFileSync(join(process.cwd(), 'src/content/testimonials', `${pick.id}.md`), 'utf8')).data;
   const [title, ...rest] = String(t.quote).split('\n\n');
+  // An excerpt is the review's own words, character for character (#8694: no quote is retyped).
+  if (pick.excerpt) expect(String(t.quote), pick.id).toContain(pick.excerpt);
   return { title, body: pick.excerpt ?? rest.join(' '), reviewer: String(t.reviewerName) };
 };
 const ROSIE_LEAD = testimonial(rosie.landing.pullQuote);
