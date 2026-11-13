@@ -23,7 +23,7 @@ const BOOKS = [
 
 // Example tags: the default ad group, and campaign "x"'s own.
 const BOX = 'https://www.amazon.com/dp/B0B2M4RGCS';
-const PRINT = 'https://www.amazon.com/dp/1090344378';
+const PRINT = 'https://www.amazon.com/dp/1090344376';
 const TAGS = {
 	'': '?maas=maas_adg_DEFAULT_afap_abs&ref_=aa_maas&tag=maas',
 	x: '?maas=maas_adg_CAMPAIGN_X_afap_abs&ref_=aa_maas&tag=maas',

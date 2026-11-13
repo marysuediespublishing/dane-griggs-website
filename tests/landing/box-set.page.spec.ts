@@ -3,7 +3,8 @@ import { test, expect, type Page } from '@playwright/test';
 import { BOX_SET_PATH, CTR_ENDPOINT, ORIGIN, pixelCalls, serveDist, type ConfigEdit } from './harness';
 
 const URL_ = `${ORIGIN}${BOX_SET_PATH}`;
-const PRINT = 'https://www.amazon.com/dp/1090344378';
+// Book 1's paperback, ISBN-10 1090344376 (ISBN 9781090344373), from Book 1's paperbackAsin.
+const PRINT = 'https://www.amazon.com/dp/1090344376';
 // site-config attributionTags.US.the-bride-program-box-set (Desk's import, de70ad7). Book 1 has no print tag yet.
 const KU_TAG = 'https://www.amazon.com/dp/B0B2M4RGCS?maas=maas_adg_3F91A019135483A3CEB6AC54EEF39FAA_afap_abs&ref_=aa_maas&tag=maas';
 const KINDLE_TAG = 'https://www.amazon.com/dp/B0B2M4RGCS?maas=maas_adg_EE79A1F0E61FC2AB6B4C507B25EE46E5_afap_abs&ref_=aa_maas&tag=maas';
@@ -28,6 +29,11 @@ test.describe('renders static', () => {
       await expect(page.getByTestId(`landing-cta-${cta}-${where(page)}`)).toHaveAttribute('href', HREF[cta]);
     }
     await expect(page.getByTestId(`landing-cta-paperback-${where(page)}`)).toHaveAttribute('href', PRINT);
+    // Kindle+ (Kindle Unlimited until 2026-10-22), in the words of Gwen's English landing pages.
+    await expect(page.getByTestId(`landing-cta-ku-${where(page)}`)).toHaveText('Read free with Kindle+');
+    await expect(page.locator('body')).toContainText('Free for Kindle+ members');
+    await expect(page.locator('body')).not.toContainText('Kindle Unlimited');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Free for Kindle\+ members\.$/);
     await expect(page.getByTestId('landing-consent')).toBeHidden();
     expect(served.pixelRequested()).toBe(false);
   });

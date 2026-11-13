@@ -60,6 +60,7 @@ collections:
       - { label: "Genres", name: "genres", widget: "list", default: [] }
       - { label: "Available on Kindle Unlimited", name: "isKU", widget: "boolean", default: true }
       - { label: "Amazon URL", name: "amazonUrl", widget: "string", required: false }
+      - { label: "Paperback ASIN or ISBN-10 (amazon.com)", name: "paperbackAsin", widget: "string", required: false, hint: "ISBN-10, not ISBN-13 (e.g. 1090344376). Book 1 of a series: the print link on its box-set page" }
       - label: "Editions"
         name: "editions"
         widget: "object"

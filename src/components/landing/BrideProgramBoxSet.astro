@@ -50,8 +50,6 @@ const PAGE = 'bride-program-box-set';
 // The box set is Books 1–9 of the series' reading order.
 const SET_SIZE = 9;
 const HOOK = 'What could possibly entice human women to willingly join a program meant to match them with snake-like alien husbands?';
-// Book 1 in paperback (ISBN 9781090344373): a quiet link that measures interest in print.
-const PAPERBACK_URL = 'https://www.amazon.com/dp/1090344378';
 // Book 1's product slug in Press's Books: the print link takes its Print tag.
 const PRINT_PRODUCT = 'the-bride-program';
 // Goodreads reviews of the box set (src/content/testimonials), by id: the pull-quote
@@ -134,11 +132,14 @@ const amazonBadge = siteConfig?.data.amazonBadge?.trim();
 // edition always has its ASIN, and a print link only when it has a paperback.
 const asin = edition ? edition.asin : series.data.boxSetAsin?.trim();
 const ku = edition ? edition.kuEnrolled : true;
+// Book 1 in paperback, a quiet link that measures interest in print: in English, Book 1's own
+// paperbackAsin (Books, ISBN-10); none, no print link.
+const paperbackAsin = edition ? edition.paperbackAsin : books[0]?.data.paperbackAsin;
 const { links, config } = landingSetup(
   PAGE,
   {
     kindleUrl: asin ? amazonDp(asin, market) : amazonSearch('Bride Program Box Set Dane Griggs', market),
-    paperbackUrl: edition ? amazonDp(edition.paperbackAsin, market) : PAPERBACK_URL,
+    paperbackUrl: amazonDp(paperbackAsin, market),
     product: series.data.boxSetSlug?.trim() || `${SERIES_SLUG}-box-set`,
     printProduct: PRINT_PRODUCT,
     ku,

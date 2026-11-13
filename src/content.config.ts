@@ -75,6 +75,8 @@ const books = defineCollection({
 			genres: z.array(z.string()).default([]),
 			isKU: z.boolean().default(true),
 			amazonUrl: z.string().url().optional(),
+			// The paperback on amazon.com, ASIN or ISBN-10 (Book 1's is the box-set page's print link)
+			paperbackAsin: z.string().optional(),
 			goodreadsUrl: z.string().url().optional(),
 			price: z.string().optional(),
 			wordCount: z.number().optional(),

@@ -22,7 +22,7 @@ import { decideConsent, isUsZone, siteMarketingConsent, utmOf } from '../../src/
 import { DEFAULT_PIXEL_HOSTS, beaconLine, isPixelHost, pixelHosts, pixelLine } from '../../src/lib/pixel-hosts';
 
 const KINDLE = 'https://www.amazon.com/dp/B0B2M4RGCS';
-const PRINT = 'https://www.amazon.com/dp/1090344378';
+const PRINT = 'https://www.amazon.com/dp/1090344376';
 const TAG_A = 'https://www.amazon.com/dp/B0B2M4RGCS?maas=maas_adg_AAA_afap_abs&ref_=aa_maas&tag=maas';
 const TAG_P = 'maas=maas_adg_PPP_afap_abs&ref_=aa_maas&tag=maas';
 const TAG_X = 'maas=maas_adg_XXX_afap_abs&ref_=aa_maas&tag=maas';
@@ -248,6 +248,10 @@ test.describe('strings: one table per language', () => {
     const en = LANDING_STRINGS.en;
     expect(en.completeSeries('Bride Program', 9)).toBe('The complete Bride Program · 9 books');
     expect(en.booksInside(9)).toBe('All nine books inside');
+    // Kindle Unlimited became Kindle+ (2026-10-22): Gwen's English landing pages' words.
+    expect(en.readFree).toBe('Read free with Kindle+');
+    expect(en.freeFor).toBe('Free for Kindle+ members');
+    expect(en.pageDescription('The Bride Program Box Set', 9, true)).not.toMatch(/Kindle Unlimited/);
     expect(en.booksInside(8)).toBe('All 8 books inside');
     expect(en.buyBoxSet('$9.99')).toBe('Buy the Kindle box set — $9.99');
     expect(formatRating(en, 4.5)).toBe('4.5');
