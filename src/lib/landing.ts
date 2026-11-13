@@ -175,10 +175,27 @@ export function landingLinks(targets: LandingTargets, settings: LandingSettings 
  *  buttons with no tag, so a product's missing tags are seen. */
 export function landingSetup(page: string, targets: LandingTargets, settings: LandingSettings = {}, market = 'US') {
   const { links, missing } = landingLinks(targets, settings);
+  return { links, config: landingConfig(page, missing, settings, market) };
+}
+
+/** "the-bride-program · Print, a-rosie-christmas · KU": the build's missing-tag line. */
+export function missingLine(missing: MissingTag[]): string {
+  const label = { ku: 'KU', kindle: 'Kindle', print: 'Print' } as const;
+  return missing.map((m) => `${m.product} · ${label[m.door]}`).join(', ');
+}
+
+/** A page of several doors (a book's landing page): each door's links, and one config
+ *  listing every door's buttons with no tag. */
+export function landingDoorsSetup(page: string, doors: LandingTargets[], settings: LandingSettings = {}, market = 'US') {
+  const built = doors.map((door) => landingLinks(door, settings));
+  const config = landingConfig(page, built.flatMap((b) => b.missing), settings, market);
+  return { links: built.map((b) => b.links), config };
+}
+
+function landingConfig(page: string, missing: MissingTag[], settings: LandingSettings, market: string): LandingConfig {
   if (missing.length) {
-    const label = { ku: 'KU', kindle: 'Kindle', print: 'Print' } as const;
     const where = market === 'US' ? page : `${page} (${market})`;
-    console.warn(`[attribution] missing on ${where}: ${missing.map((m) => `${m.product} · ${label[m.door]}`).join(', ')}`);
+    console.warn(`[attribution] missing on ${where}: ${missingLine(missing)}`);
   }
   const config: LandingConfig = {
     page,
@@ -188,7 +205,7 @@ export function landingSetup(page: string, targets: LandingTargets, settings: La
     pixelHosts: pixelHosts(settings.pixelHosts),
     missingTags: missing,
   };
-  return { links, config };
+  return config;
 }
 
 /** "9.99" or "$9.99" → "$9.99"; empty → "". */

@@ -47,6 +47,15 @@ const seriesEdition = z.object({
 	ratingCount: z.number().optional(),
 	reviews: z.array(editionReview).default([]),
 });
+// Book landing pages (/books/<slug>/landing/): a testimonial picked by id (`excerpt`
+// replaces a long body, with "…" wherever text is cut), and a door's copy. As
+// gwen-demarco-website's.
+const landingReview = z.object({ id: z.string(), excerpt: z.string().optional() });
+const landingDoor = z.object({
+	title: z.string().optional(),
+	line: z.string().optional(),
+	review: landingReview.optional(),
+});
 const bookEdition = z.object({
 	asin: z.string().optional(),
 	title: z.string(),
@@ -75,6 +84,11 @@ const books = defineCollection({
 			genres: z.array(z.string()).default([]),
 			isKU: z.boolean().default(true),
 			amazonUrl: z.string().url().optional(),
+			// The Kindle edition's ASIN on amazon.com (a landing page's KU and Kindle buttons)
+			asin: z.string().optional(),
+			// The book's product slug in Press's Books (its Attribution tags' key, site-config
+			// attributionTags.<market>.<productSlug>); default the book's own slug less "-book"
+			productSlug: z.string().optional(),
 			// The paperback on amazon.com, ASIN or ISBN-10 (Book 1's is the box-set page's print link)
 			paperbackAsin: z.string().optional(),
 			goodreadsUrl: z.string().url().optional(),
@@ -85,6 +99,26 @@ const books = defineCollection({
 			featured: z.boolean().default(false),
 			// The book in other languages (its title on a /<lang>/ box-set page)
 			editions: z.object({ de: bookEdition.optional(), fr: bookEdition.optional() }).optional(),
+			// Ad landing page at /books/<slug>/landing/, built for every book with this block
+			// (src/components/landing/BookLandingPage.astro). Up to three doors, each with
+			// Kindle+ / Kindle / Print: this book, the start of its series, and another series in
+			// the same world.
+			landing: z
+				.object({
+					hook: z.string(),
+					pullQuote: landingReview.optional(),
+					reviews: z.array(landingReview).default([]),
+					book: landingDoor.optional(),
+					seriesStart: landingDoor.optional(),
+					sameWorld: landingDoor
+						.extend({
+							series: z.string(),
+							// The `target` parameter on this door's click events
+							target: z.string(),
+						})
+						.optional(),
+				})
+				.optional(),
 		}),
 });
 

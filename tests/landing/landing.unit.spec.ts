@@ -6,8 +6,10 @@ import {
   LANDING_EVENTS,
   LANDING_LANGS,
   LANG_MARKET,
+  landingDoorsSetup,
   landingLinks,
   landingSetup,
+  missingLine,
   langPath,
   marketOf,
   money,
@@ -270,5 +272,43 @@ test.describe('strings: one table per language', () => {
     expect(formatRating(LANDING_STRINGS.de, 4.4)).toBe('4,4');
     expect(formatCount(LANDING_STRINGS.de, 1234)).toBe('1.234');
     expect(formatRating(LANDING_STRINGS.fr, 4.4)).toBe('4,4');
+  });
+});
+
+test.describe('landingDoorsSetup (a book page of several doors)', () => {
+  const tags = {
+    US: {
+      'a-rosie-christmas': { ku: 'maas=maas_adg_RKU_afap_abs&ref_=aa_maas&tag=maas', kindle: 'maas=maas_adg_RK_afap_abs&ref_=aa_maas&tag=maas' },
+      'the-bride-program-box-set': { ku: TAG_A },
+    },
+  };
+  const doors = [
+    { kindleUrl: 'https://www.amazon.com/dp/B0CPB2FSSQ', paperbackUrl: 'https://www.amazon.com/dp/B0CPHSRX29', product: 'a-rosie-christmas', printProduct: 'a-rosie-christmas' },
+    { kindleUrl: KINDLE, paperbackUrl: PRINT, product: 'the-bride-program-box-set', printProduct: 'the-bride-program' },
+  ];
+
+  test('each door takes its own product\'s tags; every door\'s untagged buttons are listed once, in the build line too', () => {
+    const warn = console.warn;
+    const lines: string[] = [];
+    console.warn = (line: string) => lines.push(line);
+    try {
+      const { links, config } = landingDoorsSetup('rosie-christmas-book-landing', doors, { attributionTags: tags });
+      expect(links[0].ku).toBe('https://www.amazon.com/dp/B0CPB2FSSQ?maas=maas_adg_RKU_afap_abs&ref_=aa_maas&tag=maas');
+      expect(links[0].buy).toBe('https://www.amazon.com/dp/B0CPB2FSSQ?maas=maas_adg_RK_afap_abs&ref_=aa_maas&tag=maas');
+      expect(links[1].ku).toBe(TAG_A);
+      expect(links[1].paperback).toBe(PRINT);
+      expect(config.page).toBe('rosie-christmas-book-landing');
+      expect(config.missingTags).toEqual([
+        { product: 'a-rosie-christmas', door: 'print', href: 'https://www.amazon.com/dp/B0CPHSRX29' },
+        { product: 'the-bride-program-box-set', door: 'kindle', href: KINDLE },
+        { product: 'the-bride-program', door: 'print', href: PRINT },
+      ]);
+      expect(lines).toEqual([
+        `[attribution] missing on rosie-christmas-book-landing: ${missingLine(config.missingTags)}`,
+      ]);
+      expect(missingLine(config.missingTags)).toBe('a-rosie-christmas · Print, the-bride-program-box-set · Kindle, the-bride-program · Print');
+    } finally {
+      console.warn = warn;
+    }
   });
 });

@@ -1,0 +1,313 @@
+---
+// A book's ad landing page, in English at /books/<slug>/landing/: built for every book whose
+// frontmatter has a `landing:` block (see README "Book landing pages"). Ported from
+// gwen-demarco-website's BookLandingPage in the Bride Program box-set page's look, from the
+// same pieces (LandingLayout, LandingConsentBar, LandingCtas, LandingTracking). Unlinked from
+// the site: no menu, noindex, not in the sitemap.
+//
+// Up to three doors, each with Kindle+ (the ku cta) / Kindle / Print:
+//   1. this book (target = the book's slug)
+//   2. the start of its series (target series-start), when the book is not book one: the
+//      series box set if it has one (boxSetAsin), else book one of its readingOrder
+//   3. another series in the same world (landing.sameWorld), only when the block names one
+// Each button takes its product's Attribution tag for its door (site-config
+// attributionTags.US.<product>.<ku|kindle|print>, the product being the book's productSlug or
+// the series' boxSetSlug), whatever ad sent the visitor; one with none is the bare /dp link,
+// and the build lists it as missing. Every button fires LandingClickKU / LandingClickBuy /
+// LandingClickPaperback with `target`, `market` and the page's utm_*.
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { Image, getImage } from 'astro:assets';
+import { type CollectionEntry, getCollection, getEntry } from 'astro:content';
+import LandingLayout from '../../layouts/LandingLayout.astro';
+import LandingCtas from './LandingCtas.astro';
+import LandingConsentBar from './LandingConsentBar.astro';
+import LandingTracking from './LandingTracking.astro';
+import { en as strings, KINDLE_PLUS } from '../../i18n/landing.en';
+import { formatCount, formatRating } from '../../i18n/landing';
+import {
+  amazonDp,
+  amazonSearch,
+  landingDoorsSetup,
+  money,
+  toLandingReview,
+  type LandingReview,
+  type LandingTargets,
+} from '../../lib/landing';
+import { landingCovers } from '../../integrations/landing-covers.mjs';
+
+export interface Props {
+  book: CollectionEntry<'books'>;
+}
+
+type Book = CollectionEntry<'books'>;
+type Series = CollectionEntry<'series'>;
+type ReviewPick = { id: string; excerpt?: string };
+type Rating = { value: number; count: number; label: string };
+
+const { book } = Astro.props;
+const landing = book.data.landing!;
+const BLURB_PARAGRAPHS = 3;
+const PLATFORM: Record<string, string> = { amazon: 'Amazon', goodreads: 'Goodreads', bookbub: 'BookBub' };
+
+const allBooks = await getCollection('books');
+const allSeries = await getCollection('series');
+const testimonials = await getCollection('testimonials');
+const siteConfig = await getEntry('settings', 'site-config');
+
+const bookById = (id?: string) => allBooks.find((b) => b.id === id);
+const seriesOf = (b: Book) => allSeries.find((s) => s.data.readingOrder.includes(b.id));
+const firstBook = (s: Series) => bookById(s.data.readingOrder[0]);
+// A book's product slug in Press's Books: its productSlug, else its own slug without the
+// "-book" these files carry (the-bride-program-book → the-bride-program).
+const productOf = (b?: Book) => b?.data.productSlug?.trim() || b?.id.replace(/-book$/, '') || '';
+const stars = (rating: number) => '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+const ratingOf = (value: number, count: number, label: string): Rating | undefined =>
+  value > 0 && count > 0 ? { value, count, label } : undefined;
+
+// A testimonial, picked by id, cited with its platform and what it reviewed.
+const review = (pick?: ReviewPick): (LandingReview & { cite: string }) | undefined => {
+  const t = pick && testimonials.find((entry) => entry.id === pick.id);
+  if (!pick || !t) return undefined;
+  const r = toLandingReview(t.data.quote, t.data.reviewerName, pick.excerpt);
+  const platform = PLATFORM[t.data.reviewerPlatform];
+  const about = t.data.bookTitle ?? book.data.title;
+  return { ...r, cite: `${r.reviewer}${platform ? `, ${platform} review` : ''} of ${about}` };
+};
+
+interface Door extends LandingTargets {
+  target: string;
+  eyebrow: string;
+  title: string;
+  line?: string;
+  cover?: { book: Book } | { src: string };
+  coverAlt: string;
+  rating?: Rating;
+  buyLabel: string;
+  printLabel: string;
+  review?: ReturnType<typeof review>;
+}
+
+const bookDoor = (b: Book, target: string, eyebrow: string, title: string): Door => {
+  const price = money(b.data.price);
+  return {
+    target,
+    eyebrow,
+    title,
+    kindleUrl: amazonDp(b.data.asin) || b.data.amazonUrl || amazonSearch(`${b.data.title} Dane Griggs`),
+    paperbackUrl: amazonDp(b.data.paperbackAsin),
+    product: productOf(b),
+    printProduct: productOf(b),
+    ku: b.data.isKU,
+    cover: { book: b },
+    coverAlt: strings.coverOf(b.data.title),
+    rating: ratingOf(b.data.rating, b.data.ratingCount, 'ratings'),
+    buyLabel: price ? `Buy for Kindle — ${price}` : 'Buy for Kindle',
+    printLabel: 'Prefer paper? The paperback →',
+  };
+};
+
+// A series door: its box set when it has one, else its book one.
+const seriesDoor = (s: Series, target: string, title?: string): Door | undefined => {
+  const one = firstBook(s);
+  const boxSetAsin = s.data.boxSetAsin?.trim();
+  if (boxSetAsin) {
+    const covers = landingCovers(s.data.boxSetCover);
+    const cover = covers && existsSync(join(process.cwd(), 'public', covers.hero)) ? covers.hero : undefined;
+    const price = money(s.data.boxSetPrice);
+    return {
+      target,
+      eyebrow: `${s.data.title} · Box set`,
+      title: title ?? `Start with the ${s.data.title} box set`,
+      kindleUrl: amazonDp(boxSetAsin),
+      paperbackUrl: amazonDp(one?.data.paperbackAsin),
+      // The box set is its own product (Press's Books slug); its print link is book one's.
+      product: s.data.boxSetSlug?.trim() || `${s.id}-box-set`,
+      printProduct: productOf(one),
+      ku: true,
+      cover: cover ? { src: cover } : undefined,
+      coverAlt: `${s.data.title} box set by Dane Griggs`,
+      rating: ratingOf(s.data.overallRating, s.data.totalRatings, 'ratings across the series'),
+      buyLabel: strings.buyBoxSet(price),
+      printLabel: strings.preferPaper,
+    };
+  }
+  if (!one) return undefined;
+  return { ...bookDoor(one, target, `${s.data.title} · Book 1`, title ?? `Start the series with ${one.data.title}`), printLabel: strings.preferPaper };
+};
+
+const series = seriesOf(book);
+const doors: Door[] = [];
+const eyebrow = [series?.data.title, book.data.seriesOrder && `Book ${book.data.seriesOrder}`].filter(Boolean).join(' · ');
+doors.push({
+  ...bookDoor(book, book.id, eyebrow, landing.book?.title ?? `Read ${book.data.title} now`),
+  line: landing.book?.line,
+  review: review(landing.book?.review),
+});
+if (series && firstBook(series)?.id !== book.id) {
+  const door = seriesDoor(series, 'series-start', landing.seriesStart?.title);
+  if (door) doors.push({ ...door, line: landing.seriesStart?.line, review: review(landing.seriesStart?.review) });
+}
+if (landing.sameWorld) {
+  const world = allSeries.find((s) => s.id === landing.sameWorld!.series);
+  if (!world) throw new Error(`Missing series entry: ${landing.sameWorld.series}`);
+  const door = seriesDoor(world, landing.sameWorld.target, landing.sameWorld.title);
+  if (door) doors.push({ ...door, line: landing.sameWorld.line, review: review(landing.sameWorld.review) });
+}
+
+const { links, config } = landingDoorsSetup(`${book.id}-landing`, doors, siteConfig?.data);
+
+const pullQuote = review(landing.pullQuote);
+const reviews = landing.reviews.map(review).filter((r): r is NonNullable<typeof r> => Boolean(r));
+const rating = ratingOf(book.data.rating, book.data.ratingCount, 'ratings');
+const amazonBadge = siteConfig?.data.amazonBadge?.trim();
+
+// The pitch: the book's synopsis (the body's "## Synopsis"), else its description; the full
+// blurb stays on Amazon, the page carries the first three paragraphs.
+const synopsis = /^##\s+Synopsis\s*$([\s\S]*?)(?=^#{1,2}\s|(?![\s\S]))/m.exec(book.body ?? '')?.[1];
+const pitch = (synopsis?.trim() || book.data.description)
+  .split(/\n\s*\n/)
+  .map((p) => p.replace(/\*\*?|__?/g, '').replace(/\s+/g, ' ').trim())
+  .filter(Boolean)
+  .slice(0, BLURB_PARAGRAPHS);
+
+const title = book.data.title;
+const hasSeriesStart = doors.some((door) => door.target === 'series-start');
+const pageTitle = `${title}${series && book.data.seriesOrder ? `: ${series.data.title} Book ${book.data.seriesOrder}` : ''} | Dane Griggs`;
+const description = `${landing.hook} Read it free with ${KINDLE_PLUS}${hasSeriesStart ? ', or start the series from the beginning' : ''}.`;
+const ogImage = (await getImage({ src: book.data.cover, width: 600, format: 'jpg' })).src;
+const waysIn = `${['One way', 'Two ways', 'Three ways'][doors.length - 1] ?? `${doors.length} ways`} in`;
+---
+
+<LandingLayout title={pageTitle} description={description} image={ogImage}>
+  <main
+    id="main-content"
+    class="px-4 pt-8 pb-6 lg:pt-12 lg:pb-16 bg-[radial-gradient(ellipse_at_20%_0%,rgba(106,76,147,0.10),transparent_55%),radial-gradient(ellipse_at_90%_10%,rgba(212,51,106,0.07),transparent_50%)]"
+    data-testid="landing-page"
+  >
+    <LandingConsentBar />
+
+    <div class="max-w-6xl mx-auto">
+      <!-- Hero: the cover, series line, hook, rating, pull-quote -->
+      <section class="grid sm:grid-cols-[minmax(0,18rem)_1fr] gap-6 sm:gap-8 items-center text-center sm:text-left max-w-4xl">
+        <Image
+          src={book.data.cover}
+          alt={`${title} by Dane Griggs`}
+          width={448}
+          class="w-full max-w-[18rem] mx-auto rounded-md shadow-lg shadow-deep-space-navy/25"
+          fetchpriority="high"
+          loading="eager"
+        />
+        <div>
+          {eyebrow && <p class="text-cosmic-rose font-semibold uppercase tracking-[0.08em] sm:tracking-[0.14em] text-xs sm:text-sm mb-2">{eyebrow}</p>}
+          <h1 class="text-4xl md:text-5xl font-primary font-bold text-deep-space-navy mb-3">{title}</h1>
+          <p class="text-lg md:text-xl text-text-secondary mb-4" data-testid="landing-hook">{landing.hook}</p>
+          {rating && (
+            <p class="text-text-secondary font-medium">
+              <span class="text-stellar-gold tracking-widest" aria-hidden="true">{stars(rating.value)}</span>
+              {formatRating(strings, rating.value)} · {formatCount(strings, rating.count)} {rating.label}
+            </p>
+          )}
+          {pullQuote && (
+            <figure class="mt-6 border-l-4 border-cosmic-rose pl-5 text-left" data-testid="landing-pull-quote">
+              <blockquote>
+                {pullQuote.title && <p class="font-primary font-semibold text-2xl text-deep-space-navy mb-2">{strings.quote(pullQuote.title)}</p>}
+                <p class="text-text-secondary">{pullQuote.body}</p>
+              </blockquote>
+              <figcaption class="mt-2 text-sm text-text-muted">{pullQuote.cite}</figcaption>
+            </figure>
+          )}
+        </div>
+      </section>
+
+      <!-- The doors: every way in, each with its own buttons -->
+      <section id="doors" class="mt-12" data-testid="landing-doors">
+        <h2 class="text-2xl md:text-3xl font-primary font-bold text-deep-space-navy mb-2 text-center lg:text-left">{waysIn}</h2>
+        <p class="text-text-muted mb-6 text-center lg:text-left">All in the same world. Pick where you want to start.</p>
+        <div class={`grid gap-6 ${doors.length === 3 ? 'lg:grid-cols-3' : 'md:grid-cols-2'}`}>
+          {doors.map((door, i) => (
+            <article
+              data-door={door.target}
+              data-testid={`landing-door-${door.target}`}
+              class="rounded-2xl border border-border-light bg-solar-white p-6 shadow-nebula flex flex-col"
+            >
+              <div class="flex-1">
+                <div class="flex gap-4 items-start mb-5">
+                  {door.cover && 'book' in door.cover && (
+                    <Image
+                      src={door.cover.book.data.cover}
+                      alt={door.coverAlt}
+                      width={192}
+                      class="w-20 shrink-0 rounded-md shadow-lg shadow-deep-space-navy/25 aspect-[2/3] object-cover"
+                    />
+                  )}
+                  {door.cover && 'src' in door.cover && (
+                    <img src={door.cover.src} alt={door.coverAlt} loading="lazy" decoding="async" class="w-24 shrink-0 mix-blend-multiply" />
+                  )}
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-cosmic-rose mb-1">{door.eyebrow}</p>
+                    <h3 class="font-primary text-xl font-bold text-deep-space-navy leading-tight mb-2">{door.title}</h3>
+                    {door.line && <p class="text-sm text-text-secondary">{door.line}</p>}
+                  </div>
+                </div>
+                {door.rating && (
+                  <p class="text-sm text-text-secondary mb-4">
+                    <span class="text-stellar-gold tracking-widest" aria-hidden="true">{stars(door.rating.value)}</span>
+                    {formatRating(strings, door.rating.value)} · {formatCount(strings, door.rating.count)} {door.rating.label}
+                  </p>
+                )}
+                {door.review && (
+                  <figure class="mb-5 border-l-4 border-cosmic-rose pl-5 text-sm">
+                    <blockquote class="text-text-secondary italic">{door.review.body}</blockquote>
+                    <figcaption class="mt-1 text-xs text-text-muted">{door.review.cite}</figcaption>
+                  </figure>
+                )}
+              </div>
+              <LandingCtas
+                links={links[i]}
+                buyLabel={door.buyLabel}
+                paperbackLabel={door.printLabel}
+                where={door.target}
+                target={door.target}
+                ku={door.ku}
+              />
+            </article>
+          ))}
+        </div>
+        {amazonBadge && <img src={amazonBadge} alt={strings.availableAtAmazon} class="h-10 w-auto mx-auto mt-6" loading="lazy" />}
+      </section>
+
+      <!-- Pitch -->
+      <section class="mt-12 max-w-3xl">
+        <h2 class="text-2xl md:text-3xl font-primary font-bold text-deep-space-navy mb-4">About {title}</h2>
+        <div class="space-y-4 text-lg text-text-secondary" data-testid="landing-pitch">
+          {pitch.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </section>
+
+      <!-- Reviews, two by two, on a full-width navy band -->
+      {reviews.length > 0 && (
+        <section class="mt-12 py-12 bg-[#221c3d] shadow-[0_0_0_100vmax_#221c3d] [clip-path:inset(0_-100vmax)]" data-testid="landing-reviews">
+          <h2 class="text-2xl md:text-3xl font-primary font-bold text-solar-white mb-6">What readers say</h2>
+          <div class="grid md:grid-cols-2 gap-5">
+            {reviews.map((r) => (
+              <figure class="rounded-xl border border-cosmic-rose/35 bg-solar-white/5 p-6 flex flex-col">
+                <blockquote class="flex-1">
+                  {r.title && <p class="font-primary font-semibold text-lg text-solar-white mb-1.5">{strings.quote(r.title)}</p>}
+                  <p class="text-slate-200">{r.body}</p>
+                </blockquote>
+                <figcaption class="mt-4 text-sm text-slate-400">{r.cite}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <p class="mt-12 text-center">
+        <a href="#doors" class="font-primary font-bold text-xl text-cosmic-rose underline underline-offset-2 hover:text-deep-space-navy">↑ Pick a door</a>
+      </p>
+    </div>
+  </main>
+
+  <LandingTracking config={config} />
+</LandingLayout>

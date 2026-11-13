@@ -112,6 +112,22 @@ The page's inputs are CMS fields, all optional:
 
 These are constants at the top of the page file: the hook, the one-line book hooks (`BOOK_HOOKS`) and the review picks (testimonial ids). The reviews are Goodreads reviews of the box set, kept in `src/content/testimonials/`. The box-set image is `public/images/bride-program-box-set.jpg` (`boxSetCover`); the build makes the page's copies of it.
 
+## Book landing pages
+
+`/books/<slug>/landing/` is built for every book whose frontmatter has a `landing:` block (Books → Landing Page in the CMS), as on gwen-demarco-website; the first is `/books/rosie-christmas-book/landing/`. The template is `src/components/landing/BookLandingPage.astro`, built from the box-set page's pieces and in its look: the slim landing chrome (no site menu), the consent bar, noindex, kept out of the sitemap and linked from nowhere. Up to three doors, in this order, each with a Kindle+ / Kindle / Print button:
+
+| Door | `target` | Goes to |
+| --- | --- | --- |
+| 1. This book | the book's slug (`rosie-christmas-book`) | the book's `asin` (else its `amazonUrl`) and `paperbackAsin` |
+| 2. Start the series | `series-start` | the box set of the series whose `readingOrder` holds the book, if it has a `boxSetAsin` (print: book 1's paperback); else book 1. Left out when the book is book 1 |
+| 3. Same world | `landing.sameWorld.target` | `landing.sameWorld.series`: its box set, or its book 1. Only when the block names one |
+
+Attribution is per product and door: each button takes `attributionTags.US.<product>.<ku|kindle|print>` from site config, the product being the book's `productSlug` (its slug in Press's Books; default the file name without `-book`, so `the-bride-program-book` → `the-bride-program`; A Rosie Christmas's is `a-rosie-christmas`) or the series' `boxSetSlug`. A button with no tag is the bare `/dp` link, and the build lists it (`[attribution] missing on <slug>-landing: …`, and `missingTags` in the page's landing config). Every button fires `LandingClickKU` / `LandingClickBuy` / `LandingClickPaperback` with `page: <slug>-landing`, `target`, `market`, `cta`, `source`, `campaign` and the page's `utm_*` unchanged.
+
+The block (src/content.config.ts) is Gwen's: `hook` (the approved ad's own words), `pullQuote` and `reviews` (testimonial ids, with an optional `excerpt`), and each door's `title`, `line` and `review`. The pitch is the body's `## Synopsis` (else the description), first three paragraphs. English only for now.
+
+Tests: `npm run build:landing-test`, then `npm run test:landing` (`tests/landing/book-landing.page.spec.ts`; `book-page-unchanged.unit.spec.ts` builds the merge-base with main and checks the book's own page is unchanged).
+
 ## Tech Stack
 
 - [Astro](https://astro.build/) - Static site framework

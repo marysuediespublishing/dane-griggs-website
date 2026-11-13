@@ -60,6 +60,8 @@ collections:
       - { label: "Genres", name: "genres", widget: "list", default: [] }
       - { label: "Available on Kindle Unlimited", name: "isKU", widget: "boolean", default: true }
       - { label: "Amazon URL", name: "amazonUrl", widget: "string", required: false }
+      - { label: "Kindle ASIN (amazon.com)", name: "asin", widget: "string", required: false, hint: "The Kindle edition: the Kindle+ and Kindle buttons on the book's landing page" }
+      - { label: "Product slug (Press)", name: "productSlug", widget: "string", required: false, hint: "The book's slug in Press's Books, its key in Site Configuration's Attribution tags (e.g. a-rosie-christmas); empty → this file's name without -book" }
       - { label: "Paperback ASIN or ISBN-10 (amazon.com)", name: "paperbackAsin", widget: "string", required: false, hint: "ISBN-10, not ISBN-13 (e.g. 1090344376). Book 1 of a series: the print link on its box-set page" }
       - label: "Editions"
         name: "editions"
@@ -94,6 +96,34 @@ collections:
         options: ["published", "pre-order", "upcoming", "draft"]
         default: "published"
       - { label: "Featured Book", name: "featured", widget: "boolean", default: false }
+      - label: "Landing Page"
+        name: "landing"
+        widget: "object"
+        required: false
+        collapsed: true
+        hint: "Fill this in to build an ad landing page at /books/<slug>/landing (unlinked from the site): up to three doors, each with Kindle+ / Kindle / Print — this book, the start of its series, and a series in the same world. See README 'Book landing pages'"
+        fields:
+          - { label: "Hook", name: "hook", widget: "string", hint: "One or two sentences under the title: the ad's own words" }
+          - label: "Pull-quote"
+            name: "pullQuote"
+            widget: "object"
+            required: false
+            fields:
+              - { label: "Testimonial ID", name: "id", widget: "string", hint: "The testimonial's file name, without .md" }
+              - { label: "Excerpt", name: "excerpt", widget: "text", required: false, hint: "Replaces a long review's body; mark every cut with …" }
+          - { label: "Reviews", name: "reviews", widget: "list", required: false, fields: [{ label: "Testimonial ID", name: "id", widget: "string", hint: "The testimonial's file name, without .md" }, { label: "Excerpt", name: "excerpt", widget: "text", required: false, hint: "Replaces a long review's body; mark every cut with …" }] }
+          - { label: "Door 1: this book", name: "book", widget: "object", required: false, fields: [{ label: "Title", name: "title", widget: "string", required: false }, { label: "Line", name: "line", widget: "string", required: false }, { label: "Quote", name: "review", widget: "object", required: false, fields: [{ label: "Testimonial ID", name: "id", widget: "string", hint: "The testimonial's file name, without .md" }, { label: "Excerpt", name: "excerpt", widget: "text", required: false, hint: "Replaces a long review's body; mark every cut with …" }] }] }
+          - { label: "Door 2: start the series", name: "seriesStart", widget: "object", required: false, hint: "The series box set if the series has a Box Set Kindle ASIN, else its book 1", fields: [{ label: "Title", name: "title", widget: "string", required: false }, { label: "Line", name: "line", widget: "string", required: false }, { label: "Quote", name: "review", widget: "object", required: false, fields: [{ label: "Testimonial ID", name: "id", widget: "string", hint: "The testimonial's file name, without .md" }, { label: "Excerpt", name: "excerpt", widget: "text", required: false, hint: "Replaces a long review's body; mark every cut with …" }] }] }
+          - label: "Door 3: same world"
+            name: "sameWorld"
+            widget: "object"
+            required: false
+            fields:
+              - { label: "Series", name: "series", widget: "relation", collection: "series", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"] }
+              - { label: "Target", name: "target", widget: "string", hint: "The `target` parameter on this door's click events" }
+              - { label: "Title", name: "title", widget: "string", required: false }
+              - { label: "Line", name: "line", widget: "string", required: false }
+              - { label: "Quote", name: "review", widget: "object", required: false, fields: [{ label: "Testimonial ID", name: "id", widget: "string", hint: "The testimonial's file name, without .md" }, { label: "Excerpt", name: "excerpt", widget: "text", required: false, hint: "Replaces a long review's body; mark every cut with …" }] }
       - { label: "Content", name: "body", widget: "markdown" }
 
   # Series collection

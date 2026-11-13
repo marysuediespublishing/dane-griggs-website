@@ -193,7 +193,9 @@ export function startLanding(config: LandingConfig, w: PixelWindow = window): vo
   ctas.forEach((a) => {
     a.addEventListener('click', () => {
       const cta = a.dataset.landingCta as LandingCta;
-      const detail = { page: config.page, market: config.market, cta, source: fromAd ? 'ad' : 'organic', campaign, ...utm };
+      // A page of several doors names the door clicked (`target`, as Gwen's book pages do).
+      const target = a.dataset.landingTarget;
+      const detail = { page: config.page, market: config.market, cta, ...(target ? { target } : {}), source: fromAd ? 'ad' : 'organic', campaign, ...utm };
       if (pixel) pixel('trackCustom', LANDING_EVENTS[cta], detail);
       if (config.ctrEndpoint && !live) {
         console.log(beaconLine({ metric: 'press.landing.ctr', ...detail }));

@@ -1,0 +1,19 @@
+---
+// A book's ad landing page in English, for every book with a `landing:` block; the template
+// is src/components/landing/BookLandingPage.astro. Unlinked: no menu, noindex, not in the sitemap.
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BookLandingPage from '../../../components/landing/BookLandingPage.astro';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.filter((book) => book.data.landing).map((book) => ({ params: { slug: book.id }, props: { book } }));
+}
+
+interface Props {
+  book: CollectionEntry<'books'>;
+}
+
+const { book } = Astro.props;
+---
+
+<BookLandingPage book={book} />

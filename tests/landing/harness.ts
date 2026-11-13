@@ -14,6 +14,8 @@ export const ORIGIN = 'https://danegriggs.com';
 /** A local build: the pixel and the beacon only log `[pixel] …` lines. */
 export const LOCAL_ORIGIN = 'http://localhost:4321';
 export const BOX_SET_PATH = '/series/saving-ceraste/box-set/';
+/** A Rosie Christmas's landing page, the first book page (/books/<slug>/landing/). */
+export const ROSIE_LANDING_PATH = '/books/rosie-christmas-book/landing/';
 export const CTR_ENDPOINT = 'https://press.test/ctr';
 const DIST = join(process.cwd(), 'dist');
 
@@ -58,7 +60,8 @@ export async function serveDist(context: BrowserContext, edit?: ConfigEdit, orig
     const file = distFile(pathname);
     if (!file) return route.fulfill({ status: 404, body: 'not found' });
     let body = readFileSync(file);
-    if (edit && pathname.endsWith(BOX_SET_PATH)) {
+    // Any landing page (the box set's, a book's): the edit applies to the page's landing config.
+    if (edit && extname(file) === '.html') {
       const html = body.toString('utf8').replace(
         /(<script type="application\/json" id="landing-config">)(.*?)(<\/script>)/s,
         (_m, open: string, json: string, close: string) =>

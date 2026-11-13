@@ -24,6 +24,9 @@ genres:
   - alien romance
 isKU: true
 amazonUrl: https://amzn.to/45xKlju
+asin: B0CPB2FSSQ
+paperbackAsin: B0CPHSRX29
+productSlug: a-rosie-christmas
 goodreadsUrl: https://www.goodreads.com/book/show/203055678-a-rosie-christmas
 price: $1.99
 wordCount: 47039
@@ -33,6 +36,11 @@ featured: false
 alienSpecies:
   - cerastean
   - human
+landing:
+  hook: "Some Christmas miracles come wrapped in stardust and seven feet of alien warrior. A cozy holiday novella."
+  seriesStart:
+    title: Start with The Bride Program Box Set
+    line: All nine books, one click.
 ---
 
 # A Rosie Christmas

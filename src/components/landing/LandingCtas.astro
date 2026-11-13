@@ -20,9 +20,11 @@ export interface Props {
   ku?: boolean;
   /** The fixed copy in the page's language */
   strings?: LandingStrings;
+  /** A page of several doors: the door these buttons are, sent as `target` on the click events. */
+  target?: string;
 }
 
-const { links, buyLabel, valueLine = '', where, compact = false, ku = true, strings = en } = Astro.props;
+const { links, buyLabel, valueLine = '', where, compact = false, ku = true, strings = en, target } = Astro.props;
 const paperbackLabel = Astro.props.paperbackLabel ?? strings.preferPaper;
 const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-text-muted mt-1 mb-4';
 ---
@@ -30,12 +32,12 @@ const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-t
 <!-- lg: the buttons sit in a 22rem sidebar, a size down so the KU label fits one line -->
 <div data-testid={`landing-ctas-${where}`}>
   {ku && (
-  <a href={links.ku} data-landing-cta="ku" data-testid={`landing-cta-ku-${where}`} class="btn btn-primary btn-lg w-full lg:!text-base lg:!px-4">
+  <a href={links.ku} data-landing-cta="ku" data-landing-target={target} data-testid={`landing-cta-ku-${where}`} class="btn btn-primary btn-lg w-full lg:!text-base lg:!px-4">
     {strings.readFree}
   </a>
   <p class={`text-center ${note}`}>{strings.freeFor}</p>
   )}
-  <a href={links.buy} data-landing-cta="buy" data-testid={`landing-cta-buy-${where}`} class="btn btn-secondary btn-lg w-full lg:!text-base lg:!px-4">
+  <a href={links.buy} data-landing-cta="buy" data-landing-target={target} data-testid={`landing-cta-buy-${where}`} class="btn btn-secondary btn-lg w-full lg:!text-base lg:!px-4">
     {buyLabel}
   </a>
   {valueLine && <p class={`text-center ${note}`}>{valueLine}</p>}
@@ -43,7 +45,7 @@ const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-t
     <p class="text-center mt-4">
       <a
         href={links.paperback}
-        data-landing-cta="paperback"
+        data-landing-cta="paperback" data-landing-target={target}
         data-testid={`landing-cta-paperback-${where}`}
         class="text-sm text-text-muted underline underline-offset-2 hover:text-text-secondary"
       >{paperbackLabel}</a>
