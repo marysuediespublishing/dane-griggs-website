@@ -148,6 +148,62 @@ attributionTags:
     the-bride-program-box-set:
       ku: "https://www.amazon.de/dp/B0GJ7DHJ3R?maas=maas_adg_8386B688BF941EF02BBB4FE2C6B92709_afap_abs&ref_=aa_maas&tag=maas"
       kindle: "https://www.amazon.de/dp/B0GJ7DHJ3R?maas=maas_adg_90DE12DF6BC5507F9A7FF9F5B41C1D98_afap_abs&ref_=aa_maas&tag=maas"
+  FR:
+    lily-saves-alien:
+      ku: "https://www.amazon.fr/dp/B0G2THMXXW?maas=maas_adg_A1B00EDD0EF03261CFCEB2F1F11C6310_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0G2THMXXW?maas=maas_adg_0A455759AB99C7EF9D54ECFA2DF31D6D_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0G2XJLZRM?maas=maas_adg_92C6C19B3A3C43E04C692B0978BB7922_afap_abs&ref_=aa_maas&tag=maas"
+    rescued-by-a-kraken:
+      ku: "https://www.amazon.fr/dp/B0GNXCKBF2?maas=maas_adg_588C289FEBA12CA048EB451FEFF760C9_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0GNXCKBF2?maas=maas_adg_DA48B3E03BCFA6CA1CA4328FABC8E705_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0GP7427WS?maas=maas_adg_247C541E5709C9C0C2E6C6F80794298B_afap_abs&ref_=aa_maas&tag=maas"
+    the-bride-program:
+      ku: "https://www.amazon.fr/dp/B0FJJJ8J2B?maas=maas_adg_7CEB156D51019A520F3B7E82CE64B2DD_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FJJJ8J2B?maas=maas_adg_5BF100BF5F94D052083C0E92325B012B_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FJMB226N?maas=maas_adg_7159D21BEEA4BDB1415CB4E7A06922E3_afap_abs&ref_=aa_maas&tag=maas"
+    bedside-manner-for-aliens:
+      ku: "https://www.amazon.fr/dp/B0FKPWLP2S?maas=maas_adg_8E922F938534F03112F6D38EF9A884C7_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FKPWLP2S?maas=maas_adg_A9DEE37640F2EA270EDBC780CB7F6331_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FKTFFXFD?maas=maas_adg_EA4CD8A5D42DE1E72CAB04FA511437D7_afap_abs&ref_=aa_maas&tag=maas"
+    threesomes-guide-to-the-galaxy:
+      ku: "https://www.amazon.fr/dp/B0FLLNF3XD?maas=maas_adg_6E0D2D55A203B10EC888A477CE78211E_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FLLNF3XD?maas=maas_adg_DA38FF253C5EA7E41FF6EAF65BD4640F_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FLQ859DH?maas=maas_adg_C96DAC3D3EED8B65DA6CFFF9D960B39E_afap_abs&ref_=aa_maas&tag=maas"
+    the-bride-program-honeymoon:
+      ku: "https://www.amazon.fr/dp/B0FP34XVZQ?maas=maas_adg_8F4D545ED6AC9D598A5C44CD146D319C_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FP34XVZQ?maas=maas_adg_E412C2596D624D3BD2B116CAC337DF83_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FP58YDMX?maas=maas_adg_BC42512BC0152F17DBD9C0BBE2DA82F2_afap_abs&ref_=aa_maas&tag=maas"
+    insatiable-curiosity:
+      ku: "https://www.amazon.fr/dp/B0FPQ1RT7J?maas=maas_adg_88F0CCA44832C9B561DE71CE15051F73_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FPQ1RT7J?maas=maas_adg_687BCB287D48B0AC43D52419360A541D_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FPRHP25R?maas=maas_adg_911A096C699AB09FC36E45ACC28A0CF2_afap_abs&ref_=aa_maas&tag=maas"
+    aliens-gossip-queen:
+      ku: "https://www.amazon.fr/dp/B0DGPNSGBM?maas=maas_adg_9D6A9E92F2EFE7A60F80AF73D3526EF0_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0DGPNSGBM?maas=maas_adg_95515B63A448C97941E3CB5A73F7B461_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FQ5FQY72?maas=maas_adg_B9731882758AECF9CCBF327ED6D61D9F_afap_abs&ref_=aa_maas&tag=maas"
+    marshmallow:
+      ku: "https://www.amazon.fr/dp/B0FR66YLR2?maas=maas_adg_42EE1FE9085BFBF478CC5FCDBC20E945_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FR66YLR2?maas=maas_adg_A790DE1CAD9FFFA3B114348198179D64_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FQPLHX1H?maas=maas_adg_ADF3A76D31EE9E4E5F5236859758ADD4_afap_abs&ref_=aa_maas&tag=maas"
+    war-brides:
+      ku: "https://www.amazon.fr/dp/B0FRDT8K5X?maas=maas_adg_61067DC5801332BB3D052E5C3C709B74_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FRDT8K5X?maas=maas_adg_506D0628AF32851FC73010C92408F197_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FRG795BW?maas=maas_adg_68D85CDC7F061A82930DBA8A3DC495EC_afap_abs&ref_=aa_maas&tag=maas"
+    the-chancellors-pilot:
+      ku: "https://www.amazon.fr/dp/B0FS3M3XD9?maas=maas_adg_8AAC72FF431F273581802D442A4A7C0E_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0FS3M3XD9?maas=maas_adg_D7E54B188561308829ED960713152C1F_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FS7S2X11?maas=maas_adg_4DB0C8EF3F2FF2050CDCA39286F0899F_afap_abs&ref_=aa_maas&tag=maas"
+    a-rosie-christmas:
+      ku: "https://www.amazon.fr/dp/B0F86RJJ9Q?maas=maas_adg_E7C1755CBF0160CD9FD2965CEAA621D7_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0F86RJJ9Q?maas=maas_adg_9AD2ACEE14BF8EE88195A2FF393F7999_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0FSL1ZDGR?maas=maas_adg_DC01968C1BA46E946E04C987FFCE00BA_afap_abs&ref_=aa_maas&tag=maas"
+    velshar:
+      ku: "https://www.amazon.fr/dp/B0GQW5N5LR?maas=maas_adg_56B85A285B6FECE2C2F4F53F2724E996_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0GQW5N5LR?maas=maas_adg_4043C6D5F8198BB9B269CD460ECF5E7D_afap_abs&ref_=aa_maas&tag=maas"
+      print: "https://www.amazon.fr/dp/B0GT9MYT6G?maas=maas_adg_1A998E29FFE34C856C9C89F412FCE12F_afap_abs&ref_=aa_maas&tag=maas"
+    the-bride-program-box-set:
+      ku: "https://www.amazon.fr/dp/B0GKJ1GGPJ?maas=maas_adg_9F12F6C13219FF482FDE95AFC56C5910_afap_abs&ref_=aa_maas&tag=maas"
+      kindle: "https://www.amazon.fr/dp/B0GKJ1GGPJ?maas=maas_adg_F601C24E0B858EC3974857EBDF1987D9_afap_abs&ref_=aa_maas&tag=maas"
 ---
 
 # Site Configuration
