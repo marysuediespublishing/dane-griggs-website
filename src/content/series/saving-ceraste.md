@@ -45,6 +45,55 @@ boxSetBlurb: |-
 alienSpecies:
   - cerastean
   - human
+editions:
+  de:
+    asin: B0GJ7DHJ3R
+    paperbackAsin: B0FH4R5MJX
+    title: Das Brautprogramm Sammelband
+    seriesName: Rettung Ceraste
+    kuEnrolled: true
+    blurb: |-
+      Die komplette Brautprogramm-Reihe – zum ersten Mal als Sammelbox erhältlich. Genieße alle heißen und prickelnden Romanzen, serviert mit einer Prise Humor. Jedes der neun Bücher erzählt die Geschichte einer menschlichen Braut, die ihren außerirdischen Seelenverwandten findet.
+
+      Was könnte menschliche Frauen dazu bewegen, freiwillig an einem Programm teilzunehmen, das sie mit schlangenähnlichen Alien-Ehemännern zusammenbringen soll?
+
+      Maya meldet sich an, um das Leben eines geliebten Menschen zu retten. Serena ergreift die Chance, bei der Heilung von Krebs mitzuwirken. Entführungsopfer Chelsea will nur ihren Peinigern entkommen – und findet am Ende die Liebe nicht nur mit einem, sondern gleich mit zwei Aliens … Und die Liste geht weiter. Manche Frauen suchen Abenteuer, manche wollen der Menschheit dienen, und manche suchen einen Ausweg – doch alle finden die Liebe, von der sie nie wussten, dass sie sie brauchten.
+
+      In dieser Sammelbox enthalten:
+
+      Das Brautprogramm
+      Die feinen Sitten für Aliens
+      Handbuch für galaktische Dreier
+      Das Brautprogramm: Flitterwochen
+      Unstillbare Neugie
+      Die Klatschkönigin des Aliens
+      Schaumkuss
+      Kriegsbräute
+      Die Pilotin des Kanzlers
+  fr:
+    asin: B0GKJ1GGPJ
+    paperbackAsin: B0FJMB226N
+    title: Coffret Le Programme des Épouses
+    seriesName: Sauver Ceraste
+    kuEnrolled: true
+    blurb: |-
+      La série complète du Programme des Épouses enfin disponible en coffret. Plongez dans ces romances torrides et sensuelles, relevées d'une touche d'humour. Chacun des neuf livres raconte l'histoire d'une fiancée humaine qui trouve son âme sœur extraterrestre.
+
+      Qu'est-ce qui pourrait bien inciter des femmes humaines à rejoindre volontairement un programme destiné à les unir à des maris extraterrestres à l'apparence reptilienne ?
+
+      Maya s'inscrit pour avoir une chance de sauver la vie d'un être cher. Serena saute sur l'occasion de contribuer à la guérison du cancer. Chelsea, victime d'un enlèvement, cherche simplement à échapper à ses bourreaux, mais finit par trouver l'amour auprès de non pas un, mais deux extraterrestres... Et la liste continue. Certaines femmes recherchent l'aventure, d'autres veulent servir une noble cause, d'autres encore cherchent une échappatoire, mais toutes trouvent l'amour qu'elles ignoraient leur manquer.
+
+      Livres inclus dans ce coffret :
+      Le Programme des Épouses
+      Savoir-Vivre pour Aliens
+      Guide Galactique du Ménage à Trois
+      Le Programme des Épouses -Lune de Miel
+      Curiosité Insatiable
+      La Reine des Commérages de l'Alien
+      Guimauve
+      Épouses de Guerre
+      La Pilote du Chancelier
+      Nouvelle bonus: Un Noël Rose
 ---
 
 # Saving Ceraste
