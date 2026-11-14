@@ -12,7 +12,7 @@ Developer runs dev servers manually. NEVER run: `npm run dev`, `npm start`, `yar
 - **Astro** with TypeScript
 - **Tailwind CSS + shadcn/ui** for styling
 - **Sveltia CMS** (Decap-compatible) for content management, online at /admin via GitHub token
-- **Jest + Playwright** with shared mocks
+- **Playwright** (`@playwright/test`) for all tests; no Jest tests (see Testing)
 
 ## Spec Format (JSON in Markdown)
 ```markdown
@@ -42,8 +42,9 @@ Developer runs dev servers manually. NEVER run: `npm run dev`, `npm start`, `yar
 - `npm run dev` - Start dev server (developer only)
 - `npm run build` - Build for production
 - `npm run typecheck` - TypeScript validation
-- `npm run test` - Jest unit tests
-- `npm run test:e2e` - Playwright E2E tests
+- `npm run test` - Landing unit test under Playwright (fast, no build)
+- `npm run test:landing` - All of tests/landing/, book-page-unchanged included (after `npm run build:landing-test`)
+- `npm run test:e2e` - Playwright tests in tests/e2e/
 - `npm run lint` - ESLint
 - `npm run format` - Prettier
 
@@ -51,12 +52,24 @@ Developer runs dev servers manually. NEVER run: `npm run dev`, `npm start`, `yar
 ```
 docs/specs.md          # All features (JSON specs)
 lib/test-mocks.ts       # Shared mock contracts
-tests/unit/             # Jest tests using shared mocks
+tests/landing/          # Landing tests; unit tests are *.unit.spec.ts (Playwright)
 tests/e2e/              # Playwright tests using same mocks
 src/                    # Astro source files
 public/admin/           # Sveltia CMS admin interface
 logs/dev.log            # Current dev server output
 ```
+
+## Testing
+
+There are no Jest tests. Every test runs under Playwright (`@playwright/test`).
+
+- `npm run test` runs the landing unit test, `tests/landing/landing.unit.spec.ts`, under Playwright. It is fast and needs no build.
+- `npm run test:landing` (after `npm run build:landing-test`) runs all of `tests/landing/`, the unit tests (`book-page-unchanged.unit.spec.ts` included) and then the built pages in a browser. `book-page-unchanged` reads the built `dist/` and builds the merge-base with main, so it is slow.
+- `npm run test:e2e` runs `tests/e2e/`.
+
+New unit tests go in `tests/landing/` as `*.unit.spec.ts` with `@playwright/test`, not in `tests/unit/` with Jest.
+
+No CI or lander runs `npm run test`: the Pages deploy runs `npm ci` and `npm run build` only, and the repo has no `verify` script.
 
 ## Spec Progress Tracking
 - **Backlog**: `## [ ] Spec 001: Feature Name` - Ready to implement

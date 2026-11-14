@@ -8,7 +8,7 @@
     "postbuild": "node scripts/check-prod-landing.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "jest",
+    "test": "playwright test -c playwright.landing.config.ts --project=unit tests/landing/landing.unit.spec.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "typecheck": "astro check",

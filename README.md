@@ -52,11 +52,23 @@ If the org requires approval, approve the token under org Settings → Personal 
 | `npm run typecheck` | Run TypeScript type checking |
 | `npm run lint` | Lint source files with ESLint |
 | `npm run format` | Format source files with Prettier |
-| `npm run test` | Run Jest unit tests |
-| `npm run test:e2e` | Run Playwright end-to-end tests |
+| `npm run test` | The landing unit test (`tests/landing/landing.unit.spec.ts`) under Playwright. Fast, no build |
+| `npm run test:e2e` | Run the Playwright tests in `tests/e2e/` |
 | `npm run test:e2e:ui` | Run Playwright tests with interactive UI |
-| `npm run test:landing` | Landing-page tests: unit tests, then the built pages in a browser, English, German and French. Run `npm run build:landing-test` first (the build with the test editions); no server needed |
+| `npm run test:landing` | Landing-page tests: unit tests (`book-page-unchanged.unit.spec.ts` included), then the built pages in a browser, English, German and French. Run `npm run build:landing-test` first (the build with the test editions); no server needed |
 | `npm run build:landing-test` | The build the landing tests run on: `npm run build` plus made-up DE/FR editions and tags (`tests/fixtures/landing-editions.json`). Never deploy it |
+
+## Testing
+
+There are no Jest tests. Every test runs under Playwright (`@playwright/test`).
+
+- `npm run test` runs the landing unit test, `tests/landing/landing.unit.spec.ts`, under Playwright. It is fast and needs no build.
+- `npm run test:landing` (after `npm run build:landing-test`) runs all of `tests/landing/`, the unit tests (`book-page-unchanged.unit.spec.ts` included) and then the built pages in a browser. `book-page-unchanged` reads the built `dist/` and builds the merge-base with main, so it is slow.
+- `npm run test:e2e` runs `tests/e2e/`.
+
+New unit tests go in `tests/landing/` as `*.unit.spec.ts` with `@playwright/test`, not in `tests/unit/` with Jest.
+
+No CI or lander runs `npm run test`: the Pages deploy runs `npm ci` and `npm run build` only, and the repo has no `verify` script.
 
 ## Project Structure
 
@@ -65,9 +77,8 @@ src/              # Astro source files (pages, components, layouts)
 public/           # Static assets served as-is
 public/admin/     # Sveltia CMS admin (online at /admin)
 docs/             # Project documentation and specs
-tests/unit/       # Jest unit tests
 tests/e2e/        # Playwright E2E tests
-tests/landing/    # Landing-page tests (playwright.landing.config.ts)
+tests/landing/    # Landing-page tests (playwright.landing.config.ts); unit tests are *.unit.spec.ts
 lib/              # Shared utilities and test mocks
 ```
 
