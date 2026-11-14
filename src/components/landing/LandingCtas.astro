@@ -1,5 +1,5 @@
 ---
-// The three buttons of an ad landing page: Kindle Unlimited (primary), buy the
+// The three buttons of an ad landing page: Kindle+ (primary; Kindle Unlimited until 2026-10-22), buy the
 // Kindle edition, and a quiet print link. Every link carries data-landing-cta, which
 // landing-client.ts reads to swap a campaign's links in and to fire the click events.
 import type { LandingLinks } from '../../lib/landing';
@@ -16,15 +16,17 @@ export interface Props {
   where: string;
   /** The phone's fixed bar: smaller notes, no print link. */
   compact?: boolean;
-  /** The edition is in Kindle Unlimited in this storefront; false: no KU button. */
+  /** The edition is in Kindle+ in this storefront; false: no KU button. */
   ku?: boolean;
+  /** Inside site-config kindlePlusFormerlyUntil: the note adds strings.formerlyKU (DE, FR; English has none). */
+  formerly?: boolean;
   /** The fixed copy in the page's language */
   strings?: LandingStrings;
   /** A page of several doors: the door these buttons are, sent as `target` on the click events. */
   target?: string;
 }
 
-const { links, buyLabel, valueLine = '', where, compact = false, ku = true, strings = en, target } = Astro.props;
+const { links, buyLabel, valueLine = '', where, compact = false, ku = true, formerly = false, strings = en, target } = Astro.props;
 const paperbackLabel = Astro.props.paperbackLabel ?? strings.preferPaper;
 const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-text-muted mt-1 mb-4';
 ---
@@ -35,7 +37,7 @@ const note = compact ? 'text-xs text-solar-white/70 mt-1 mb-2' : 'text-sm text-t
   <a href={links.ku} data-landing-cta="ku" data-landing-target={target} data-testid={`landing-cta-ku-${where}`} class="btn btn-primary btn-lg w-full lg:!text-base lg:!px-4">
     {strings.readFree}
   </a>
-  <p class={`text-center ${note}`}>{strings.freeFor}</p>
+  <p class={`text-center ${note}`}>{strings.freeFor}{formerly && strings.formerlyKU && <> · <span class="whitespace-nowrap" data-formerly-ku>{strings.formerlyKU}</span></>}</p>
   )}
   <a href={links.buy} data-landing-cta="buy" data-landing-target={target} data-testid={`landing-cta-buy-${where}`} class="btn btn-secondary btn-lg w-full lg:!text-base lg:!px-4">
     {buyLabel}

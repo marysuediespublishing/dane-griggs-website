@@ -6,7 +6,7 @@
 // CMS inputs (all optional, see README "Box-set landing pages"):
 //   series boxSetAsin / boxSetSlug / boxSetBlurb / boxSetPrice / boxSetSeparatePrice /
 //   boxSetCover / editions, and site-config metaPixelId / attributionTags / pressCtrEndpoint /
-//   amazonBadge
+//   amazonBadge / kindlePlusFormerlyUntil
 // English is the original: its words are the constants below and the series'. A German or
 // French page takes the product's words from the series' editions.<lang> (and each book's
 // editions.<lang> for the list), the fixed copy from src/i18n/landing.<lang>.ts, and links
@@ -35,6 +35,7 @@ import {
   type LandingReview,
 } from '../../lib/landing';
 import { landingCovers } from '../../integrations/landing-covers.mjs';
+import { showFormerlyKU } from '../../lib/kindle-plus';
 
 export interface Props {
   lang: LandingLang;
@@ -127,6 +128,9 @@ const countText = formatCount(strings, ratingCount);
 
 const siteConfig = await getEntry('settings', 'site-config');
 const amazonBadge = siteConfig?.data.amazonBadge?.trim();
+// Kindle+ (formerly Kindle Unlimited) through site-config kindlePlusFormerlyUntil, German and
+// French only: the English page has said plain Kindle+ since 2026-10-22 and does not change.
+const formerlyKU = lang !== 'en' && showFormerlyKU(siteConfig?.data.kindlePlusFormerlyUntil);
 
 // The market's storefront. English keeps its search fallback and Book 1's paperback; an
 // edition always has its ASIN, and a print link only when it has a paperback.
@@ -178,7 +182,7 @@ const alternates = langs.length > 1 ? langs.map((l) => ({ hreflang: l, href: lan
 
 <LandingLayout
   title={strings.pageTitle(title, books.length)}
-  description={strings.pageDescription(title, books.length, ku)}
+  description={strings.pageDescription(title, books.length, ku, formerlyKU)}
   image={covers.og}
   strings={strings}
   alternates={alternates}
@@ -280,7 +284,7 @@ const alternates = langs.length > 1 ? langs.map((l) => ({ hreflang: l, href: lan
             {strings.closing(books.length)}
           </p>
           <div class="lg:hidden max-w-md mx-auto">
-            <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="closing" ku={ku} strings={strings} />
+            <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="closing" ku={ku} formerly={formerlyKU} strings={strings} />
           </div>
         </section>
       </div>
@@ -297,7 +301,7 @@ const alternates = langs.length > 1 ? langs.map((l) => ({ hreflang: l, href: lan
               <p class="text-xs text-text-muted mt-0.5">{strings.ratingsAcrossShort(countText)}</p>
             </div>
           )}
-          <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="side" ku={ku} strings={strings} />
+          <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="side" ku={ku} formerly={formerlyKU} strings={strings} />
           {amazonBadge && <img src={amazonBadge} alt={strings.availableAtAmazon} class="h-10 w-auto mx-auto mt-5" loading="lazy" />}
         </div>
       </aside>
@@ -309,7 +313,7 @@ const alternates = langs.length > 1 ? langs.map((l) => ({ hreflang: l, href: lan
       class="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-cosmic-rose/40 bg-deep-space-navy/95 backdrop-blur px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-200"
     >
       <div class="max-w-md mx-auto">
-        <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="bar" compact ku={ku} strings={strings} />
+        <LandingCtas links={links} buyLabel={buyLabel} valueLine={valueLine} where="bar" compact ku={ku} formerly={formerlyKU} strings={strings} />
       </div>
     </div>
   </main>

@@ -1,10 +1,15 @@
 // MACHINE-DRAFTED, NATIVE CHECK PENDING. French fixed copy for the /fr/ box-set landing page
 // (Press suite_006 §2.3): a French reader checks it before the first FR ad (a step of the
-// first run's approve card). Kindle Unlimited keeps its name in the French store.
+// first run's approve card). Kindle Unlimited became Kindle+ on amazon.fr on 2026-10-22, as
+// in the US: the name is KINDLE_PLUS, shared with the English table, and "anciennement Kindle Unlimited"
+// shows beside it through site-config kindlePlusFormerlyUntil (src/lib/kindle-plus.ts).
+import { KINDLE_PLUS } from '../lib/kindle-plus';
 import type { LandingStrings } from './landing';
 
 const WORDS = ['zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix'];
 const word = (n: number) => WORDS[n] ?? String(n);
+const KU = KINDLE_PLUS;
+const FORMERLY = 'anciennement Kindle Unlimited';
 const Word = (n: number) => word(n).replace(/^./, (c) => c.toUpperCase());
 // French puts a no-break space before ? : ! and inside « ».
 const NBSP = ' ';
@@ -12,8 +17,9 @@ const NBSP = ' ';
 export const fr: LandingStrings = {
   lang: 'fr',
   locale: 'fr-FR',
-  readFree: 'Lire gratuitement avec Kindle Unlimited',
-  freeFor: 'Gratuit pour les abonnés Kindle Unlimited',
+  readFree: `Lire gratuitement avec ${KU}`,
+  freeFor: `Gratuit pour les membres ${KU}`,
+  formerlyKU: FORMERLY,
   buyBoxSet: (price) => (price ? `Acheter l’intégrale Kindle – ${price}` : 'Acheter l’intégrale Kindle'),
   valueLine: (n, price, separate) => `${n} tomes pour ${price} – ${separate} à l’unité`,
   preferPaper: `Vous préférez le papier${NBSP}? Le tome 1 en broché →`,
@@ -32,8 +38,8 @@ export const fr: LandingStrings = {
   closing: (n) => `${Word(n)} mariées. ${Word(n)} héros extraterrestres. Les ${word(n)} tomes, en un clic.`,
   availableAtAmazon: 'Disponible sur Amazon',
   pageTitle: (title, n) => `${title}${NBSP}: les ${word(n)} tomes | Dane Griggs`,
-  pageDescription: (title, n, ku) =>
-    `${title}${NBSP}: les ${word(n)} tomes réunis en une intégrale.${ku ? ' Gratuit pour les abonnés Kindle Unlimited.' : ''}`,
+  pageDescription: (title, n, ku, formerly) =>
+    `${title}${NBSP}: les ${word(n)} tomes réunis en une intégrale.${ku ? ` Gratuit pour les membres ${KU}${formerly ? ` (${FORMERLY})` : ''}.` : ''}`,
   consent: {
     text: 'Nous utilisons un pixel Meta pour mesurer nos publicités.',
     cookiePolicy: 'Politique relative aux cookies',

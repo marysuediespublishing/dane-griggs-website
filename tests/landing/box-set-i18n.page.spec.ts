@@ -12,6 +12,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { BOX_SET_PATH, CTR_ENDPOINT, ORIGIN, distFile, pixelCalls, serveDist, type ConfigEdit } from './harness';
 import { LANDING_STRINGS } from '../../src/i18n';
 import { en } from '../../src/i18n/landing.en';
+import { showFormerlyKU } from '../../src/lib/kindle-plus';
 
 const fixture = JSON.parse(readFileSync('tests/fixtures/landing-editions.json', 'utf8')) as {
   series: { 'saving-ceraste': Record<'de' | 'fr', { title: string; hook: string }> };
@@ -21,6 +22,10 @@ const DE_TAGS = fixture.attributionTags.DE;
 const withEndpoint: ConfigEdit = (config) => ({ ...config, ctrEndpoint: CTR_ENDPOINT });
 const where = (page: Page) => ((page.viewportSize()?.width ?? 1280) >= 1024 ? 'side' : 'closing');
 const url = (lang: string) => `${ORIGIN}/${lang}${BOX_SET_PATH}`;
+// "ehemals / anciennement Kindle Unlimited" shows through site-config kindlePlusFormerlyUntil
+// (the build's date decides; a build and its test run the same day).
+const until = readFileSync('src/content/settings/site-config.md', 'utf8').match(/^kindlePlusFormerlyUntil:\s*"?([0-9-]+)"?/m)?.[1];
+const formerly = showFormerlyKU(until);
 
 test.beforeAll(() => {
   if (!distFile(`/de${BOX_SET_PATH}`)) {
@@ -165,6 +170,48 @@ test.describe('FR: amazon.fr, not in KU, no paperback', () => {
     const detail = { page: 'bride-program-box-set', market: 'FR', cta: 'buy', source: 'organic', campaign: '' };
     await expect.poll(() => pixelCalls(page)).toContainEqual(['trackCustom', 'LandingClickBuy', detail]);
     await expect.poll(() => served.beacons).toContainEqual({ metric: 'press.landing.ctr', ...detail });
+  });
+});
+
+// Kindle Unlimited is Kindle+ on amazon.de and amazon.fr too (2026-10-22, #8862): the DE/FR ads
+// say Kindle+, so must the page. "Kindle Unlimited" may stand only in the formerly line (beside
+// each Kindle+ note, and in parentheses in the meta description) and in a reader's quoted words.
+test.describe('DE and FR: Kindle+, never "Kindle Unlimited" outside the formerly line', () => {
+  for (const lang of ['de', 'fr'] as const) {
+    const s = LANDING_STRINGS[lang];
+    test(`/${lang}/: no "Kindle Unlimited" in the page, its title or its description, but in the formerly line`, async ({ page, context }) => {
+      await serveDist(context);
+      await page.goto(url(lang));
+      const rest = await page.evaluate(() => {
+        const copy = document.documentElement.cloneNode(true) as HTMLElement;
+        copy.querySelectorAll('[data-formerly-ku], blockquote, script, style').forEach((el) => el.remove());
+        return copy.textContent ?? '';
+      });
+      expect(rest).not.toMatch(/Kindle[\s\u00a0-]+Unlimited/i);
+      const description = (await page.locator('meta[name="description"]').getAttribute('content')) ?? '';
+      expect(description.replace(` (${s.formerlyKU})`, '')).not.toMatch(/Kindle[\s\u00a0-]+Unlimited/i);
+      expect(await page.title()).not.toMatch(/Unlimited/i);
+      const kuButtons = await page.locator('[data-landing-cta="ku"]').count();
+      // Every formerly line sits beside a Kindle+ note, one per KU button (none when not in Kindle+).
+      await expect(page.locator('[data-formerly-ku]')).toHaveCount(formerly ? kuButtons : 0);
+      for (const line of await page.locator('[data-formerly-ku]').allTextContents()) expect(line).toBe(s.formerlyKU);
+      if (kuButtons) expect(description).toContain(formerly ? `${s.formerlyKU})` : 'Kindle+');
+    });
+  }
+
+  test('/de/: the three doors\' words: Kindle+, the Kindle box set, Book 1 in paperback', async ({ page, context }) => {
+    const de = LANDING_STRINGS.de;
+    await serveDist(context);
+    await page.goto(url('de'));
+    const w = where(page);
+    await expect(page.getByTestId(`landing-cta-ku-${w}`)).toHaveText('Gratis lesen mit Kindle+');
+    await expect(page.getByTestId(`landing-ctas-${w}`).locator('p').first()).toHaveText(
+      formerly ? 'Für Kindle+-Mitglieder kostenlos · ehemals Kindle Unlimited' : 'Für Kindle+-Mitglieder kostenlos',
+    );
+    await expect(page.getByTestId(`landing-cta-buy-${w}`)).toHaveText(de.buyBoxSet('9,99 €'));
+    await expect(page.getByTestId(`landing-cta-paperback-${w}`)).toHaveText(de.preferPaper);
+    // The phone's bar says it too.
+    await expect(page.getByTestId('landing-cta-ku-bar')).toHaveText('Gratis lesen mit Kindle+');
   });
 });
 

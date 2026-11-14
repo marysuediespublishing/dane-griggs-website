@@ -2,9 +2,10 @@
 // carried, word for word (the English page must not change), but for Kindle Unlimited, which
 // Amazon renamed Kindle+ on 2026-10-22: the KU door's words are Gwen's English landing pages'
 // ("Read free with Kindle+", "Free for Kindle+ members"). See landing.ts.
+import { KINDLE_PLUS } from '../lib/kindle-plus';
 import type { LandingStrings } from './landing';
 
-export const KINDLE_PLUS = 'Kindle+';
+export { KINDLE_PLUS };
 
 const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
@@ -13,6 +14,9 @@ export const en: LandingStrings = {
   locale: 'en-US',
   readFree: `Read free with ${KINDLE_PLUS}`,
   freeFor: `Free for ${KINDLE_PLUS} members`,
+  // No "formerly Kindle Unlimited" line in English: the page has said plain Kindle+ since
+  // 2026-10-22, and the English page does not change.
+  formerlyKU: '',
   buyBoxSet: (price) => (price ? `Buy the Kindle box set — ${price}` : 'Buy the Kindle box set'),
   valueLine: (n, price, separate) => `${n} books for ${price} — ${separate} bought separately`,
   preferPaper: 'Prefer paper? Book 1 in paperback →',

@@ -41,6 +41,7 @@ pixelHosts:
   - www.danegriggs.com
 pressCtrEndpoint: ""
 amazonBadge: ""
+kindlePlusFormerlyUntil: "2027-01-20"
 attributionTags:
   US:
     lily-saves-alien:

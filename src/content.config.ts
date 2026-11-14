@@ -30,7 +30,7 @@ const seriesEdition = z.object({
 	// The box set's title as Amazon shows it, e.g. "Das Bräute-Programm"
 	title: z.string(),
 	blurb: z.string(),
-	// In Kindle Unlimited in that marketplace: false shows two buttons, not three
+	// In Kindle+ (Kindle Unlimited until 2026-10-22) in that marketplace: false shows two buttons, not three
 	kuEnrolled: z.boolean(),
 	// The edition's own box-set image (/images/…), when it is not the English one
 	cover: z.string().optional(),
@@ -214,6 +214,9 @@ const settings = defineCollection({
 		}))).optional(),
 		pressCtrEndpoint: z.string().optional(),
 		amazonBadge: z.string().optional(),
+		// Kindle Unlimited became Kindle+ on 2026-10-22: through this date (inclusive) the /de/ and
+		// /fr/ box-set pages add "ehemals / anciennement Kindle Unlimited" (src/lib/kindle-plus.ts)
+		kindlePlusFormerlyUntil: z.union([z.string(), z.date()]).optional(),
 	}),
 });
 

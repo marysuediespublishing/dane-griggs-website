@@ -8,9 +8,12 @@ export interface LandingStrings {
   lang: LandingLang;
   /** Intl locale for numbers on the page */
   locale: string;
-  /** The KU button and the note under it */
+  /** The KU button and the note under it: Kindle+, Kindle Unlimited's name since 2026-10-22 */
   readFree: string;
   freeFor: string;
+  /** "formerly Kindle Unlimited", beside the note through site-config kindlePlusFormerlyUntil
+   *  (src/lib/kindle-plus.ts); empty: never shown (English) */
+  formerlyKU: string;
   /** The Buy button: with the storefront's price when there is one */
   buyBoxSet: (price?: string) => string;
   /** Under the Buy button, when both prices are known */
@@ -41,7 +44,7 @@ export interface LandingStrings {
   availableAtAmazon: string;
   /** <title> and meta description */
   pageTitle: (title: string, books: number) => string;
-  pageDescription: (title: string, books: number, ku: boolean) => string;
+  pageDescription: (title: string, books: number, ku: boolean, formerly?: boolean) => string;
   consent: { text: string; cookiePolicy: string; allow: string; deny: string };
   chrome: { skip: string; privacy: string; cookies: string };
 }

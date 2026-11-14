@@ -21,6 +21,7 @@ import {
 } from '../../src/lib/landing';
 import { LANDING_STRINGS } from '../../src/i18n';
 import { formatCount, formatRating, type LandingStrings } from '../../src/i18n/landing';
+import { showFormerlyKU } from '../../src/lib/kindle-plus';
 import { decideConsent, isUsZone, siteMarketingConsent, utmOf } from '../../src/lib/landing-client';
 import { DEFAULT_PIXEL_HOSTS, beaconLine, isPixelHost, pixelHosts, pixelLine } from '../../src/lib/pixel-hosts';
 
@@ -294,11 +295,43 @@ test.describe('strings: one table per language', () => {
     test(`${lang}: no English fixed copy`, () => {
       const english = new Set(sample(LANDING_STRINGS.en));
       const ours = sample(LANDING_STRINGS[lang]);
-      // Kindle Unlimited keeps its name in DE and FR; nothing else may match English.
+      // Nothing may match English (Kindle+ is the one word every language shares).
       expect(ours.filter((line) => english.has(line))).toEqual([]);
       for (const line of ours) expect(line).not.toMatch(/\b(the|books|with|members|buy|review|ratings|average|Goodreads)\b/i);
     });
   }
+  // Kindle Unlimited became Kindle+ on amazon.de and amazon.fr on 2026-10-22, as in the US
+  // (#8862): the DE/FR ads say Kindle+, and so do the doors they land on. Gwen's DE/FR words.
+  test('DE and FR doors say Kindle+; "Kindle Unlimited" only in the formerly line', () => {
+    const { de, fr } = LANDING_STRINGS;
+    expect(de.readFree).toBe('Gratis lesen mit Kindle+');
+    expect(de.freeFor).toBe('Für Kindle+-Mitglieder kostenlos');
+    expect(de.formerlyKU).toBe('ehemals Kindle Unlimited');
+    expect(de.pageDescription('Das Bräute-Programm', 9, true)).toBe('Das Bräute-Programm: alle neun Bände in einem Sammelband. Für Kindle+-Mitglieder kostenlos.');
+    expect(de.pageDescription('Das Bräute-Programm', 9, true, true)).toBe(
+      'Das Bräute-Programm: alle neun Bände in einem Sammelband. Für Kindle+-Mitglieder (ehemals Kindle Unlimited) kostenlos.',
+    );
+    expect(fr.readFree).toBe('Lire gratuitement avec Kindle+');
+    expect(fr.freeFor).toBe('Gratuit pour les membres Kindle+');
+    expect(fr.formerlyKU).toBe('anciennement Kindle Unlimited');
+    expect(fr.pageDescription('Le Programme', 9, true, true)).toBe(
+      'Le Programme\u00a0: les neuf tomes réunis en une intégrale. Gratuit pour les membres Kindle+ (anciennement Kindle Unlimited).',
+    );
+    expect(fr.pageDescription('Le Programme', 9, false, true)).not.toMatch(/Kindle/);
+    // English has no formerly line: the English page does not change.
+    expect(LANDING_STRINGS.en.formerlyKU).toBe('');
+    for (const s of [de, fr]) {
+      const lines = [...sample(s), s.pageDescription('X', 9, true, false), s.pageDescription('X', 9, true, true).replace(` (${s.formerlyKU})`, '')];
+      for (const line of lines) expect(line).not.toMatch(/Kindle[\s\u00a0-]+Unlimited/i);
+    }
+  });
+  test('the formerly window: through kindlePlusFormerlyUntil, inclusive, UTC', () => {
+    expect(showFormerlyKU('2027-01-20', new Date('2027-01-20T23:59:59Z'))).toBe(true);
+    expect(showFormerlyKU('2027-01-20', new Date('2027-01-21T00:00:00Z'))).toBe(false);
+    expect(showFormerlyKU(new Date('2027-01-20'), new Date('2026-11-13T12:00:00Z'))).toBe(true);
+    expect(showFormerlyKU(undefined)).toBe(false);
+    expect(showFormerlyKU('not a date')).toBe(false);
+  });
   test('numbers as the language writes them', () => {
     expect(formatRating(LANDING_STRINGS.de, 4.4)).toBe('4,4');
     expect(formatCount(LANDING_STRINGS.de, 1234)).toBe('1.234');

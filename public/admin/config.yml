@@ -192,7 +192,7 @@ collections:
               - { label: "Book 1 Paperback ASIN or ISBN-10 (amazon.de)", name: "paperbackAsin", widget: "string", required: false, hint: "The print link. Empty: no print link" }
               - { label: "Title", name: "title", widget: "string", hint: "As Amazon shows it" }
               - { label: "Blurb", name: "blurb", widget: "text", hint: "As Amazon shows it; the first three paragraphs show" }
-              - { label: "In Kindle Unlimited (amazon.de)", name: "kuEnrolled", widget: "boolean", default: true, hint: "Off: no KU button" }
+              - { label: "In Kindle+ (amazon.de)", name: "kuEnrolled", widget: "boolean", default: true, hint: "Off: no KU button" }
               - { label: "Box Set Image", name: "cover", widget: "image", required: false, hint: "This edition's own; empty: the English one" }
               - { label: "Series Name", name: "seriesName", widget: "string", required: false, hint: "For the line over the title; empty: the language's plain 'the complete series'" }
               - { label: "Hook", name: "hook", widget: "string", required: false }
@@ -220,7 +220,7 @@ collections:
               - { label: "Book 1 Paperback ASIN or ISBN-10 (amazon.fr)", name: "paperbackAsin", widget: "string", required: false, hint: "The print link. Empty: no print link" }
               - { label: "Title", name: "title", widget: "string", hint: "As Amazon shows it" }
               - { label: "Blurb", name: "blurb", widget: "text", hint: "As Amazon shows it; the first three paragraphs show" }
-              - { label: "In Kindle Unlimited (amazon.fr)", name: "kuEnrolled", widget: "boolean", default: true, hint: "Off: no KU button" }
+              - { label: "In Kindle+ (amazon.fr)", name: "kuEnrolled", widget: "boolean", default: true, hint: "Off: no KU button" }
               - { label: "Box Set Image", name: "cover", widget: "image", required: false, hint: "This edition's own; empty: the English one" }
               - { label: "Series Name", name: "seriesName", widget: "string", required: false, hint: "For the line over the title; empty: the language's plain 'the complete series'" }
               - { label: "Hook", name: "hook", widget: "string", required: false }
@@ -381,6 +381,7 @@ collections:
       - { label: "Pixel Hosts", name: "pixelHosts", widget: "list", required: false, hint: "The only hostnames the pixel and the Press CTR beacon send from (danegriggs.com, www.danegriggs.com). Anywhere else (localhost, previews) they log [pixel] lines to the console. Empty: those two" }
       - { label: "Press CTR Endpoint", name: "pressCtrEndpoint", widget: "string", required: false, hint: "Empty: clicks count only as pixel events" }
       - { label: "Amazon Badge", name: "amazonBadge", widget: "image", required: false, hint: "Amazon's official 'Available at Amazon' badge, unaltered" }
+      - { label: "Kindle+ \"formerly Kindle Unlimited\" until (DE, FR)", name: "kindlePlusFormerlyUntil", widget: "datetime", type: "date", format: "YYYY-MM-DD", required: false, hint: "Kindle Unlimited became Kindle+ on 2026-10-22. Through this date the German and French box-set pages show \"ehemals Kindle Unlimited\" / \"anciennement Kindle Unlimited\" beside Kindle+; after it, just \"Kindle+\" (on the next build). The English pages never show it. Leave empty to never show it" }
       - { label: "Content", name: "body", widget: "markdown", required: false }
 
   # Species collection

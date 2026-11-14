@@ -10,6 +10,10 @@
 // src/content/series/saving-ceraste.md), never a B0FIX one or a FIXTURE tag. And it shows the
 // edition's own reader reviews (editions.<lang>.reviews), each with its title, its words and its
 // reviewer's name in the reviews band, and no reviews band when the edition has none (#8701).
+// And it calls the programme Kindle+ (#8862): Amazon renamed Kindle Unlimited on amazon.de and
+// amazon.fr on 2026-10-22, and the DE/FR ads say Kindle+. "Kindle Unlimited" may stand only in
+// the "ehemals / anciennement Kindle Unlimited" line (data-formerly-ku, and its parenthesis in
+// the meta description) and in a reader's own quoted words (blockquote).
 //
 // A page that is absent passes: until the content carries a language's edition, production
 // builds no /<lang>/ page for it (before #8708 there is no /de/ or /fr/ box-set at all), and
@@ -37,6 +41,15 @@ const text = (s) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+// The page with the places "Kindle Unlimited" may stand cut out: what is left must not name it.
+const FORMERLY = { de: 'ehemals Kindle Unlimited', fr: 'anciennement Kindle Unlimited' };
+const outsideFormerly = (html, lang) =>
+  html
+    .replace(/<span[^>]*\bdata-formerly-ku\b[^>]*>[^<]*<\/span>/g, '')
+    .replace(/<blockquote\b.*?<\/blockquote>/gs, '')
+    .replaceAll(` (${FORMERLY[lang]})`, '');
+const KINDLE_UNLIMITED = /Kindle(\s|&nbsp;|&#160;|\u00a0|-)+Unlimited/i;
+
 const failures = [];
 for (const [lang, host] of Object.entries(MARKET_HOST)) {
   const file = join(dist, lang, 'series', SERIES, 'box-set', 'index.html');
@@ -58,6 +71,8 @@ for (const [lang, host] of Object.entries(MARKET_HOST)) {
   for (const asin of linked) if (!real.has(asin)) failures.push(`/${lang}/: links ${asin}, not one of the content's (${[...real].join(', ')})`);
   if (!linked.has(edition.asin)) failures.push(`/${lang}/: never links the edition's ASIN ${edition.asin}`);
   if (!html.includes(host)) failures.push(`/${lang}/: no ${host} link`);
+  if (KINDLE_UNLIMITED.test(outsideFormerly(html, lang))) failures.push(`/${lang}/: says "Kindle Unlimited" outside the "${FORMERLY[lang]}" line: the programme is Kindle+ (#8862)`);
+  if (!html.includes('Kindle+') && edition.kuEnrolled) failures.push(`/${lang}/: in Kindle+ but never says "Kindle+"`);
   const band = html.match(/data-testid="landing-reviews".*?<\/section>/s)?.[0];
   const reviews = edition.reviews ?? [];
   if (reviews.length && !band) failures.push(`/${lang}/: the edition has ${reviews.length} review(s) but the page has no reviews band`);
