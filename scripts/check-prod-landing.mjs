@@ -7,7 +7,9 @@
 // fixture's made-up editions (ASINs starting B0FIX) win over the content's (src/lib/editions.ts).
 // This checks that none of that reaches production: for each of /de/ and /fr/, the page links
 // Amazon only at the content's own edition ASINs (asin, paperbackAsin in
-// src/content/series/saving-ceraste.md), never a B0FIX one or a FIXTURE tag.
+// src/content/series/saving-ceraste.md), never a B0FIX one or a FIXTURE tag. And it shows the
+// edition's own reader reviews (editions.<lang>.reviews), each with its title, its words and its
+// reviewer's name in the reviews band, and no reviews band when the edition has none (#8701).
 //
 // A page that is absent passes: until the content carries a language's edition, production
 // builds no /<lang>/ page for it (before #8708 there is no /de/ or /fr/ box-set at all), and
@@ -21,6 +23,19 @@ const dist = process.argv[2] ?? 'dist';
 const SERIES = 'saving-ceraste';
 const MARKET_HOST = { de: 'amazon.de', fr: 'amazon.fr' };
 const { data } = matter(readFileSync(`src/content/series/${SERIES}.md`, 'utf8'));
+
+// The reviews band's text, tags dropped, entities decoded and white space collapsed, as a reader sees it.
+const text = (s) =>
+  s
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const failures = [];
 for (const [lang, host] of Object.entries(MARKET_HOST)) {
@@ -43,7 +58,17 @@ for (const [lang, host] of Object.entries(MARKET_HOST)) {
   for (const asin of linked) if (!real.has(asin)) failures.push(`/${lang}/: links ${asin}, not one of the content's (${[...real].join(', ')})`);
   if (!linked.has(edition.asin)) failures.push(`/${lang}/: never links the edition's ASIN ${edition.asin}`);
   if (!html.includes(host)) failures.push(`/${lang}/: no ${host} link`);
-  console.log(`/${lang}/ box-set: links ${[...linked].join(', ') || 'nothing'}`);
+  const band = html.match(/data-testid="landing-reviews".*?<\/section>/s)?.[0];
+  const reviews = edition.reviews ?? [];
+  if (reviews.length && !band) failures.push(`/${lang}/: the edition has ${reviews.length} review(s) but the page has no reviews band`);
+  if (!reviews.length && band) failures.push(`/${lang}/: a reviews band, but the edition has no reviews of its own`);
+  const shown = band ? text(band) : '';
+  for (const r of reviews) {
+    for (const [what, words] of [['reviewer', r.reviewer], ['title', r.title], ['body', r.body]]) {
+      if (words && !shown.includes(text(words))) failures.push(`/${lang}/: ${r.reviewer}'s review: its ${what} is not in the reviews band`);
+    }
+  }
+  console.log(`/${lang}/ box-set: links ${[...linked].join(', ') || 'nothing'}; reviews by ${reviews.map((r) => r.reviewer).join(', ') || 'nobody'}`);
 }
 
 if (failures.length) {

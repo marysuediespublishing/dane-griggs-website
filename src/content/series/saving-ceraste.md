@@ -70,6 +70,19 @@ editions:
       Schaumkuss
       Kriegsbräute
       Die Pilotin des Kanzlers
+    reviews:
+      - title: "Wow....🥰😍"
+        reviewer: "Moni"
+        body: |-
+          ....ich habe den Sammelband regelrecht verschlungen 😂
+
+          Einfühlsam mit viel Witz und Spannung.
+
+          Ich hoffe es gibt noch mehr Geschichten, gerade hinsichtlich des zu erwartenden Babybooms...
+      - title: "So eine schöne Geschichte / Übersetzung jedoch fehlerbehaftet"
+        reviewer: "Anja Beckedahl"
+        body: |-
+          Ich habe nichts erwartet und bin total begeistert. Die Protagonisten sind mit so viel Liebe gestaltet. Ich konnte mir jede Frau und jeden Cerastean oder Hilk super vorstellen. Optisch und vom Charakter. Ich konnte mir die Raumschiffe und Geräte gut vorstellen. Die Planeten und deren Landschaften. Das Geschehen. Was wem wie gerade passiert. Alle Cerasteans sind Green Flags. Die Reihe ist Cozy und Bildgewaltig geschrieben. Wunderbar fürs Kopfkino.
   fr:
     asin: B0GKJ1GGPJ
     paperbackAsin: B0FJMB226N
@@ -94,6 +107,21 @@ editions:
       Épouses de Guerre
       La Pilote du Chancelier
       Nouvelle bonus: Un Noël Rose
+    reviews:
+      - title: "Très bonne série"
+        reviewer: "Doreline"
+        body: |-
+          Toute l’histoire nous emmène en voyage. Il y a un souffle d’aventure mêlant la SF à la romance, ainsi qu’une tentation renouvelée de connaître l’avenir des personnages, et le futur de la planète Ceraste.
+      - title: "Un régal"
+        reviewer: "Alexandra GARCIA"
+        body: |-
+          J'ai beaucoup aimé le style de l'auteur, facile à lire, captivant, les personnages sont attachants. J'ai lu le coffret en seulement quelques jours.
+
+          Quelques trouvailles originales, de l’humour distillé au fil des pages et des personnages souvent attachants donnent envie d’aller au bout de cette série que je recommande pour passer un bon moment.
+
+          Un 11e volume devrait sortir, sera-t-il le dernier ?
+
+          Bon, allez-y, lancez-vous dans l’espace, l’atmosphère est sympa dans le vide intersidéral 😉
 ---
 
 # Saving Ceraste
