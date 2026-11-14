@@ -1,0 +1,53 @@
+// The production build's DE/FR box-set pages link only the content's real ASINs:
+//
+//   npm run build            (runs this as `postbuild`)
+//   node scripts/check-prod-landing.mjs [dist]
+//
+// The test build (`npm run build:landing-test`) sets LANDING_EDITIONS_FIXTURE, and there the
+// fixture's made-up editions (ASINs starting B0FIX) win over the content's (src/lib/editions.ts).
+// This checks that none of that reaches production: for each of /de/ and /fr/, the page links
+// Amazon only at the content's own edition ASINs (asin, paperbackAsin in
+// src/content/series/saving-ceraste.md), never a B0FIX one or a FIXTURE tag.
+//
+// A page that is absent passes: until the content carries a language's edition, production
+// builds no /<lang>/ page for it (before #8708 there is no /de/ or /fr/ box-set at all), and
+// there is nothing to check. A page that exists while the content has no edition for it fails:
+// in a production build it could only have come from the fixture.
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import matter from 'gray-matter';
+
+const dist = process.argv[2] ?? 'dist';
+const SERIES = 'saving-ceraste';
+const MARKET_HOST = { de: 'amazon.de', fr: 'amazon.fr' };
+const { data } = matter(readFileSync(`src/content/series/${SERIES}.md`, 'utf8'));
+
+const failures = [];
+for (const [lang, host] of Object.entries(MARKET_HOST)) {
+  const file = join(dist, lang, 'series', SERIES, 'box-set', 'index.html');
+  const edition = data.editions?.[lang];
+  if (!existsSync(file)) {
+    console.log(`/${lang}/ box-set: not built${edition ? ' (but the content has an edition: is dist a full build?)' : ' (no edition in the content yet)'}`);
+    if (edition) failures.push(`/${lang}/: the content has an edition but ${file} is missing`);
+    continue;
+  }
+  const html = readFileSync(file, 'utf8');
+  if (!edition) {
+    failures.push(`/${lang}/: built, but the content has no ${lang} edition (from the fixture?)`);
+    continue;
+  }
+  const real = new Set([edition.asin, edition.paperbackAsin].filter(Boolean));
+  const linked = new Set([...html.matchAll(/amazon\.[a-z.]+\/dp\/([A-Z0-9]+)/g)].map((m) => m[1]));
+  if (/B0FIX/.test(html)) failures.push(`/${lang}/: carries a fixture ASIN (B0FIX…)`);
+  if (/FIXTURE/.test(html)) failures.push(`/${lang}/: carries a fixture tag (FIXTURE)`);
+  for (const asin of linked) if (!real.has(asin)) failures.push(`/${lang}/: links ${asin}, not one of the content's (${[...real].join(', ')})`);
+  if (!linked.has(edition.asin)) failures.push(`/${lang}/: never links the edition's ASIN ${edition.asin}`);
+  if (!html.includes(host)) failures.push(`/${lang}/: no ${host} link`);
+  console.log(`/${lang}/ box-set: links ${[...linked].join(', ') || 'nothing'}`);
+}
+
+if (failures.length) {
+  console.error(`check-prod-landing: ${failures.length} failure(s)\n  ${failures.join('\n  ')}`);
+  process.exit(1);
+}
+console.log('check-prod-landing: ok');

@@ -1,5 +1,5 @@
 {
-  "_note": "Test build only (LANDING_EDITIONS_FIXTURE): made-up DE/FR editions and tags so the /de/ and /fr/ box-set page is tested before Books has the real ones (Todd's #6968). ASINs starting B0FIX are not real. The content's editions win over these.",
+  "_note": "Test build only (LANDING_EDITIONS_FIXTURE): made-up DE/FR editions and tags so the /de/ and /fr/ box-set page is tested before Books has the real ones (Todd's #6968). ASINs starting B0FIX are not real. In the test build these win over the content's editions for the series/book × language they name (anything not named falls through to the content), so the page's branches (DE in KU, paperback, every tag; FR not in KU, no paperback, a refused tag, its own review) stay testable once the real editions are in the content. The content's Attribution tags still win over these tags. A production build never reads this file.",
   "series": {
     "saving-ceraste": {
       "de": {

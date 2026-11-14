@@ -3,6 +3,10 @@
 //   npm run build:landing-test
 // DE: in KU, a paperback, every tag. FR: not in KU, no paperback, a Kindle tag for another
 // ASIN (so refused), one review of its own.
+// In that build the fixture's editions win over the content's (src/lib/editions.ts), so these
+// made-up cases hold whatever real DE/FR editions saving-ceraste.md carries: it is the only
+// box-set page, and the real editions need not reach every branch. That production links only
+// the content's real ASINs is checked against `npm run build` by scripts/check-prod-landing.mjs.
 import { readFileSync } from 'node:fs';
 import { test, expect, type Page } from '@playwright/test';
 import { BOX_SET_PATH, CTR_ENDPOINT, ORIGIN, distFile, pixelCalls, serveDist, type ConfigEdit } from './harness';
