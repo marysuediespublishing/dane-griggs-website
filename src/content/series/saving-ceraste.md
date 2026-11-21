@@ -65,7 +65,7 @@ editions:
       Die feinen Sitten für Aliens
       Handbuch für galaktische Dreier
       Das Brautprogramm: Flitterwochen
-      Unstillbare Neugie
+      Unstillbare Neugier
       Die Klatschkönigin des Aliens
       Schaumkuss
       Kriegsbräute
@@ -79,10 +79,14 @@ editions:
           Einfühlsam mit viel Witz und Spannung.
 
           Ich hoffe es gibt noch mehr Geschichten, gerade hinsichtlich des zu erwartenden Babybooms...
-      - title: "So eine schöne Geschichte / Übersetzung jedoch fehlerbehaftet"
-        reviewer: "Anja Beckedahl"
+      - title: 'Rettung Ceraste „LESENSWERT"'
+        reviewer: "Maria Schramm"
         body: |-
-          Ich habe nichts erwartet und bin total begeistert. Die Protagonisten sind mit so viel Liebe gestaltet. Ich konnte mir jede Frau und jeden Cerastean oder Hilk super vorstellen. Optisch und vom Charakter. Ich konnte mir die Raumschiffe und Geräte gut vorstellen. Die Planeten und deren Landschaften. Das Geschehen. Was wem wie gerade passiert. Alle Cerasteans sind Green Flags. Die Reihe ist Cozy und Bildgewaltig geschrieben. Wunderbar fürs Kopfkino.
+          Eine sehr stimmige und gut durchdacht Buchserie ( 10 Bände) !
+
+          Diese einzelnen Bücher sind spannend, mit gutem Witz die einzelnen Protagonisten sind so liebevoll gestaltet man fiebert mit jeder Person mit .
+
+          Sehr lesenswert 🖤
   fr:
     asin: B0GKJ1GGPJ
     paperbackAsin: B0FJMB226N
