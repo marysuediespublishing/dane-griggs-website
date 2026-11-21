@@ -79,7 +79,7 @@ editions:
           Einfühlsam mit viel Witz und Spannung.
 
           Ich hoffe es gibt noch mehr Geschichten, gerade hinsichtlich des zu erwartenden Babybooms...
-      - title: 'Rettung Ceraste „LESENSWERT"'
+      - title: "Rettung Ceraste ‚LESENSWERT‘"
         reviewer: "Maria Schramm"
         body: |-
           Eine sehr stimmige und gut durchdacht Buchserie ( 10 Bände) !
